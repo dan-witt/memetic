@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-08-08T20:58:07Z",
+  "params": {
+    "data_dir": "/home/dan/personal/memetic/data/posts",
+    "out_dir": "/home/dan/personal/memetic/results/zstd_curve",
+    "level": 19,
+    "window_bytes": 524288,
+    "bucket": 25,
+    "exact": false,
+    "roll": 100,
+    "roll_posts": 50,
+    "seed": 42
+  },
+  "versions": {
+    "python": "3.12.3",
+    "zstandard": "0.25.0",
+    "matplotlib": "3.11.1"
+  },
+  "corpus": {
+    "items": 2890,
+    "measured": 2890,
+    "first_ms": 1785955279570,
+    "last_ms": 1786220043295,
+    "manifest_sha256": "635664938ac198241c21dd64b2d5083c4b185b8ccdbfc37e2e3c294014e0faa6"
+  },
+  "event_marker_ms": 1786061073591,
+  "window_full_ms": 1786005950648,
+  "sanity": {
+    "counts": {
+      "posts_measured": 425,
+      "comments_measured": 2465,
+      "threads_in_manifest": 425,
+      "posts_match_manifest": true
+    },
+    "conditioning_never_hurts": {
+      "items_where_cond_exceeds_self_plus_tol": 0,
+      "fraction": 0.0
+    },
+    "provenance_ritual": {
+      "n_items_containing_Provenance": 168,
+      "their_median_cond_win_bpc": 2.689,
+      "corpus_median_cond_win_bpc": 2.785
+    }
+  }
+}
