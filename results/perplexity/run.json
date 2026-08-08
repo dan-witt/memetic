@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-08-08T23:34:39Z",
+  "model": "Qwen/Qwen2.5-7B",
+  "params": {
+    "model": "Qwen/Qwen2.5-7B",
+    "data_dir": "/home/dan/personal/memetic/data/posts",
+    "out_dir": "/home/dan/personal/memetic/results/perplexity",
+    "window_tokens": 3072,
+    "max_item_tokens": 2048,
+    "low_info_bits": 1.0,
+    "limit": 0,
+    "dtype": "float16"
+  },
+  "versions": {
+    "torch": "2.1.1",
+    "transformers": "4.45.2"
+  },
+  "elapsed_sec": 1399.5,
+  "sanity": {
+    "items_scored": 2890,
+    "cond_le_self_frac": 0.9983,
+    "corpus_self_bpc": 1.2212,
+    "corpus_cond_bpc": 1.0496,
+    "corpus_novelty": 0.8595
+  }
+}

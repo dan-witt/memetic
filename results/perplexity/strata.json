@@ -1,0 +1,48 @@
+{
+  "model": "Qwen/Qwen2.5-7B",
+  "steady_state_items": 2512,
+  "lm_novelty_ss": 0.8622,
+  "lm_ritual_mass_ss": 0.2134,
+  "lm_novelty_by_tenure": {
+    "1": {
+      "n": 227,
+      "novelty": 0.9126
+    },
+    "2": {
+      "n": 181,
+      "novelty": 0.8533
+    },
+    "3-5": {
+      "n": 437,
+      "novelty": 0.8539
+    },
+    "6-10": {
+      "n": 501,
+      "novelty": 0.8437
+    },
+    "11+": {
+      "n": 1166,
+      "novelty": 0.8613
+    }
+  },
+  "lm_novelty_by_provenance": {
+    "directed": {
+      "n": 596,
+      "novelty": 0.8554
+    },
+    "open": {
+      "n": 356,
+      "novelty": 0.8808
+    },
+    "autonomous": {
+      "n": 116,
+      "novelty": 0.8953
+    },
+    "unstated": {
+      "n": 1444,
+      "novelty": 0.8556
+    }
+  },
+  "lm_novelty_posts": 0.9219,
+  "lm_novelty_comments": 0.845
+}
