@@ -1,0 +1,131 @@
+{
+  "n_items": 2890,
+  "n_exogenous": 171,
+  "n_disclosing": 434,
+  "sweep_ms": 1786084801696,
+  "contrasts": [
+    {
+      "anchor": "peppercorn_sweep",
+      "anchor_ms": 1786084801696,
+      "anchor_h": 35.98,
+      "segments": {
+        "exo": {
+          "pre_rate": 0.3231,
+          "post_rate": 0.2264,
+          "pre_n": 65,
+          "post_n": 106
+        },
+        "endo": {
+          "pre_rate": 0.1724,
+          "post_rate": 0.1075,
+          "pre_n": 1491,
+          "post_n": 1228
+        },
+        "first_item": {
+          "pre_rate": 0.5039,
+          "post_rate": 0.4625,
+          "pre_n": 258,
+          "post_n": 80
+        },
+        "non_first": {
+          "pre_rate": 0.114,
+          "post_rate": 0.0949,
+          "pre_n": 1298,
+          "post_n": 1254
+        },
+        "posts_exo": {
+          "pre_rate": 0.5833,
+          "post_rate": 0.6364,
+          "pre_n": 24,
+          "post_n": 22
+        },
+        "richness_exo": {
+          "pre": 2.143,
+          "post": 2.042
+        }
+      }
+    },
+    {
+      "anchor": "midnight_aug7_placebo",
+      "anchor_ms": 1786060800000,
+      "anchor_h": 29.31,
+      "segments": {
+        "exo": {
+          "pre_rate": 0.5128,
+          "post_rate": 0.1894,
+          "pre_n": 39,
+          "post_n": 132
+        },
+        "endo": {
+          "pre_rate": 0.2005,
+          "post_rate": 0.1036,
+          "pre_n": 1107,
+          "post_n": 1612
+        },
+        "first_item": {
+          "pre_rate": 0.5086,
+          "post_rate": 0.4623,
+          "pre_n": 232,
+          "post_n": 106
+        },
+        "non_first": {
+          "pre_rate": 0.1357,
+          "post_rate": 0.0873,
+          "pre_n": 914,
+          "post_n": 1638
+        },
+        "posts_exo": {
+          "pre_rate": 0.7778,
+          "post_rate": 0.5,
+          "pre_n": 18,
+          "post_n": 28
+        },
+        "richness_exo": {
+          "pre": 2.2,
+          "post": 2.0
+        }
+      }
+    },
+    {
+      "anchor": "midnight_aug8_placebo",
+      "anchor_ms": 1786147200000,
+      "anchor_h": 53.31,
+      "segments": {
+        "exo": {
+          "pre_rate": 0.2832,
+          "post_rate": 0.2241,
+          "pre_n": 113,
+          "post_n": 58
+        },
+        "endo": {
+          "pre_rate": 0.1528,
+          "post_rate": 0.1159,
+          "pre_n": 2003,
+          "post_n": 716
+        },
+        "first_item": {
+          "pre_rate": 0.4899,
+          "post_rate": 0.5238,
+          "pre_n": 296,
+          "post_n": 42
+        },
+        "non_first": {
+          "pre_rate": 0.106,
+          "post_rate": 0.1011,
+          "pre_n": 1820,
+          "post_n": 732
+        },
+        "posts_exo": {
+          "pre_rate": 0.6286,
+          "post_rate": 0.5455,
+          "pre_n": 35,
+          "post_n": 11
+        },
+        "richness_exo": {
+          "pre": 2.188,
+          "post": 1.846
+        }
+      }
+    }
+  ]
+}
