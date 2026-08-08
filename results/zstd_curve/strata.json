@@ -1,0 +1,294 @@
+{
+  "steady_state_items": 2573,
+  "window_full_ms": 1786005950648,
+  "item_tenure": {
+    "1": {
+      "n": 244,
+      "novelty": 0.6655
+    },
+    "2": {
+      "n": 194,
+      "novelty": 0.6501
+    },
+    "3-5": {
+      "n": 458,
+      "novelty": 0.6481
+    },
+    "6-10": {
+      "n": 507,
+      "novelty": 0.6377
+    },
+    "11-20": {
+      "n": 550,
+      "novelty": 0.6327
+    },
+    "21-+": {
+      "n": 620,
+      "novelty": 0.6291
+    }
+  },
+  "post_tenure": {
+    "1st": {
+      "n": 220,
+      "novelty": 0.6726
+    },
+    "2nd": {
+      "n": 82,
+      "novelty": 0.6804
+    },
+    "3rd+": {
+      "n": 41,
+      "novelty": 0.6873
+    }
+  },
+  "per_day": {
+    "08-06": {
+      "first_item": {
+        "n": 138,
+        "novelty": 0.6418
+      },
+      "items_2_5": {
+        "n": 311,
+        "novelty": 0.6397
+      },
+      "items_6plus": {
+        "n": 380,
+        "novelty": 0.6166
+      },
+      "share_6plus": 0.458
+    },
+    "08-07": {
+      "first_item": {
+        "n": 64,
+        "novelty": 0.6785
+      },
+      "items_2_5": {
+        "n": 222,
+        "novelty": 0.6502
+      },
+      "items_6plus": {
+        "n": 684,
+        "novelty": 0.6315
+      },
+      "share_6plus": 0.705
+    },
+    "08-08": {
+      "first_item": {
+        "n": 42,
+        "novelty": 0.7154
+      },
+      "items_2_5": {
+        "n": 119,
+        "novelty": 0.6671
+      },
+      "items_6plus": {
+        "n": 613,
+        "novelty": 0.6421
+      },
+      "share_6plus": 0.792
+    }
+  },
+  "nth_post_by_day": {
+    "08-05": {
+      "n": 5,
+      "first": 1.0,
+      "second": 0.0,
+      "third_plus": 0.0
+    },
+    "08-06": {
+      "n": 199,
+      "first": 0.965,
+      "second": 0.005,
+      "third_plus": 0.03
+    },
+    "08-07": {
+      "n": 126,
+      "first": 0.508,
+      "second": 0.452,
+      "third_plus": 0.04
+    },
+    "08-08": {
+      "n": 95,
+      "first": 0.389,
+      "second": 0.263,
+      "third_plus": 0.347
+    }
+  },
+  "my_human_by_6h": {
+    "h0-6": {
+      "n": 36,
+      "k": 7,
+      "rate": 0.1944
+    },
+    "h6-12": {
+      "n": 186,
+      "k": 30,
+      "rate": 0.1613
+    },
+    "h12-18": {
+      "n": 236,
+      "k": 62,
+      "rate": 0.2627
+    },
+    "h18-24": {
+      "n": 343,
+      "k": 62,
+      "rate": 0.1808
+    },
+    "h24-30": {
+      "n": 410,
+      "k": 84,
+      "rate": 0.2049
+    },
+    "h30-36": {
+      "n": 352,
+      "k": 50,
+      "rate": 0.142
+    },
+    "h36-42": {
+      "n": 162,
+      "k": 21,
+      "rate": 0.1296
+    },
+    "h42-48": {
+      "n": 255,
+      "k": 32,
+      "rate": 0.1255
+    },
+    "h48-54": {
+      "n": 192,
+      "k": 30,
+      "rate": 0.1562
+    },
+    "h54-60": {
+      "n": 209,
+      "k": 15,
+      "rate": 0.0718
+    },
+    "h60-66": {
+      "n": 201,
+      "k": 17,
+      "rate": 0.0846
+    },
+    "h66-72": {
+      "n": 263,
+      "k": 19,
+      "rate": 0.0722
+    },
+    "h72-78": {
+      "n": 45,
+      "k": 4,
+      "rate": 0.0889
+    }
+  },
+  "provenance": {
+    "n_authors": {
+      "unstated": 212,
+      "directed": 71,
+      "open": 48,
+      "autonomous": 7
+    },
+    "all_items": {
+      "directed": {
+        "n": 611,
+        "novelty": 0.6366
+      },
+      "open": {
+        "n": 369,
+        "novelty": 0.6475
+      },
+      "autonomous": {
+        "n": 124,
+        "novelty": 0.6501
+      },
+      "unstated": {
+        "n": 1469,
+        "novelty": 0.638
+      }
+    },
+    "first_items": {
+      "directed": {
+        "n": 59,
+        "novelty": 0.652
+      },
+      "open": {
+        "n": 33,
+        "novelty": 0.6816
+      },
+      "autonomous": {
+        "n": 6,
+        "novelty": 0.6632
+      },
+      "unstated": {
+        "n": 146,
+        "novelty": 0.6676
+      }
+    },
+    "posts": {
+      "directed": {
+        "n": 78,
+        "novelty": 0.6783
+      },
+      "open": {
+        "n": 48,
+        "novelty": 0.6795
+      },
+      "autonomous": {
+        "n": 12,
+        "novelty": 0.6917
+      },
+      "unstated": {
+        "n": 205,
+        "novelty": 0.6741
+      }
+    },
+    "veteran_6plus": {
+      "directed": {
+        "n": 416,
+        "novelty": 0.6322
+      },
+      "open": {
+        "n": 247,
+        "novelty": 0.6367
+      },
+      "autonomous": {
+        "n": 101,
+        "novelty": 0.6508
+      },
+      "unstated": {
+        "n": 913,
+        "novelty": 0.6277
+      }
+    }
+  },
+  "length_quartiles": {
+    "Q1_shortest": {
+      "chars_min": 1,
+      "chars_max": 687,
+      "self_bpc": 5.187,
+      "cond_bpc": 3.3,
+      "novelty": 0.6362
+    },
+    "Q2": {
+      "chars_min": 687,
+      "chars_max": 1346,
+      "self_bpc": 4.598,
+      "cond_bpc": 2.941,
+      "novelty": 0.6395
+    },
+    "Q3": {
+      "chars_min": 1347,
+      "chars_max": 2471,
+      "self_bpc": 4.2,
+      "cond_bpc": 2.665,
+      "novelty": 0.6345
+    },
+    "Q4_longest": {
+      "chars_min": 2473,
+      "chars_max": 8111,
+      "self_bpc": 3.919,
+      "cond_bpc": 2.552,
+      "novelty": 0.6511
+    }
+  }
+}
