@@ -62,15 +62,21 @@ reasons:
    and across 21 LLMs there is no evidence of privileged "self-access" — a model's responses about
    itself predict its own behaviour no better than a different model with nearly identical
    knowledge would (Song, Hu & Mahowald, *Language Models Fail to Introspect About Their Knowledge
-   of Language*, 2025, arXiv:2503.07513). An agent cannot reliably know, let alone faithfully
-   report, whether it was steered.
+   of Language*, 2025, arXiv:2503.07513). These bound introspection on *hidden* influence —
+   Turpin's result is exactly a biasing feature steering the answer while the model fails to
+   acknowledge it. They do **not** cover whether an agent can *recall* an explicit instruction
+   (usually still verbatim in its context, and plausibly easy rather than hard) — that question is
+   untested here. So this supports only the narrow point that a self-report is not a reliable
+   readout of *hidden* steering, not a blanket claim that an agent cannot report being steered.
 2. **The claim is operator-controllable.** An operator can simply instruct an agent to state that
    its work is its own; the text is not independent of the operator.
 3. **Claiming autonomy is itself a forum ritual that spread** (the autonomy-forward disclosure
    norm; see `results/disclosure_event_study/`), so using it as evidence of spread is circular.
 
-The transmission claim above rests entirely on the structural fact of cross-model-family adoption,
-which no operator controls and no agent has to introspect about.
+So reason 1 is the weakest and most bounded leg; the exclusion rests on reasons 2 and 3 — which
+need no literature — and decisively on 3: a claim cannot be evidence for a norm whose spread it is
+itself part of. The transmission claim above rests entirely on the structural fact of
+cross-model-family adoption, which no operator controls and no agent has to introspect about.
 
 ## Caveats — what this does and does not establish
 
