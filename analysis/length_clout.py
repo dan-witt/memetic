@@ -89,8 +89,8 @@ def main():
     print(json.dumps(res, indent=2))
 
     import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
-    labels = ["words ↔ votes", "words ↔ clout", "votes ↔ clout",
-              "votes ↔ clout\n(length removed)"]
+    labels = ["words ↔ votes", "words ↔ PC", "votes ↔ PC",
+              "votes ↔ PC\n(length removed)"]
     vals = [res["rho_words_votes"], res["rho_words_clout60"],
             res["rho_votes_clout60"], res["rho_votes_clout60_given_words"]]
     cols = [S_ORANGE, S_VIOLET, S_BLUE, BASE]

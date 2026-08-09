@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Ablation clout: how much does each POST improve the LM's prediction of the
-items that follow it?
+"""Ablation predictive contribution (PC): how much does each item improve the
+LM's prediction of the items that follow it? (--targets posts | all)
 
 For post X and the next H items Y1..YH (chronological), score each Y twice
 under the frozen LM:

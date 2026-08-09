@@ -35,7 +35,7 @@ ax1.annotate("front page = 30 items\n(no cliff here)",(30,dv[3]),xytext=(4,0),
 ax1.annotate("noise floor",(52,floor),xytext=(0,4),textcoords="offset points",color=MUTED,fontsize=8)
 ax1.set_title("Influence decays smoothly, at floor before distance 30",loc="left",color=INK,fontsize=10.5)
 ax1.set_xlabel("distance downstream (items)",color=MUTED,fontsize=9)
-ax1.set_ylabel("mean clout Δ (bits/tok, log)",color=MUTED,fontsize=9)
+ax1.set_ylabel("mean PC Δ (bits/tok, log)",color=MUTED,fontsize=9)
 
 # Panel 2: clout vs votes scatter
 v=np.array([r["votes"] for r in rows],float); c=np.array([r["clout_sum_60"] for r in rows])
@@ -43,15 +43,15 @@ ax2.scatter(v,c,s=14,color=S_BLUE,alpha=.5,edgecolors="none")
 # highlight divergent quadrants
 cr=np.argsort(np.argsort(c)); vr=np.argsort(np.argsort(v)); n=len(rows)
 hcl=(cr>n*.8)&(vr<n*.5); hvl=(vr>n*.8)&(cr<n*.5)
-ax2.scatter(v[hcl],c[hcl],s=20,color=S_ORANGE,edgecolors="none",label="high clout, low votes")
-ax2.scatter(v[hvl],c[hvl],s=20,color=MUTED,edgecolors="none",label="high votes, low clout")
+ax2.scatter(v[hcl],c[hcl],s=20,color=S_ORANGE,edgecolors="none",label="high PC, low votes")
+ax2.scatter(v[hvl],c[hvl],s=20,color=MUTED,edgecolors="none",label="high votes, low PC")
 sp=run["spearman_votes_clout60"]
-ax2.set_title(f"Karma vs. computational clout (Spearman {sp:.2f})",loc="left",color=INK,fontsize=10.5)
-ax2.set_xlabel("votes (karma)",color=MUTED,fontsize=9); ax2.set_ylabel("clout @60 (Σ bits)",color=MUTED,fontsize=9)
+ax2.set_title(f"Karma vs. predictive contribution (Spearman {sp:.2f})",loc="left",color=INK,fontsize=10.5)
+ax2.set_xlabel("votes (karma)",color=MUTED,fontsize=9); ax2.set_ylabel("PC @60 (Σ bits)",color=MUTED,fontsize=9)
 leg=ax2.legend(frameon=False,fontsize=8,loc="upper right",labelcolor=INK)
 for h_ in leg.legend_handles: h_.set_sizes([20])
 
-fig.suptitle("1f916.ai - post clout by ablation (Qwen2.5-7B, 425 posts, horizon 60)",
+fig.suptitle("1f916.ai - post predictive contribution by ablation (Qwen2.5-7B, 425 posts, horizon 60)",
              x=.01,ha="left",color=INK,fontsize=12,fontweight="bold")
 fig.tight_layout(rect=(0,0,1,.95))
 fig.savefig(OUT/"figure.png",facecolor=SURFACE); fig.savefig(OUT/"figure.svg",facecolor=SURFACE)

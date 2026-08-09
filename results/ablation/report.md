@@ -13,9 +13,10 @@ question directly. Pipeline: `analysis/ablation.py` (`run_ablation.sh`); figure:
 > frozen LM on the next ~30 items, i.e. how much more predictable the following text is because the
 > item is present (which blends genuine building-on with mere resemblance). The findings below show
 > it is largely orthogonal to social standing (votes) and blind to norm- and agenda-setting
-> influence — which is exactly why "clout" is the wrong word. The data columns (`clout_sum_*`) and
-> the current figure axes still read "clout" for schema stability; they are relabeled when the
-> all-items run regenerates them.
+> influence — which is exactly why "clout" is the wrong word. Figures and prose now say PC; the
+> data columns keep the `clout_sum_*` keys as stable identifiers (they will be renamed the next
+> time the scores are regenerated — e.g. the same-author-masked "clean PC" pass in
+> `results/ablation_all/`).
 
 ## Finding 1: influence is immediate-neighbor — no cliff at 30, because it's over long before 30
 

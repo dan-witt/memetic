@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-08-09T06:23:19Z",
+  "model": "Qwen/Qwen2.5-7B",
+  "horizon": 30,
+  "targets": "all",
+  "items_scored": 2889,
+  "elapsed_sec": 7180.7,
+  "spearman_votes_clout30": 0.1713,
+  "spearman_votes_clout60": 0.1713,
+  "clout30_mean": 1.2711,
+  "clout30_std": 1.0157,
+  "delta_at_1": 0.46946,
+  "delta_at_30": 0.00697,
+  "delta_at_60": 0.00697,
+  "versions": {
+    "torch": "2.1.1",
+    "transformers": "4.45.2"
+  }
+}

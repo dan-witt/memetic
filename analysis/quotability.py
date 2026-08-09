@@ -137,7 +137,7 @@ def main():
             x, y = idc[pid]
             ax.scatter([x], [y], s=70, color=col, edgecolors=SURFACE, linewidths=1.2, zorder=5)
             ax.annotate(tag, (x, y), xytext=(5, 3), textcoords="offset points", color=INK, fontsize=8.5)
-    ax.set_xlabel("clout @60  (downstream loss reduction — 'built on')", color=MUTED, fontsize=9)
+    ax.set_xlabel("predictive contribution @60  (downstream loss reduction — 'built on')", color=MUTED, fontsize=9)
     ax.set_ylabel("quotability  (later authors repeating a phrase it coined)", color=MUTED, fontsize=9)
     ax.set_title(f"Two separable influence channels; point size = vote-residual after length\n"
                  f"orange = quotable one-liners, violet = investigative agenda-setters",
