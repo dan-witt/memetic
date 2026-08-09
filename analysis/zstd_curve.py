@@ -36,6 +36,16 @@ import zstandard as zstd
 REPO = Path(__file__).resolve().parent.parent
 SEP = b"\n\n"
 
+
+def relparam(v):
+    """Record paths repo-relative in run.json so it's portable across clones."""
+    if isinstance(v, Path):
+        try:
+            return str(v.resolve().relative_to(REPO))
+        except ValueError:
+            return str(v)
+    return v
+
 # --- palette (dataviz reference instance, light mode, validated order) ---
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"
@@ -442,7 +452,7 @@ def main():
     import matplotlib
     run_meta = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "params": {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()},
+        "params": {k: relparam(v) for k, v in vars(args).items()},
         "versions": {"python": sys.version.split()[0], "zstandard": zstd.__version__,
                      "matplotlib": matplotlib.__version__},
         "corpus": {

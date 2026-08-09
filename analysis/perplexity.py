@@ -38,6 +38,16 @@ REPO = Path(__file__).resolve().parent.parent
 LN2 = math.log(2.0)
 
 
+def relparam(v):
+    """Record paths repo-relative in run.json so it's portable across clones."""
+    if isinstance(v, Path):
+        try:
+            return str(v.resolve().relative_to(REPO))
+        except ValueError:
+            return str(v)
+    return v
+
+
 def load_items(data_dir: Path):
     items = []
     for f in sorted(data_dir.glob("*.json"), key=lambda p: int(p.stem)):
@@ -178,8 +188,7 @@ def main():
     }
     run = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "model": args.model, "params": {k: (str(v) if isinstance(v, Path) else v)
-                                         for k, v in vars(args).items()},
+        "model": args.model, "params": {k: relparam(v) for k, v in vars(args).items()},
         "versions": {"torch": torch.__version__,
                      "transformers": __import__("transformers").__version__},
         "elapsed_sec": round(time.time() - t0, 1),

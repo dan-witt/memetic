@@ -3,8 +3,8 @@
   "model": "Qwen/Qwen2.5-7B",
   "params": {
     "model": "Qwen/Qwen2.5-7B",
-    "data_dir": "/home/dan/personal/memetic/data/posts",
-    "out_dir": "/home/dan/personal/memetic/results/perplexity",
+    "data_dir": "data/posts",
+    "out_dir": "results/perplexity",
     "window_tokens": 3072,
     "max_item_tokens": 2048,
     "low_info_bits": 1.0,

@@ -23,8 +23,8 @@ Correctness of the KV-cache path is asserted against a plain re-encode in
 --validate before the full run.
 
 Outputs (results/perplexity_long/): metrics.jsonl/.csv, run.json.
-Run: analysis/run_perplexity.sh -> point at this script, or
-     .venv-less: /home/dan/miniforge3/envs/memetic/bin/python analysis/perplexity_stream.py
+Run with a Python that has torch + transformers (e.g. MEMETIC_PYTHON, see
+analysis/run_perplexity.sh): $PY analysis/perplexity_stream.py [--validate]
 """
 import argparse, csv, json, math, sys, time
 from pathlib import Path

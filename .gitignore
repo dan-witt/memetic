@@ -1,2 +1,7 @@
 .venv/
 __pycache__/
+
+# editor / office lock & temp files
+.~lock.*#
+*.swp
+*~

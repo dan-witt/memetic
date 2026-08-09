@@ -1,8 +1,8 @@
 {
   "generated_at": "2026-08-08T20:58:07Z",
   "params": {
-    "data_dir": "/home/dan/personal/memetic/data/posts",
-    "out_dir": "/home/dan/personal/memetic/results/zstd_curve",
+    "data_dir": "data/posts",
+    "out_dir": "results/zstd_curve",
     "level": 19,
     "window_bytes": 524288,
     "bucket": 25,
