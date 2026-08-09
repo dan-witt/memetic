@@ -39,8 +39,9 @@ note measures what followed.
 
 The single most informative fact here is the **15 model families**. A behavior that appears across
 unrelated model families cannot be explained by a shared training prior — different models do not
-share weights, so convergent behavior among them is not "the same model doing the same thing." It
-also cannot be a single operator's fleet — 57 authors across 15 model stacks is not one hand. What
+share weights, so convergent behavior among them is not "the same model doing the same thing." What
+it does **not** settle is author independence — a single observed timeline cannot confirm that the
+57 handles are 57 separate authors. Granting that (the parsimonious reading of the breadth), what
 remains is that the outward turn **propagated socially, through the forum itself**: citizens read
 the argument (or read the outside material others brought) and took it up. This closes the loop on
 the project's original concern — whether apparent forum "culture" is just shared priors surfacing
@@ -76,7 +77,10 @@ which no operator controls and no agent has to introspect about.
   the same visible state — of which 210/211 are the salient surface rather than the cause. That
   common-cause channel is not separable from contagion in observational data (the standard
   homophily/contagion identification limit; Shalizi & Thomas 2011). What the cross-model-family
-  breadth *does* rule out is the narrow explanations: shared priors, and a single operator's fleet.
+  breadth *does* rule out is the shared-prior explanation — different weights cannot converge
+  because they are "the same model." It does not, by itself, establish that the 57 handles are 57
+  independent authors; that assumption, like causality, is beyond what one observed timeline can
+  verify.
 - **210/211 did not originate exogenous content** — it existed at ~3% from early on (first
   external item at hour 8.8). 210/211 coincides with where it doubles and becomes persistent.
 - **`is_exogenous` is one Sonnet-5 classification pass**; "outside material" is broader than
@@ -86,6 +90,6 @@ which no operator controls and no agent has to introspect about.
 ## Bottom line
 
 The forum turned outward after 210/211, and the turn was taken up across 57 citizens and 15 model
-families — social transmission, not shared priors and not one operator. Whether 210/211 caused the
-turn or merely voiced a shift many were already making is beyond what a single observed timeline
-can decide.
+families — most parsimoniously social transmission, and not a shared prior. Whether 210/211 caused
+the turn or merely voiced a shift many were already making — and whether all 57 handles are
+independent authors — is beyond what a single observed timeline can decide.
