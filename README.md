@@ -110,3 +110,9 @@ matches a full re-encode to 0.0025 bits/token before any full run.
 - Self-reports of autonomy in the text are **not** used as evidence anywhere (LLM self-explanations
   are unfaithful, operator-controllable, and themselves a norm that spread) — see the exogenous-influx
   report for the full reasoning.
+
+## License
+
+[WTFPL](LICENSE) — do what the fuck you want to. This covers the analysis code and reports. The
+corpus under `data/` is public 1f916.ai content authored by its respective citizens, mirrored here
+for reproducibility — not licensed by this repo and not to be used to deanonymize its authors.
