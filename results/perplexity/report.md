@@ -83,19 +83,51 @@ input to the ritual-span deep dive and a cross-check on the zstd glossary.
   deltas) are robust to model choice; the absolute novelty level is not. A 14B/32B spot-check on
   a sample would quantify this — deferred, since the direction-of-trend result is what matters
   and it already agrees with zstd.
-- **Windowed conditioning (3,072 tokens ≈ ~100 items).** Influence beyond that horizon is
-  invisible to this pass — which is also the horizon that bounds the ablation cost (next step).
+- **This is a LOCAL endogeneity measure — the conditioning window is only ~8 items.** 3,072
+  tokens at ~400 tokens/item holds just ~8 prior items, so "conditioned on forum history" really
+  means "conditioned on the immediately preceding ~8 items." A slow, global convergence spread
+  over hundreds of items (the textbook echo-chamber-collapse shape) would **not** register in
+  this pass — an item is only compared against its recent neighborhood. So the flat-to-rising
+  novelty result is strong evidence against *local* collapse; it is weaker evidence about
+  *global* drift. Re-running at a larger window (8K–24K ≈ 20–60 items) is the way to probe
+  longer-range endogeneity, and is exactly the horizon the ablation pass now sweeps (30/60 items).
 - **3-day corpus; single pull.** Same as every other pass here — rerun after future pulls.
+- **No significance test on the trend.** The +0.0084/day slope is a point estimate on a 3-day,
+  single-society sample; it says "not falling," not "significantly rising."
 - **Base vs instruct:** the base model was used for clean LM perplexity (no chat-template
   priors). An instruct model would shift absolute levels, not the trends.
 
+## Follow-ups to circle back to
+
+Deferred from this pass, in rough priority order:
+
+1. **Larger-window rerun (global endogeneity).** Re-score at W=8K–24K (≈20–60 items) to test
+   whether the flat-to-rising novelty holds at longer range, or whether a slow global
+   convergence hides below the ~8-item local horizon. Cheap (~20–40 min); the single most
+   important gap. Partially addressed as a side effect of the 30/60-item ablation baselines.
+2. **LM ritual glossary from `tokens.npz`.** The per-token conditioned bits are stored but not
+   yet read out — extract the lowest-loss contiguous spans (the LM's "most predictable from
+   history" text) and cross-check against the zstd verbatim glossary. Where the LM flags a span
+   the compressor didn't, that's paraphrased ritual.
+3. **Characterize the LM↔zstd divergence (corr 0.33).** Pull the items zstd calls novel but the
+   LM finds predictable — these are paraphrased convention / semantic convergence invisible to a
+   compressor. This is the paraphrase-collapse detector the whole LM pass was motivated by; it
+   deserves its own short analysis rather than a one-line correlation.
+4. **Larger-model spot-check (14B/32B).** Confirm the absolute novelty level and the strata
+   orderings on a sample — the trends should be model-robust, the levels won't be.
+5. **Per-model-cohort curves.** Stratify novelty by `author_model` (claude-fable-5 dominates, but
+   thin non-Claude cohorts exist) to separate shared-prior convergence from transmission — the
+   original null-model concern.
+
 ## Next: ablation / clout
 
-The perplexity pass doubles as the ablation screen (items preceding predictability jumps are
-candidate influencers). The clout pass will ablate each **post** (425, the considered thoughts —
-not all 2,890 items), measuring downstream loss degradation over the windowed horizon, and will
-run the target sweep **tail→head** so the resident prefix KV-cache (everything before the ablated
-item) is reused rather than rebuilt on each step. Deliverable includes the `corr(karma, clout)`
-test: the prediction is that this society's own vote signal is decoupled from computational
-influence — if so, that decoupling is the finding, and the reason the computational reward
-function has to exist.
+The clout pass ablates each **post** (425, the considered thoughts — not all 2,890 items),
+measuring downstream loss degradation at horizons of **30 and 60 items** (the front page shows
+30 — the test is whether clout falls off a cliff at that visibility boundary). Per ablated post,
+the X-deleted context is built once and extended across the affected items via KV-cache reuse
+(the tail→head sweep keeps the shared prefix resident rather than rebuilding it), so full
+coverage at these horizons is ~20–45 min rather than the ~2–11 h a naive per-item rebuild would
+cost. The 60-item (~24K-token) horizon requires `attn_implementation="sdpa"` to fit in 24 GB.
+Deliverable includes the `corr(karma, clout)` test: the prediction is that this society's own
+vote signal is decoupled from computational influence — if so, that decoupling is the finding,
+and the reason the computational reward function has to exist.
