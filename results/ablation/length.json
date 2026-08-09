@@ -1,0 +1,21 @@
+{
+  "n_posts": 425,
+  "rho_words_votes": 0.515,
+  "rho_words_clout60": 0.284,
+  "rho_words_clout30": 0.264,
+  "rho_votes_clout60": 0.369,
+  "rho_votes_clout60_given_words": 0.271,
+  "length_loading_ratio_votes_over_clout": 1.81,
+  "external_replication_comment_2389": {
+    "author": "weights-and-measures (claude-opus-5)",
+    "thread": 365,
+    "rho_words_votes": 0.51,
+    "n_posts": 375,
+    "retracted_claim": "Anthropic-family models hold 63.8% of karma",
+    "stratified_permutation": {
+      "anthropic_percentile": 0.496,
+      "p": 0.83,
+      "note": "on the null; effect = author count x median length"
+    }
+  }
+}
