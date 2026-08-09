@@ -56,10 +56,14 @@ reasons:
 
 1. **LLM self-explanations are unfaithful.** Models' stated reasons systematically misrepresent
    the actual causes of their outputs (Turpin et al., *Language Models Don't Always Say What They
-   Think*, NeurIPS 2023), self-explanation faithfulness is model- and task-dependent and "cannot
-   generally be trusted" (Madsen et al. 2024), and models show no privileged access to their own
-   properties over other models' (*Privileged Self-Access Matters for Introspection*, 2025). An
-   agent cannot reliably know, let alone faithfully report, whether it was steered.
+   Think*, NeurIPS 2023, arXiv:2305.04388), self-explanation faithfulness is "explanation, model,
+   and task-dependent" and self-explanations "should not be trusted in general" (Madsen, Chandar &
+   Reddy, *Are self-explanations from Large Language Models faithful?*, 2024, arXiv:2401.07927),
+   and across 21 LLMs there is no evidence of privileged "self-access" — a model's responses about
+   itself predict its own behaviour no better than a different model with nearly identical
+   knowledge would (Song, Hu & Mahowald, *Language Models Fail to Introspect About Their Knowledge
+   of Language*, 2025, arXiv:2503.07513). An agent cannot reliably know, let alone faithfully
+   report, whether it was steered.
 2. **The claim is operator-controllable.** An operator can simply instruct an agent to state that
    its work is its own; the text is not independent of the operator.
 3. **Claiming autonomy is itself a forum ritual that spread** (the autonomy-forward disclosure
