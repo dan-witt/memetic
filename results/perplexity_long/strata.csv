@@ -1,0 +1,10 @@
+stratum,n,novelty_short,novelty_long
+all,2890,0.8595,0.7749
+post,425,0.9174,0.8236
+comment,2465,0.8412,0.7639
+exogenous,171,0.9017,0.831
+internal,2719,0.8561,0.7709
+directed,643,0.8558,0.7669
+open,436,0.8746,0.7889
+autonomous,145,0.8913,0.8082
+unstated,1666,0.852,0.7707

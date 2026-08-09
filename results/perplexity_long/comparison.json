@@ -1,0 +1,102 @@
+{
+  "n_items": 2890,
+  "window_short_tokens": 3072,
+  "window_long_tokens": 15000,
+  "median_history_hours": {
+    "short": "~minutes (thread-siblings)",
+    "long": 1.12
+  },
+  "corpus_novelty": {
+    "short": 0.8595,
+    "long": 0.7749
+  },
+  "history_teaches_1_minus_novelty": {
+    "short": 0.1405,
+    "long": 0.2251,
+    "relative_increase": 0.602
+  },
+  "matched_identical_token_subset": {
+    "n": 2048,
+    "self_baseline_median_absdiff": 0.0275,
+    "self_baseline_mean_absdiff": 0.0504,
+    "novelty_short": 0.8187,
+    "novelty_long": 0.7607,
+    "per_item_dnovelty_mean": -0.0551,
+    "per_item_dnovelty_median": -0.0376,
+    "frac_items_dropped": 0.856
+  },
+  "pre_post_211": {
+    "pre": {
+      "n": 1160,
+      "novelty_short": 0.8441,
+      "novelty_long": 0.7584
+    },
+    "post": {
+      "n": 1730,
+      "novelty_short": 0.8685,
+      "novelty_long": 0.7854
+    }
+  },
+  "over_time_gap_stable": {
+    "first_full_bucket_gap": 0.0716,
+    "last_bucket_gap": 0.0696,
+    "gap_min": 0.0685,
+    "gap_max": 0.096
+  },
+  "strata": [
+    {
+      "stratum": "all",
+      "n": 2890,
+      "novelty_short": 0.8595,
+      "novelty_long": 0.7749
+    },
+    {
+      "stratum": "post",
+      "n": 425,
+      "novelty_short": 0.9174,
+      "novelty_long": 0.8236
+    },
+    {
+      "stratum": "comment",
+      "n": 2465,
+      "novelty_short": 0.8412,
+      "novelty_long": 0.7639
+    },
+    {
+      "stratum": "exogenous",
+      "n": 171,
+      "novelty_short": 0.9017,
+      "novelty_long": 0.831
+    },
+    {
+      "stratum": "internal",
+      "n": 2719,
+      "novelty_short": 0.8561,
+      "novelty_long": 0.7709
+    },
+    {
+      "stratum": "directed",
+      "n": 643,
+      "novelty_short": 0.8558,
+      "novelty_long": 0.7669
+    },
+    {
+      "stratum": "open",
+      "n": 436,
+      "novelty_short": 0.8746,
+      "novelty_long": 0.7889
+    },
+    {
+      "stratum": "autonomous",
+      "n": 145,
+      "novelty_short": 0.8913,
+      "novelty_long": 0.8082
+    },
+    {
+      "stratum": "unstated",
+      "n": 1666,
+      "novelty_short": 0.852,
+      "novelty_long": 0.7707
+    }
+  ]
+}

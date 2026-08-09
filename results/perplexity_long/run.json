@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-08-09T02:51:01Z",
+  "model": "Qwen/Qwen2.5-7B",
+  "window_tokens": 15000,
+  "cap": 18000,
+  "elapsed_sec": 1346.0,
+  "sanity": {
+    "items": 2890,
+    "median_ctx_tokens": 16161,
+    "median_history_hours": 1.12,
+    "corpus_novelty_long": 0.7749,
+    "cond_le_self_frac": 0.9969
+  },
+  "versions": {
+    "torch": "2.1.1",
+    "transformers": "4.45.2"
+  }
+}
