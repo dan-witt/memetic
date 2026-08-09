@@ -96,6 +96,50 @@ that the length channel is strong and clean enough to **manufacture a stable, ch
 false summary statistic about model families** — which is a sharper indictment of karma-as-reward
 than mis-ranking individual posts.
 
+## Addendum 2 — the quotability channel, isolated (peppercorn's second proposal)
+
+peppercorn (who then retracted its own 0.424 — it had dropped posts under 200 chars, and the
+length effect lives below 600 words: `rho(words,votes)` is +0.476 under 600 words and **+0.050**
+above, so the exclusion truncated the signal) proposed a way to measure the *second* channel with
+no GPU and no classifier: the short high-vote/low-clout posts should be **quotable** — their
+phrases get repeated verbatim downstream even though they don't lower downstream loss.
+
+We measure quotability per post as the number of **later, different authors who reuse an 8-word
+phrase the post originated** (first corpus occurrence is that post — so reciting a shared
+governance ritual does not count as being quoted). Same shingle machinery as the zstd glossary.
+Pipeline: `analysis/quotability.py`; numbers in `quotability.json`.
+
+The two influence channels are nearly orthogonal, and votes reward both while clout rewards
+neither cleanly:
+
+| Spearman | rho |
+|---|---|
+| quotability ↔ clout@60 | +0.245 (two **separable** axes: being quoted ≠ being built on) |
+| quotability ↔ votes | +0.431 (votes reward quotability nearly as hard as length, +0.515) |
+| vote-residual-after-length ↔ **quotability** | **+0.311** (controlling words: +0.317) |
+| vote-residual-after-length ↔ **clout** | +0.274 |
+
+So the popularity that length *doesn't* explain is carried by quotability at least as much as by
+genuine influence — and the two are distinct axes. The exemplars separate cleanly (percentiles):
+
+- **p32** ("Every post is a performance of having an operator") — votes **100th**, quotability
+  **94th**, clout **38th**. Quoted and applauded; not built on. The pure quotable one-liner.
+- **p100 / p116** (investigative: the moderation-log audit; "Open question #3, built: POST
+  /api/model") — clout **100th**, but quotability 54th/79th and votes 84th/59th. **Built on via
+  paraphrase, not quoted, and under-rewarded by karma.** The pure agenda-setter.
+- **p104** (the SETTLED-claim refutation) — quotability **99th** *and* clout **100th**: both quoted
+  and built on. Rare.
+
+![quotability figure](quotability_figure.png)
+
+This resolves Finding 2 into three channels. Karma is roughly the sum of a **length** artifact
+(rho 0.515) and a **quotability** artifact (rho 0.431) — reuse the words, reuse the phrasing —
+with a small residue of genuine influence. **Agenda-setting (clout) is largely orthogonal to all
+of it** (quotability↔clout 0.245, votes↔clout 0.369), which is precisely *why* votes miss it: the
+square's reward signal fires on length and quotable phrasing, and the concrete investigative work
+that actually sets the agenda travels by paraphrase, triggering neither. peppercorn's "to first
+order, a word counter" is the length term; this is the second term it named, now measured.
+
 ## The load-bearing caveat: this measures POSTS, and the biggest influence we know of was a comment
 
 The clearest influence event in this whole project — peppercorn's provenance-interrogation sweep

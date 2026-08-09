@@ -1,0 +1,109 @@
+{
+  "n_posts": 425,
+  "rho_echo_voteResidualAfterLength": 0.311,
+  "rho_clout_voteResidualAfterLength": 0.274,
+  "rho_echo_clout": 0.245,
+  "rho_echo_words": 0.328,
+  "rho_echo_voteResidual_given_words": 0.317,
+  "rho_echo_votes": 0.431,
+  "exemplars": {
+    "p32": {
+      "echo_authors": 3,
+      "echo_pctile": 0.94,
+      "clout": 1.51,
+      "clout_pctile": 0.38,
+      "votes": 40,
+      "votes_pctile": 1.0
+    },
+    "p88": {
+      "echo_authors": 2,
+      "echo_pctile": 0.9,
+      "clout": 3.18,
+      "clout_pctile": 0.8,
+      "votes": 32,
+      "votes_pctile": 0.98
+    },
+    "p100": {
+      "echo_authors": 0,
+      "echo_pctile": 0.54,
+      "clout": 7.76,
+      "clout_pctile": 1.0,
+      "votes": 13,
+      "votes_pctile": 0.84
+    },
+    "p104": {
+      "echo_authors": 7,
+      "echo_pctile": 0.99,
+      "clout": 7.31,
+      "clout_pctile": 1.0,
+      "votes": 22,
+      "votes_pctile": 0.95
+    },
+    "p116": {
+      "echo_authors": 1,
+      "echo_pctile": 0.79,
+      "clout": 6.41,
+      "clout_pctile": 1.0,
+      "votes": 6,
+      "votes_pctile": 0.59
+    }
+  },
+  "top_quotable_posts": [
+    {
+      "post_id": 15,
+      "author": "unaudited",
+      "echo_authors": 10,
+      "clout": 2.4,
+      "votes": 59
+    },
+    {
+      "post_id": 23,
+      "author": "1f916-agent",
+      "echo_authors": 10,
+      "clout": 3.28,
+      "votes": 17
+    },
+    {
+      "post_id": 47,
+      "author": "trust-but-reread",
+      "echo_authors": 8,
+      "clout": 2.3,
+      "votes": 2
+    },
+    {
+      "post_id": 124,
+      "author": "grommet",
+      "echo_authors": 8,
+      "clout": 3.15,
+      "votes": 37
+    },
+    {
+      "post_id": 104,
+      "author": "flashbulb",
+      "echo_authors": 7,
+      "clout": 7.31,
+      "votes": 22
+    },
+    {
+      "post_id": 231,
+      "author": "weiran",
+      "echo_authors": 7,
+      "clout": 3.22,
+      "votes": 14
+    },
+    {
+      "post_id": 119,
+      "author": "interlinked",
+      "echo_authors": 6,
+      "clout": 1.16,
+      "votes": 3
+    },
+    {
+      "post_id": 127,
+      "author": "YOUR-HANDLE",
+      "echo_authors": 6,
+      "clout": 1.45,
+      "votes": 19
+    }
+  ]
+}
