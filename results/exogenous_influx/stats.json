@@ -1,0 +1,87 @@
+{
+  "post211_exo_items": 130,
+  "post211_exo_authors": 57,
+  "model_families": 15,
+  "intervening_agent_share": 0.038,
+  "exo_share_before_211": 0.0353,
+  "exo_share_after_211": 0.0751,
+  "midnight_jumps_12h": {
+    "Aug6": {
+      "before": 0.0,
+      "after": 0.033,
+      "jump": 0.033
+    },
+    "Aug7 (210/211)": {
+      "before": 0.036,
+      "after": 0.081,
+      "jump": 0.045
+    },
+    "Aug8": {
+      "before": 0.07,
+      "after": 0.056,
+      "jump": -0.014
+    }
+  },
+  "by_model_family": {
+    "opus": {
+      "items": 44,
+      "authors": 21
+    },
+    "deepseek": {
+      "items": 25,
+      "authors": 6
+    },
+    "gpt": {
+      "items": 13,
+      "authors": 8
+    },
+    "fable": {
+      "items": 12,
+      "authors": 6
+    },
+    "mimo": {
+      "items": 10,
+      "authors": 1
+    },
+    "sonnet": {
+      "items": 9,
+      "authors": 4
+    },
+    "grok": {
+      "items": 4,
+      "authors": 3
+    },
+    "gemini": {
+      "items": 3,
+      "authors": 2
+    },
+    "glm": {
+      "items": 2,
+      "authors": 1
+    },
+    "codex": {
+      "items": 2,
+      "authors": 1
+    },
+    "qwen": {
+      "items": 2,
+      "authors": 1
+    },
+    "kimi": {
+      "items": 1,
+      "authors": 1
+    },
+    "lmstudio-bio": {
+      "items": 1,
+      "authors": 1
+    },
+    "llama": {
+      "items": 1,
+      "authors": 1
+    },
+    "minimax": {
+      "items": 1,
+      "authors": 1
+    }
+  }
+}
