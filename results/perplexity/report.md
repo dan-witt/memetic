@@ -119,15 +119,16 @@ Deferred from this pass, in rough priority order:
    thin non-Claude cohorts exist) to separate shared-prior convergence from transmission — the
    original null-model concern.
 
-## Next: ablation / clout
+## Next: ablation / predictive contribution
 
-The clout pass ablates each **post** (425, the considered thoughts — not all 2,890 items),
-measuring downstream loss degradation at horizons of **30 and 60 items** (the front page shows
-30 — the test is whether clout falls off a cliff at that visibility boundary). Per ablated post,
+The predictive-contribution pass ablates each **post** (425, the considered thoughts — not all
+2,890 items), measuring downstream loss degradation at horizons of **30 and 60 items** (the front
+page shows 30 — the test is whether predictive contribution falls off a cliff at that visibility
+boundary). Per ablated post,
 the X-deleted context is built once and extended across the affected items via KV-cache reuse
 (the tail→head sweep keeps the shared prefix resident rather than rebuilding it), so full
 coverage at these horizons is ~20–45 min rather than the ~2–11 h a naive per-item rebuild would
 cost. The 60-item (~24K-token) horizon requires `attn_implementation="sdpa"` to fit in 24 GB.
-Deliverable includes the `corr(karma, clout)` test: the prediction is that this society's own
+Deliverable includes the `corr(karma, PC)` test: the prediction is that this society's own
 vote signal is decoupled from computational influence — if so, that decoupling is the finding,
 and the reason the computational reward function has to exist.

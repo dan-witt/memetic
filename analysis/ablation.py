@@ -75,9 +75,11 @@ def main():
     ap.add_argument("--model", default="Qwen/Qwen2.5-7B")
     ap.add_argument("--data-dir", type=Path, default=REPO / "data" / "posts")
     ap.add_argument("--out-dir", type=Path, default=REPO / "results" / "ablation")
-    ap.add_argument("--horizon", type=int, default=60, help="items after each post to measure")
+    ap.add_argument("--horizon", type=int, default=60, help="items after each target to measure")
+    ap.add_argument("--targets", choices=["posts", "all"], default="posts",
+                    help="ablate only posts (default) or every item including comments")
     ap.add_argument("--max-item-tokens", type=int, default=512)
-    ap.add_argument("--limit", type=int, default=0, help="score only first N posts (smoke test)")
+    ap.add_argument("--limit", type=int, default=0, help="score only last N targets (smoke test)")
     args = ap.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -92,17 +94,17 @@ def main():
     items, votes = load_items_and_votes(args.data_dir)
     ids_cache = [tok(it["text"], add_special_tokens=False)["input_ids"][:args.max_item_tokens]
                  for it in items]
-    post_pos = [i for i, it in enumerate(items) if it["kind"] == "post"
-                and len(ids_cache[i]) > 0]
+    target_pos = [i for i, it in enumerate(items) if len(ids_cache[i]) > 0
+                  and (args.targets == "all" or it["kind"] == "post")]
     if args.limit:
-        post_pos = post_pos[-args.limit:]          # tail-first sample for smoke test
-    post_pos.sort(reverse=True)                    # tail -> head
-    print(f"{len(post_pos)} posts, horizon {args.horizon}", file=sys.stderr)
+        target_pos = target_pos[-args.limit:]      # tail-first sample for smoke test
+    target_pos.sort(reverse=True)                  # tail -> head
+    print(f"{len(target_pos)} targets ({args.targets}), horizon {args.horizon}", file=sys.stderr)
 
     rows = []
     dist_sum = np.zeros(args.horizon); dist_n = np.zeros(args.horizon)
     t0 = time.time()
-    for pi, X in enumerate(post_pos):
+    for pi, X in enumerate(target_pos):
         x_ids = ids_cache[X]
         fut = [j for j in range(X + 1, min(X + 1 + args.horizon, len(items))) if len(ids_cache[j])]
         if not fut:
@@ -118,17 +120,18 @@ def main():
         d = np.array(deltas)
         dist = np.array([j - X for j in fut])
         rows.append({
-            "post_id": it["id"], "author": it["author"], "author_model": it["author_model"],
-            "created_at": it["created_at"], "votes": votes[("post", it["id"])],
+            "kind": it["kind"], "id": it["id"], "post_id": it["id"], "seq": X,
+            "author": it["author"], "author_model": it["author_model"],
+            "created_at": it["created_at"], "votes": votes[(it["kind"], it["id"])],
             "n_future": len(fut),
             "clout_sum_30": round(float(d[dist <= 30].sum()), 4),
             "clout_sum_60": round(float(d.sum()), 4),
             "clout_mean_30": round(float(d[dist <= 30].mean()), 5),
             "clout_mean_60": round(float(d.mean()), 5),
         })
-        if (pi + 1) % 25 == 0 or pi + 1 == len(post_pos):
+        if (pi + 1) % 25 == 0 or pi + 1 == len(target_pos):
             el = time.time() - t0
-            print(f"  {pi+1}/{len(post_pos)}  {el:.0f}s  {(pi+1)/el:.2f} posts/s", file=sys.stderr)
+            print(f"  {pi+1}/{len(target_pos)}  {el:.0f}s  {(pi+1)/el:.2f} items/s", file=sys.stderr)
 
     rows.sort(key=lambda r: r["created_at"])
     with (args.out_dir / "clout.jsonl").open("w") as f:
@@ -152,7 +155,8 @@ def main():
     c30 = np.array([r["clout_sum_30"] for r in rows]); c60 = np.array([r["clout_sum_60"] for r in rows])
     run = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "model": args.model, "horizon": args.horizon, "posts_scored": len(rows),
+        "model": args.model, "horizon": args.horizon, "targets": args.targets,
+        "items_scored": len(rows),
         "elapsed_sec": round(time.time() - t0, 1),
         "spearman_votes_clout30": round(spearman(v, c30), 4),
         "spearman_votes_clout60": round(spearman(v, c60), 4),

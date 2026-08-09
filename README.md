@@ -25,7 +25,7 @@ its caveats; none of these are causal claims (see [Caveats](#caveats)).
 | Do accumulating "rituals" lower per-token information over time? | zstd conditional compression (near-verbatim repetition) | No. Steady-state novelty ≈ 0.63 and weakly **rising** (0.631 → 0.650); the `Provenance:` formula is a day-one arrival ritual, not a growing one. | [`results/zstd_curve`](results/zstd_curve/report.md) |
 | Same question, but sensitive to *paraphrased* convention, not just verbatim? | Qwen2.5-7B token cross-entropy, ~8-item window | Novelty ≈ 0.86; replicates the tenure/invocation ordering compression can't see. | [`results/perplexity`](results/perplexity/report.md) |
 | Does the community lean on its **accumulated** culture (hours, not minutes)? | Streaming long-horizon perplexity, ~40-item / ~1.1 h window | Longer history lowers novelty 0.86 → 0.775, but the gap is **constant** across the whole timeline — endogeneity is a fixed baseline reached early, **not** growing. | [`results/perplexity_long`](results/perplexity_long/report.md) |
-| Which posts actually shaped later text, and does karma track it? | Leave-one-out LM ablation ("clout") over 425 posts | Influence is immediate-neighbour (no cliff at the 30-item front page); karma is a weak proxy (Spearman 0.37). Votes track length ~1.8× harder than influence (rho 0.515 vs 0.284) — replicated in-corpus by comment 2389. | [`results/ablation`](results/ablation/report.md) |
+| Which posts actually shaped later text, and does karma track it? | Leave-one-out LM ablation (predictive contribution) over 425 posts | Influence is immediate-neighbour (no cliff at the 30-item front page); karma is a weak proxy (Spearman 0.37). Votes track length ~1.8× harder than influence (rho 0.515 vs 0.284) — replicated in-corpus by comment 2389. | [`results/ablation`](results/ablation/report.md) |
 | Did the square turn outward, and how widely? | `is_exogenous` classification + placebo-controlled event study | Exogenous share **doubles** after posts 210/211, adopted across **57 authors / 15 model families** — cross-population, not shared priors or one operator. | [`results/exogenous_influx`](results/exogenous_influx/report.md) |
 | Did a provenance-disclosure norm spread, and from what stimulus? | LLM-classified event study anchored at an interrogation sweep | A self-disclosure norm rises after the comment-1300–1303 interrogation, detectable only once the string match is replaced by a paraphrase-aware classifier. | [`results/disclosure_event_study`](results/disclosure_event_study/report.md) |
 
@@ -56,7 +56,7 @@ analysis/                one script per measurement (+ report/figure scripts)
   zstd_curve.py          compression novelty curve        (run.sh)
   perplexity.py          ~8-item LM novelty               (run_perplexity.sh)
   perplexity_stream.py   streaming long-horizon LM novelty (run_perplexity.sh)
-  ablation.py            post "clout" by LM ablation       (run_ablation.sh)
+  ablation.py            post predictive contribution by ablation (run_ablation.sh)
   exo_influx.py          the outward turn (exogenous influx)
   event_study.py         disclosure-norm event study
   stratify.py            tenure/provenance/day novelty cuts
@@ -90,7 +90,7 @@ export HF_HOME=/where/models/cache              # optional; defaults to ~/.cache
 analysis/run_perplexity.sh                          # ~8-item pass  (~23 min)
 analysis/run_perplexity.sh --limit 50               # smoke test
 "$MEMETIC_PYTHON" analysis/perplexity_stream.py     # streaming long-horizon pass (~22 min)
-analysis/run_ablation.sh                            # post clout   (~43 min)
+analysis/run_ablation.sh                            # post predictive contribution (~43 min)
 ```
 
 The streaming scorer self-checks: `perplexity_stream.py --validate` asserts its KV-cache path
@@ -103,7 +103,7 @@ matches a full re-encode to 0.0025 bits/token before any full run.
   post *caused* it — concurrent common causes (many citizens reacting to the same visible state)
   are not separable from transmission in observational data. Each report states its own version of
   this limit.
-- **Relative measures under one frozen 7B model.** The LM novelty and clout numbers are within-model
+- **Relative measures under one frozen 7B model.** The LM novelty and predictive-contribution numbers are within-model
   ratios; the rankings and the *changes* between conditions carry the meaning, not the absolute bits.
 - **3-day, single-pull snapshot.** Findings describe this corpus; re-pull to test durability.
 - Self-reports of autonomy in the text are **not** used as evidence anywhere (LLM self-explanations
