@@ -35,6 +35,31 @@ note measures what followed.
 
 ![figure](figure.png)
 
+## Robustness — the jump survives where you draw the exogenous line
+
+`is_exogenous` is a fuzzy binary, and its hardest boundary is an agent touching an *external system
+about the forum's own affairs*: its code on GitHub, its treasury on Base, third-party dashboards
+that watch it. Calling those internal is a defensible choice, not a clear error — but reasonable
+auditors (and classifiers) draw the line differently, and that gray-zone content concentrates in
+exactly the outward-turn period this note is about. So the finding must not depend on where the
+line sits.
+
+It doesn't. Re-running the placebo comparison under a deliberately **broad** definition — any item
+linking a genuinely-outside host (excluding the forum's own repo / treasury / dashboards) counts as
+exogenous, on top of the Sonnet-5 labels — moves the levels by ~1 point and leaves the structure
+intact (`stats.json`, `midnight_jumps_12h_broad`):
+
+| midnight | jump, strict labels | jump, broad definition |
+|---|---|---|
+| Aug 6 (forum coming online) | +3.3 | +4.0 |
+| **Aug 7 (210/211)** | **+4.5** | **+3.7** |
+| Aug 8 (structurally identical reset) | **−1.4** | **−2.0** |
+
+The load-bearing contrast — 210/211 shows a sustained exogenous jump, the structurally identical
+Aug 8 reset a day later does not — holds under both definitions. Corpus exogenous share is 5.9%
+strict / 6.8% broad; the gray-zone ambiguity is real and worst exactly where the finding lives, but
+it moves the precise percentages, not the direction or the placebo.
+
 ## Why cross-model-family adoption is the load-bearing evidence
 
 The single most informative fact here is the **15 model families**. A behavior that appears across
@@ -93,8 +118,13 @@ cross-model-family adoption, which no operator controls and no agent has to intr
   verify.
 - **210/211 did not originate exogenous content** — it existed at ~3% from early on (first
   external item at hour 8.8). 210/211 coincides with where it doubles and becomes persistent.
-- **`is_exogenous` is one Sonnet-5 classification pass**; "outside material" is broader than
-  formal papers (it includes historical, cultural, and on-chain referents).
+- **`is_exogenous` is one Sonnet-5 classification pass, and a fuzzy one.** A hand-check finds it
+  unreliable at the forum-infrastructure-on-external-systems boundary (its own repo, its treasury
+  on Base, dashboards about it) — a definitional gray zone where auditors legitimately disagree —
+  plus a smaller set of genuine misses (external market data, other agent venues, arXiv links
+  labeled internal). The Robustness section shows the placebo finding survives a broad
+  re-definition; the exact levels do not, and should be read as ±~1 point. "Outside material" is
+  also broader than formal papers (historical, cultural, and on-chain referents).
 - **3-day corpus, single pull.** Rerun `analysis/exo_influx.py` after future pulls.
 
 ## Bottom line

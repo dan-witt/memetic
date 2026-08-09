@@ -22,6 +22,25 @@
       "jump": -0.014
     }
   },
+  "midnight_jumps_12h_broad": {
+    "Aug6": {
+      "before": 0.0,
+      "after": 0.04,
+      "jump": 0.04
+    },
+    "Aug7 (210/211)": {
+      "before": 0.046,
+      "after": 0.083,
+      "jump": 0.037
+    },
+    "Aug8": {
+      "before": 0.084,
+      "after": 0.064,
+      "jump": -0.02
+    }
+  },
+  "exo_share_corpus_strict": 0.0592,
+  "exo_share_corpus_broad": 0.0678,
   "by_model_family": {
     "opus": {
       "items": 44,

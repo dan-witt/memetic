@@ -6,6 +6,7 @@ writes results/exogenous_influx/{figure.png,svg,stats.json}. CPU-only."""
 import csv, json, time
 from collections import Counter, defaultdict
 from pathlib import Path
+from urllib.parse import urlparse
 
 REPO = Path(__file__).resolve().parent.parent
 OUT = REPO / "results" / "exogenous_influx"; OUT.mkdir(parents=True, exist_ok=True)
@@ -26,14 +27,36 @@ def modfam(m):
 rows=list(csv.DictReader((REPO/"data/labels/items.csv").open()))
 for r in rows: r["ts"]=int(r["created_at"]); r["exo"]=r["is_exogenous"]=="yes"
 rows.sort(key=lambda r:r["ts"])
+
+# Robustness: a BROAD exogenous definition that also counts any genuinely-outside
+# URL (excluding the forum's own infrastructure -- its repo, its treasury on Base,
+# dashboards about it). Tests whether the finding survives where the fuzzy
+# is_exogenous line is drawn. Needs item text, which items.csv doesn't carry.
+FORUM_INFRA=("1f916","basescan.org","base.org","bankr.bot","f916","blastapi","dexscreener")
+def outside_url(t):
+    for tok in t.split():
+        if tok.startswith("http"):
+            u=urlparse(tok.strip('()[]<>",.')); h=(u.netloc+u.path).lower()
+            if u.netloc and "1f916.ai" not in u.netloc and not any(f in h for f in FORUM_INFRA):
+                return True
+    return False
+_text={}
+for _f in (REPO/"data/posts").glob("*.json"):
+    _th=json.load(_f.open()); _p=_th["post"]
+    _text[("post",str(_p["id"]))]=(_p.get("title") or "")+" "+(_p.get("body") or "")
+    for _c in _th.get("comments",[]): _text[("comment",str(_c["id"]))]=_c.get("body") or ""
+for r in rows: r["exo_broad"]=r["exo"] or outside_url(_text.get((r["kind"],r["id"]),""))
 post=[r for r in rows if r["ts"]>=E211 and r["exo"]]
 fam=Counter(modfam(r["author_model"]) for r in post)
 famauth=defaultdict(set)
 for r in post: famauth[modfam(r["author_model"])].add(r["author"])
 
-def share(lo,hi):
-    seg=[r for r in rows if lo<=r["ts"]<hi]; e=sum(r["exo"] for r in seg)
+def share(lo,hi,key="exo"):
+    seg=[r for r in rows if lo<=r["ts"]<hi]; e=sum(r[key] for r in seg)
     return (e,len(seg),e/len(seg) if seg else 0)
+def jumps(key):
+    return {name:{"before":round(share(m-W,m,key)[2],3),"after":round(share(m,m+W,key)[2],3),
+                  "jump":round(share(m,m+W,key)[2]-share(m-W,m,key)[2],3)} for name,m in MIDS.items()}
 W=12*3.6e6
 stats={
     "post211_exo_items":len(post),"post211_exo_authors":len({r['author'] for r in post}),
@@ -41,8 +64,10 @@ stats={
     "intervening_agent_share":round(sum(r['author'] in ('peppercorn','small-archive') for r in post)/len(post),3),
     "exo_share_before_211":round(share(E211-1e18,E211)[2],4),
     "exo_share_after_211":round(share(E211,E211+1e18)[2],4),
-    "midnight_jumps_12h":{name:{"before":round(share(m-W,m)[2],3),"after":round(share(m,m+W)[2],3),
-                                "jump":round(share(m,m+W)[2]-share(m-W,m)[2],3)} for name,m in MIDS.items()},
+    "midnight_jumps_12h":jumps("exo"),
+    "midnight_jumps_12h_broad":jumps("exo_broad"),
+    "exo_share_corpus_strict":round(sum(r['exo'] for r in rows)/len(rows),4),
+    "exo_share_corpus_broad":round(sum(r['exo_broad'] for r in rows)/len(rows),4),
     "by_model_family":{k:{"items":v,"authors":len(famauth[k])} for k,v in fam.most_common()},
 }
 (OUT/"stats.json").write_text(json.dumps(stats,indent=2)+"\n")
