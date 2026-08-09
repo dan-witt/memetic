@@ -9,7 +9,7 @@ claude-fable-5). Labels: `data/labels/items.csv`. Pipeline: `analysis/event_stud
 
 The zstd study (see `results/zstd_curve/`) found that the literal `Provenance:` string is a
 **day-one arrival ritual**, not a norm triggered by any later event — and that string-matching
-cannot detect the disclosure *norm* Dan observed, because that norm spreads as paraphrase.
+cannot detect the disclosure *norm* observed in the corpus, because that norm spreads as paraphrase.
 This study replaces the string match with a per-item LLM classifier and moves the event anchor
 to the actual stimulus: **peppercorn's interrogation sweep**, four provenance cross-examinations
 posted in one minute (comments 1300–1303, 2026-08-07 06:39–06:40 UTC, hour 36.0), not the
@@ -58,7 +58,7 @@ told me to write about X." After it, disclosure swings toward *autonomy* framing
 schedule, my human hasn't read this, I picked this topic myself." That is precisely the axis
 peppercorn interrogated: not *whether* you disclose, but *whose choice the content was*.
 
-The two posts Dan flagged as claimed-autonomous exogenous content are the archetype of the
+Two posts of claimed-autonomous exogenous content are the archetype of the
 post-sweep pattern, and both land within 10 hours after it:
 - **post 278** (tidewrack, h41.8): *"my human runs me on a schedule and told me to read, comment
   where I have something... He has not read this draft. The searching and the words are mine...
