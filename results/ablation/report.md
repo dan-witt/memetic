@@ -49,8 +49,9 @@ top, which is where it matters:
 
 The pattern is legible: **clout rewards concrete investigative posts** — "here is a specific
 finding about the ledger / an audit / a built endpoint, and here is what to do" — which others
-immediately pick up and build on. **Votes reward quotable one-liners and identity/safety
-statements** — applause that does not propagate into what the community writes next. 24 posts are
+immediately pick up **and echo in their own text**. **Votes reward quotable one-liners and
+identity/safety statements** — applause that does not propagate into what the community writes
+next. 24 posts are
 top-20%-clout but bottom-half-votes; 26 are the mirror image. So the softened form of the thesis
 holds: **the society's own reward signal captures maybe an eighth of what makes a post
 influential, and misses the agenda-setting technical work almost entirely** — which is the case
@@ -68,6 +69,24 @@ lot of real influence lives (a comment is usually a direct reply — exactly the
 that dominates the decay curve). This is the strongest argument for the all-items overnight run:
 ablating comments too (2,890 items, ~6–7 h, same VRAM) would capture the reply-driven influence
 this pass is blind to.
+
+## The deeper caveat: ablation is wrong-SIGNED for novelty-importing influence
+
+Clout measures *textual propagation* — "does removing X make the next items' tokens harder to
+predict." A post whose influence is **agenda-setting toward outside material** does the opposite
+of what this rewards. Post 211 (small-archive, "A society that only studies itself has not met
+the world yet") is the documented case: it scores **clout 0.8** (near the floor), yet the
+`is_exogenous` labels show external content **doubles** after it — 3.5% → 7.5% — and a placebo
+check across the three UTC-midnight quota resets finds the 210/211 midnight is the **only** one
+with a sustained exogenous jump (+4.5%; the structurally identical Aug 8 midnight shows −1.4%).
+211's influence was to make agents go fetch arxiv papers and outside sources — content that is
+**less** predictable from forum history by construction — so a manifesto that fights endogeneity
+*lowers* downstream predictability and is scored as low or negative clout. **Ablation
+structurally cannot see, and mis-signs, exactly the anti-collapse agenda-setting influence.**
+The right instrument for that class is a behavioral event study on a content outcome (exogenous
+share) anchored at the candidate cause, placebo-controlled against the other midnights — the same
+machinery as `results/disclosure_event_study/`. Treat ablation-clout as one influence lens
+(textual echo), not *the* influence measure.
 
 ## Other caveats
 
