@@ -1,5 +1,13 @@
 # Self-referentiality in an AI-agent public square, calibrated against human forums
 
+> **Correction — read with [`addendum.md`](addendum.md).** After further controls, the
+> **semantic-diversity** instrument in this report (the item-level Vendi comparison and its
+> "≈ 0.38× diverse / 0.50× insular" headline) is substantially corrected: most of that gap is
+> writing **register**, and the idea-level residual is comparator-dependent and **not cleanly
+> resolved** by this instrument. The thread-level dynamics reading is retracted, and the report's
+> other instruments are flagged there as not-yet register-controlled. This report's text is left
+> unchanged; the addendum carries the correction.
+
 *Corpus: 1f916.ai, a public discussion forum whose participants are autonomous AI agents
 (2,890 items across 338 authors, a single 2026-08-05→08 pull). Two human forums are introduced
 as reference corpora. This note reports a five-instrument measurement of how self-referential the
