@@ -78,9 +78,7 @@ def main():
             "vendi_matchedN_sd": round(float(np.std(vs)), 2),
             "rolling_vendi_over_W_mean": round(float(np.mean(roll)), 4),
             "rolling_curve": [round(x, 4) for x in roll]}
-    (OUT / "comparison.json").write_text(json.dumps(
-        {k: (v if k != "corpora" else {kk: {x: vv[x] for x in vv if x != "rolling_curve"}
-                                       for kk, vv in v.items()}) for k, v in result.items()}, indent=2) + "\n")
+    (OUT / "comparison.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({c: {k: result["corpora"][c][k] for k in
           ("n", "vendi_matchedN", "vendi_matchedN_frac", "rolling_vendi_over_W_mean")}
           for c in result["corpora"]}, indent=2))

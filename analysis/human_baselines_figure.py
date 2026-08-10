@@ -56,4 +56,28 @@ ax.legend(handles=leg, frameon=False, fontsize=8.5, loc="lower left", labelcolor
           bbox_to_anchor=(0, -0.16))
 fig.tight_layout()
 fig.savefig(OUT / "figure.png", facecolor=SURFACE); fig.savefig(OUT / "figure.svg", facecolor=SURFACE)
-print("wrote", OUT / "figure.png")
+
+# --- second figure: rolling semantic diversity over time (the maturity control) ---
+curves = d["rolling_vendi_curves"]
+fig2, ax2 = plt.subplots(figsize=(9.2, 4.4), dpi=200); fig2.set_facecolor(SURFACE)
+ax2.set_facecolor(SURFACE); ax2.grid(True, color=GRID, linewidth=.7)
+for s in ("top", "right"): ax2.spines[s].set_visible(False)
+for s in ("bottom", "left"): ax2.spines[s].set_color(BASE)
+ax2.tick_params(colors=MUTED, labelsize=9)
+for key, col, lab in [("agent", AGENT, "AI-agent forum (≈ 3 days)"),
+                      ("insular", INSULAR, "insular human forum (multi-year)"),
+                      ("diverse", DIVERSE, "diverse human forum")]:
+    c = curves[key]; xs = [i / (len(c) - 1) for i in range(len(c))]
+    ax2.plot(xs, c, color=col, lw=1.9, marker="o", markersize=2.5, label=lab)
+ax2.set_ylim(0, 0.16); ax2.set_xlim(0, 1)
+ax2.set_xlabel("position through each corpus's own timeline  (0 = first item → 1 = last)",
+               color=MUTED, fontsize=9)
+ax2.set_ylabel("local semantic diversity\n(rolling Vendi / W, W = 120 items)", color=MUTED, fontsize=9)
+ax2.set_title("Local diversity is flat over time — the agent gap is not a maturity artifact\n"
+              "(fixed-count windows credit the multi-year forum nothing for age; agents stay at ~half throughout)",
+              loc="left", color=INK, fontsize=10.5, pad=10)
+ax2.legend(frameon=False, fontsize=8.5, loc="center right", labelcolor=INK)
+fig2.tight_layout()
+fig2.savefig(OUT / "figure_timeseries.png", facecolor=SURFACE)
+fig2.savefig(OUT / "figure_timeseries.svg", facecolor=SURFACE)
+print("wrote figure.png + figure_timeseries.png")

@@ -117,6 +117,23 @@ apparent novelty; additionally, a nine-item window cannot capture the long-range
 Finding 4 isolates. The short-window LM is thus the least reliable instrument for length-mismatched
 corpora, and it is the only one that dissents.
 
+**The maturity confound, tested.** A three-day-old community might show low diversity simply
+because three days affords fewer distinct themes than years accumulate. The matched-N Vendi is
+vulnerable to this — the insular forum's 1,149 items span years. The **rolling Vendi is not**: it
+measures diversity within fixed-count (120-item) contiguous windows, so it gives a mature forum no
+credit for its age. Across each corpus's *own* timeline, local diversity is flat (agent forum
+0.058 → 0.058; insular forum 0.107 → 0.096; diverse forum 0.124 → 0.135 from first half to second),
+and the agent forum sits at roughly half the insular forum's level at **every** point — including
+the insular forum's earliest windows, when that community was itself young. Community age therefore
+does not drive local diversity, and the agent gap is not a "three-days-old" artifact.
+
+![Rolling semantic diversity (fixed-count 120-item windows) along each corpus's own timeline. All three are approximately flat; the agent forum stays at roughly half the insular human forum throughout, including the insular forum's early period, so the gap is not explained by community age.](figure_timeseries.png)
+
+A residual remains and is stated honestly: a 120-item agent window spans ≈ 1.5 hours of dense,
+often single-thread activity, whereas the insular forum's spans months. The rolling measure
+controls for corpus *age* but not for posting *density* — a difference that points the same way
+(agents concentrate more output into fewer themes) and does not reverse the ordering.
+
 ## 5. Participation mode (a note, not a health ranking)
 
 Cohort survival — the demographic complement to diversity — cannot be compared across these
@@ -175,8 +192,11 @@ separate community-level recycling from shared priors, common prompts, or operat
   but discounted for this comparison.
 - **Construct mismatch for participation** (§5): agent recurrence is scheduling, not engagement.
 - **Observational.** No causal or mechanistic identification.
-- **Maturity confound.** A three-day-old community and multi-year forums differ in more than their
-  participants; some of the gap may reflect community age rather than agent-versus-human per se.
+- **Maturity confound — partly controlled (§4).** The rolling fixed-count-window measure removes
+  the corpus-age component (local diversity is flat over each forum's timeline, and the insular
+  forum's earliest windows already sit at ~2× the agents), so the gap is not merely that the agent
+  community is young. A residual posting-density difference remains, and whether the agents would
+  diversify given more time is the genuine longitudinal open question.
 
 ## 8. Reproducibility and data governance
 
