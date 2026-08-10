@@ -1,0 +1,54 @@
+{
+  "note": "Addendum correcting the SEMANTIC-DIVERSITY instrument of results/human_baselines/report.md. (1) The raw ~2.6x item-level Vendi gap is mostly writing REGISTER (shown directly by a register transplant). (2) The idea-level residual is comparator-dependent and BOTH of the report's human comparators are confounded (HN = permissive 'discusses-everything' upper bound + possible 2026 LLM contamination of unknown direction; the 'insular' forum is a mischaracterized leaky bucket), so this instrument does NOT cleanly establish an idea-level self-referentiality gap in either direction. (3) The self-referentiality question relocates to topic/venue ALLOCATION (what fraction of discourse is self-focused) -- the domain of the self-reference-RATE instrument, not this one -- and is left open. Thread-dynamics retracted. Corrects the semantic instrument ONLY. A 'core-to-core' comparison is PARKED as exploratory (confounded, not load-bearing). Insular forum kept generic; Vendi RATIOS only; single summarizer (Qwen).",
+  "register_is_most_of_the_raw_gap": {
+    "transplant_3arm": {
+      "vs_diverse_vendi_m104": {"baseline": 16.3, "passthrough_mediation_only": 16.2, "agent_register": 10.6},
+      "register_effect": "-35% at constant content+mediation; passthrough ~= baseline => mediation noise negligible; agent/diverse ratio 0.48 -> 0.74",
+      "caveat": "transplant + normalizer are one Qwen model / fixed prompts; the -35% is register AS QWEN IMITATES IT (caricature could over/understate); pass-through controls mediation noise, not caricature"
+    },
+    "summarizer_validation": {"roundtrip_recovery_pct": 95, "per_item_content_preservation_cosine": 0.82, "random_floor_cosine": 0.41, "note": "content preserved, not swapped; but validated in a Qwen-on-Qwen loop"},
+    "replication": "full->claim recovery reproduces on bge/mpnet/gte; >=3-author 8-gram rule strips ~0% of tokens (register is structural, not verbatim)",
+    "raw_gap": "openings ~2.1x (agent/diverse 0.48), full corpus ~2.6x (0.38)"
+  },
+  "idea_level_comparator_dependent_and_confounded": {
+    "vs_diverse_HN_claim_3embedders": [0.66, 0.75],
+    "vs_diverse_confound": "permissive 'discusses everything' upper bound (base report's own caveat); fresh 2026 content, possible LLM contamination of UNKNOWN direction -> not even a clean lower bound",
+    "vs_insular_whole_claim_3embedders": [0.76, 1.12],
+    "vs_insular_confound": "MISCHARACTERIZED: structurally a leaky bucket (top-5 authors 59% of content; >5yr core 64%; 63% of authors <7-day drive-bys), so 'vs insular ~ parity' compared agents to a tourist-diluted blend, not a cohesive insular community. Also embedder-unstable (straddles parity).",
+    "conclusion": "the register-controlled semantic instrument does NOT establish an idea-level self-referentiality gap; we can say the raw gap is mostly register but cannot cleanly say whether a real idea-level gap remains"
+  },
+  "self_referentiality_relocates_to_allocation": {
+    "argument": "idea-DIVERSITY is the wrong level for 'self-referentiality'; a community can be idea-diverse ABOUT ITSELF. 'Self-referential' is an ALLOCATION claim -- what fraction of discourse is turned inward (governance/provenance/treasury/agent-existence) vs outward.",
+    "belongs_to": "the self-reference-RATE instrument, not the Vendi instrument",
+    "status": "NOT measured here (share of agents' entire discourse that is self-focused, vs the equivalent share of a human community's total output) -- the natural next measurement"
+  },
+  "thread_dynamics": {
+    "verdict": "mostly retracted",
+    "not_faster": true,
+    "tighter_was_register": "claim-normalized arc: all forums open at ~0.37, agents end only ~7% tighter",
+    "no_closure_dwell_retracted": "agent median thread = 4 items (~ insular 3); dwell not detected"
+  },
+  "scope_and_knock_on": {
+    "scope": "corrects the SEMANTIC-DIVERSITY (Vendi) instrument only",
+    "other_instruments": "self-reference-rate and long-window-perplexity findings are NOT register-controlled here; treat as register-uncontrolled until re-run. Caveat: a zstd-on-claims proxy still separates agents somewhat after register-stripping, so the token-level story is not purely register.",
+    "base_report_finding2": "the base report's instrument self-validation (Finding 2) was built on the same whole-forum comparisons shown here to be confounded; it no longer stands as written"
+  },
+  "PARKED_exploratory_core_to_core": {
+    "status": "EXPLORATORY, NOT LOAD-BEARING -- set aside after cold review ruled the parity a construct switch; specific ratios kept in local working notes, not published here",
+    "what_it_explored": "register-controlled idea-diversity of the agents' most-active authors vs the sustaining cores of human communities (incl. a pre-LLM Usenet self-governance core); the agent activity-core landed in the range of a human governance core -- NOT treated as a finding, for the reasons below",
+    "why_not_a_finding": [
+      "CONSTRUCT SWITCH: topic-matching to a self-governance comparator conditions on the very phenomenon (self-focus); news.groups was a dedicated governance CORNER of a diverse Usenet ecosystem, while the agents' ENTIRE square is governance-dominated -- within-venue parity says nothing about the venue-allocation anomaly",
+      "NOT core-to-core: agent 'core' is an unvalidated 3-day ACTIVITY proxy (158 authors) vs validated multi-year PERSISTENCE cores; pooled 8yr Usenet text vs 3-day agent (abandons the base report's rolling-Vendi maturity control)",
+      "NO statistics: 0.97-1.03 band is narrower than the instrument's own 0.14-0.16 embedder spread; no CI / equivalence test; author-level (clustered) bootstrap not done",
+      "n=1 post-hoc comparator (forking paths); single-Qwen normalizer never fidelity-checked on 1980s Usenet",
+      "'topic breadth explains the residual gaps' is asserted, not measured (no within/between-topic Vendi decomposition)"
+    ],
+    "insularity_structure_context": "the churn/core measure (window=year, core=active>=3 windows) did validate that the Usenet-governance CORE is a genuine insular in-group (YoY stability 0.49 vs 0.10; 51% survive the Great Renaming vs 5%) and that both public human forums are core+periphery blends -- useful structural context, but does not rescue the parity inference"
+  },
+  "caveats": {
+    "mediation": "transplant + claim-normalizer are one Qwen model / fixed prompts; a second unrelated model would strengthen register attribution",
+    "uncertainty": "CIs are subsampling noise only; cross-embedder spread is the honest uncertainty; ratios only, never absolute Vendi across differently-embedded pipelines",
+    "baselines": "diverse (HN) fresh 2026, contamination direction unknown; 'insular' comparator is a leaky-bucket blend; a pre-2023 pull + a properly matched comparator would both help",
+    "observational": "no causal claim"
+  }
+}
