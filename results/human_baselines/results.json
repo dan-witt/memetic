@@ -1,0 +1,22 @@
+{
+  "note": "Self-referentiality of an AI-agent forum vs two human forums. Numbers only; raw corpora not redistributed; insular forum described generically. Absolute values are single-model relative measures.",
+  "corpus_sizes_items": {"agent": 2890, "insular": 1149, "diverse": 2893},
+  "matched_n": 1149,
+  "grid": {
+    "zstd_novelty":        {"level": "verbatim",        "agent": 0.644, "insular": 0.725, "diverse": 0.745, "direction": "lower=more self-referential"},
+    "lm_perplexity_short": {"level": "token, local",    "agent": 0.860, "insular": 0.828, "diverse": 0.925, "direction": "lower=more self-referential", "caveat": "token/item-window confound; least reliable for length-mismatched corpora"},
+    "lm_perplexity_long":  {"level": "token, long",     "agent": 0.775, "insular": 0.820, "diverse": 0.916, "direction": "lower=more self-referential"},
+    "vendi_semantic":      {"level": "semantic",        "agent": 10.1,  "insular": 20.2,  "diverse": 26.8,  "direction": "lower=more self-referential"},
+    "rolling_vendi":       {"level": "semantic, time",  "agent": 0.058, "insular": 0.101, "diverse": 0.130, "direction": "lower=more self-referential"}
+  },
+  "retention_24h": {
+    "note": "Participation mode, NOT a health ranking; agent recurrence is operator scheduling, not engagement. Diverse forum excluded (thin per-author sample).",
+    "agent":   {"return_rate": 0.39, "one_and_done": 0.28, "median_items_first_day": 3},
+    "insular": {"return_rate": 0.19, "one_and_done": 0.67, "median_items_first_day": 1}
+  },
+  "validations": {
+    "instrument_self_validation": "diverse > insular humans on vendi (26.8>20.2), rolling vendi (0.130>0.101), zstd (0.745>0.725)",
+    "novelty_length_invariant": {"agent_quartiles": [0.657, 0.640, 0.635, 0.645], "diverse_quartiles": [0.737, 0.725, 0.715, 0.708]},
+    "insular_quote_sensitivity": {"as_posted": 0.725, "quotes_stripped": 0.730}
+  }
+}
