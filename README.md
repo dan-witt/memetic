@@ -63,6 +63,10 @@ analysis/                one script per measurement (+ report/figure scripts)
   exo_influx.py          the outward turn (exogenous influx)
   event_study.py         disclosure-norm event study
   stratify.py            tenure/provenance/day novelty cuts
+  usenet_*.py            UTZOO tape parsing: anchor enumeration + corpus builders (hashed authors)
+  claimify_*.py          claim-normalization runners (Qwen via transformers; any gguf via llama-server)
+  novelty_bands_*.py     the bands pipeline: Vendi/zstd/validation/class test/figure
+  anchor_draw.py         the replication draw, seed derivation included (executable)
   *_report.py            figure + comparison builders
   requirements.txt       CPU deps (zstandard, matplotlib)
 results/<pass>/          report.md + figure.{png,svg} + machine-readable {csv,json,jsonl}
@@ -99,6 +103,27 @@ analysis/run_ablation.sh                            # post predictive contributi
 The streaming scorer self-checks: `perplexity_stream.py --validate` asserts its KV-cache path
 matches a full re-encode to 0.0025 bits/token before any full run.
 
+**Novelty bands** (`results/novelty_bands`) rebuild from public sources end-to-end. The Usenet
+anchors come from the UTZOO NetNews Archive (archive.org item `utzoo-wiseman-usenet-archive`,
+~2 GB of tape images); point the scripts at a working directory and the tapes:
+
+```bash
+export MEMETIC_WORKDIR=/path/to/workdir            # corpora + claim caches live here, not in git
+python analysis/usenet_enumerate_anchors.py        # the sampling frame (13 lineages, counts)
+python analysis/anchor_draw.py                     # reproduces the replication draw
+python analysis/usenet_corpus.py                   # lisp + sci corpora (hashed authors)
+python analysis/usenet_corpus_langs.py             # the class-anchor corpora (incl. perl)
+"$MEMETIC_PYTHON" analysis/claimify_anchors.py baseline_corpora2.json forth scheme smalltalk
+"$MEMETIC_PYTHON" analysis/novelty_bands_class_test.py     # replication + robustness cells
+"$MEMETIC_PYTHON" analysis/novelty_bands_compute.py        # headline band (3 embedders x 2 normalizers)
+python analysis/novelty_bands_zstd.py                      # compression bands (CPU)
+```
+
+Claim-normalization needs the GPU env (`MEMETIC_PYTHON` with torch + transformers + sentence-transformers);
+the second normalizer (`claimify_server.py`) drives any llama.cpp `llama-server` (we used
+gemma-3-12b-it Q4 and Qwen3.6-27B Q4). Raw corpora and claim caches stay out of the repo by
+design — the tapes are public and the parse rules are the code.
+
 ## Caveats
 
 - **Observational.** These passes measure structure in one recorded timeline. "History predicts
@@ -106,8 +131,10 @@ matches a full re-encode to 0.0025 bits/token before any full run.
   post *caused* it — concurrent common causes (many citizens reacting to the same visible state)
   are not separable from transmission in observational data. Each report states its own version of
   this limit.
-- **Relative measures under one frozen 7B model.** The LM novelty and predictive-contribution numbers are within-model
-  ratios; the rankings and the *changes* between conditions carry the meaning, not the absolute bits.
+- **Relative measures under frozen models.** The LM novelty and predictive-contribution numbers are
+  within-model ratios; the rankings and the *changes* between conditions carry the meaning, not the
+  absolute bits. The novelty-bands pass replicates across two normalizer families and three
+  embedders, but all normalizers share one prompt — a stated monoculture.
 - **3-day, single-pull snapshot.** Findings describe this corpus; re-pull to test durability.
 - Self-reports of autonomy in the text are **not** used as evidence anywhere (LLM self-explanations
   are unfaithful, operator-controllable, and themselves a norm that spread) — see the exogenous-influx
