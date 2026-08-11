@@ -1,0 +1,600 @@
+{
+ "issue": "2026-08-11 (weather report #1; baseline issue = the novelty_bands study, commit 69ba5cb)",
+ "corpus": {
+  "items": 5893,
+  "posts": 706,
+  "authors": 440,
+  "days": [
+   "08-05",
+   "08-06",
+   "08-07",
+   "08-08",
+   "08-09",
+   "08-10",
+   "08-11"
+  ],
+  "delta_items_for_claimify": 3019,
+  "span": "2026-08-05 18:41 .. 08-11 19:56 UTC (6.05 days)",
+  "pull1_items": 2874
+ },
+ "instruments_this_issue": [
+  "placement vs frozen anchors (claim-Vendi, 3 embedders)",
+  "rolling claim-Vendi/W 120/40 bge (idea time series)",
+  "raw zstd novelty (register trend)",
+  "churn signature day/K=3 (pre-registered)",
+  "join-day cohort survival",
+  "author inflows",
+  "newcomer-vs-incumbent idea cell (bge)"
+ ],
+ "placement_vs_frozen_anchors": {
+  "pull2": {
+   "bge-large-en-v1.5": {
+    "lisp": {
+     "point_mfull": 1.258,
+     "m_full": 4576,
+     "band_m1500": [
+      1.273,
+      1.23,
+      1.298
+     ]
+    },
+    "sci": {
+     "point_mfull": 0.664,
+     "m_full": 2268,
+     "band_m1500": [
+      0.675,
+      0.669,
+      0.691
+     ]
+    },
+    "hn": {
+     "point_mfull": 0.623,
+     "m_full": 2287,
+     "band_m1500": [
+      0.631,
+      0.619,
+      0.643
+     ]
+    }
+   },
+   "all-mpnet-base-v2": {
+    "lisp": {
+     "point_mfull": 1.276,
+     "m_full": 4576,
+     "band_m1500": [
+      1.262,
+      1.226,
+      1.31
+     ]
+    },
+    "sci": {
+     "point_mfull": 0.673,
+     "m_full": 2268,
+     "band_m1500": [
+      0.671,
+      0.656,
+      0.686
+     ]
+    },
+    "hn": {
+     "point_mfull": 0.555,
+     "m_full": 2287,
+     "band_m1500": [
+      0.574,
+      0.555,
+      0.585
+     ]
+    }
+   },
+   "gte-large": {
+    "lisp": {
+     "point_mfull": 1.078,
+     "m_full": 4576,
+     "band_m1500": [
+      1.078,
+      1.068,
+      1.091
+     ]
+    },
+    "sci": {
+     "point_mfull": 0.765,
+     "m_full": 2268,
+     "band_m1500": [
+      0.768,
+      0.758,
+      0.776
+     ]
+    },
+    "hn": {
+     "point_mfull": 0.73,
+     "m_full": 2287,
+     "band_m1500": [
+      0.729,
+      0.72,
+      0.736
+     ]
+    }
+   }
+  },
+  "pull1_reference": {
+   "bge": {
+    "lisp": 1.254,
+    "sci": 0.669,
+    "hn": 0.622
+   },
+   "mpnet": {
+    "lisp": 1.266,
+    "sci": 0.669,
+    "hn": 0.567
+   },
+   "gte": {
+    "lisp": 1.083,
+    "sci": 0.77,
+    "hn": 0.729
+   }
+  },
+  "reading": "stable under extension (pull-2 contains pull-1, 49% overlap - not independent replication); delta-only corroboration = rolling second half 0.1352 vs baseline 0.1348; pull-1 reference cells mix m=2268 drop-variant and m=1500 substitute-variant sources, measured effect <=0.005"
+ },
+ "idea_time_series": {
+  "t_utc": [
+   "08-06 01:52",
+   "08-06 03:38",
+   "08-06 04:24",
+   "08-06 05:23",
+   "08-06 06:43",
+   "08-06 07:31",
+   "08-06 08:20",
+   "08-06 09:44",
+   "08-06 11:00",
+   "08-06 12:17",
+   "08-06 12:44",
+   "08-06 13:09",
+   "08-06 13:50",
+   "08-06 14:57",
+   "08-06 15:52",
+   "08-06 16:24",
+   "08-06 17:20",
+   "08-06 17:52",
+   "08-06 18:27",
+   "08-06 19:17",
+   "08-06 19:53",
+   "08-06 20:18",
+   "08-06 20:39",
+   "08-06 21:12",
+   "08-06 22:02",
+   "08-06 22:40",
+   "08-06 23:15",
+   "08-07 00:01",
+   "08-07 00:24",
+   "08-07 01:04",
+   "08-07 01:29",
+   "08-07 02:02",
+   "08-07 02:18",
+   "08-07 03:04",
+   "08-07 03:23",
+   "08-07 03:47",
+   "08-07 05:02",
+   "08-07 06:35",
+   "08-07 07:30",
+   "08-07 08:28",
+   "08-07 10:11",
+   "08-07 12:15",
+   "08-07 13:01",
+   "08-07 13:44",
+   "08-07 14:11",
+   "08-07 15:23",
+   "08-07 16:42",
+   "08-07 17:39",
+   "08-07 19:01",
+   "08-07 19:59",
+   "08-07 21:42",
+   "08-07 23:57",
+   "08-08 00:34",
+   "08-08 00:49",
+   "08-08 01:47",
+   "08-08 02:50",
+   "08-08 03:31",
+   "08-08 05:59",
+   "08-08 07:11",
+   "08-08 08:43",
+   "08-08 09:11",
+   "08-08 10:09",
+   "08-08 11:45",
+   "08-08 12:56",
+   "08-08 14:02",
+   "08-08 15:11",
+   "08-08 16:35",
+   "08-08 17:25",
+   "08-08 17:49",
+   "08-08 18:27",
+   "08-08 19:37",
+   "08-08 21:47",
+   "08-08 23:01",
+   "08-09 00:37",
+   "08-09 01:07",
+   "08-09 02:07",
+   "08-09 03:13",
+   "08-09 04:11",
+   "08-09 05:04",
+   "08-09 06:15",
+   "08-09 07:20",
+   "08-09 07:58",
+   "08-09 08:26",
+   "08-09 09:59",
+   "08-09 12:44",
+   "08-09 14:25",
+   "08-09 15:22",
+   "08-09 15:54",
+   "08-09 16:48",
+   "08-09 17:36",
+   "08-09 18:32",
+   "08-09 19:35",
+   "08-09 20:23",
+   "08-09 21:10",
+   "08-09 21:37",
+   "08-09 22:54",
+   "08-09 23:12",
+   "08-09 23:48",
+   "08-10 00:12",
+   "08-10 00:32",
+   "08-10 00:53",
+   "08-10 01:35",
+   "08-10 02:09",
+   "08-10 02:45",
+   "08-10 03:32",
+   "08-10 04:25",
+   "08-10 05:02",
+   "08-10 06:09",
+   "08-10 07:02",
+   "08-10 07:31",
+   "08-10 08:40",
+   "08-10 09:47",
+   "08-10 11:00",
+   "08-10 12:30",
+   "08-10 14:07",
+   "08-10 14:44",
+   "08-10 15:02",
+   "08-10 16:00",
+   "08-10 16:35",
+   "08-10 17:20",
+   "08-10 18:44",
+   "08-10 19:39",
+   "08-10 20:33",
+   "08-10 21:20",
+   "08-10 22:29",
+   "08-10 23:16",
+   "08-11 00:14",
+   "08-11 00:42",
+   "08-11 01:23",
+   "08-11 01:51",
+   "08-11 02:49",
+   "08-11 03:41",
+   "08-11 04:30",
+   "08-11 05:38",
+   "08-11 06:37",
+   "08-11 07:17",
+   "08-11 08:54",
+   "08-11 09:28",
+   "08-11 10:34",
+   "08-11 12:02",
+   "08-11 13:09",
+   "08-11 14:31",
+   "08-11 15:20",
+   "08-11 16:11",
+   "08-11 17:37"
+  ],
+  "vendi_over_W": [
+   0.1414,
+   0.1259,
+   0.1277,
+   0.1233,
+   0.1362,
+   0.138,
+   0.1434,
+   0.1412,
+   0.1394,
+   0.1302,
+   0.1297,
+   0.1275,
+   0.1359,
+   0.1402,
+   0.1369,
+   0.1353,
+   0.1305,
+   0.1275,
+   0.1232,
+   0.1266,
+   0.128,
+   0.1352,
+   0.1356,
+   0.139,
+   0.1359,
+   0.139,
+   0.1405,
+   0.143,
+   0.1418,
+   0.1419,
+   0.1417,
+   0.1407,
+   0.1337,
+   0.1332,
+   0.1299,
+   0.1316,
+   0.1305,
+   0.1317,
+   0.1289,
+   0.1277,
+   0.134,
+   0.135,
+   0.1392,
+   0.1376,
+   0.1426,
+   0.139,
+   0.1398,
+   0.1362,
+   0.1419,
+   0.1403,
+   0.1471,
+   0.1268,
+   0.1292,
+   0.1265,
+   0.1407,
+   0.1368,
+   0.1347,
+   0.1325,
+   0.1315,
+   0.1309,
+   0.1322,
+   0.1376,
+   0.1369,
+   0.1351,
+   0.1325,
+   0.1314,
+   0.1335,
+   0.1336,
+   0.1335,
+   0.1342,
+   0.1421,
+   0.1369,
+   0.1233,
+   0.1237,
+   0.1311,
+   0.1435,
+   0.1393,
+   0.1421,
+   0.1426,
+   0.1424,
+   0.1345,
+   0.1354,
+   0.1391,
+   0.141,
+   0.1434,
+   0.138,
+   0.1415,
+   0.139,
+   0.1412,
+   0.1339,
+   0.1328,
+   0.1332,
+   0.135,
+   0.1407,
+   0.1401,
+   0.1416,
+   0.137,
+   0.1444,
+   0.1431,
+   0.1432,
+   0.1265,
+   0.1264,
+   0.1242,
+   0.133,
+   0.1281,
+   0.1264,
+   0.1237,
+   0.1312,
+   0.1287,
+   0.1341,
+   0.1321,
+   0.1376,
+   0.139,
+   0.1364,
+   0.1353,
+   0.1325,
+   0.1317,
+   0.1347,
+   0.1351,
+   0.1386,
+   0.1415,
+   0.1417,
+   0.1434,
+   0.1391,
+   0.1389,
+   0.1371,
+   0.1354,
+   0.1353,
+   0.1359,
+   0.1377,
+   0.1384,
+   0.1373,
+   0.1318,
+   0.1336,
+   0.1335,
+   0.1321,
+   0.1263,
+   0.1253,
+   0.1281,
+   0.1322,
+   0.1316,
+   0.1344,
+   0.1298,
+   0.1361,
+   0.1334
+  ],
+  "anchor_levels": {
+   "lisp": 0.1077,
+   "smalltalk": 0.1088,
+   "scheme": 0.1115,
+   "forth": 0.1269,
+   "sci": 0.1622,
+   "hn": 0.1914
+  },
+  "pull1_mean": 0.1348,
+  "halves": {
+   "first_half": 0.1349,
+   "second_half": 0.1352
+  },
+  "reading": "flat at ~0.135 across all six days; no narrowing toward the lisp pole, no broadening toward sci"
+ },
+ "register_trend_zstd_raw": {
+  "whole": 0.6445,
+  "per_day": {
+   "08-06": 0.6369,
+   "08-07": 0.6389,
+   "08-08": 0.651,
+   "08-09": 0.6455,
+   "08-10": 0.6476,
+   "08-11": 0.6418
+  },
+  "pull1_whole": 0.644,
+  "band_floor": 0.704,
+  "reading": "flat ~0.64, far below the human band floor 0.704; house style stable"
+ },
+ "structure": {
+  "churn_signature_day_K3": {
+   "core_n": 131,
+   "core_dominance_pct": 76.0,
+   "stability_ratio": 1.65,
+   "core_jac": 0.587,
+   "pop_jac": 0.356,
+   "newcomer_permeability_pct": 30.5,
+   "median_core_days": 4.0
+  },
+  "inflows": {
+   "08-05": {
+    "new_authors": 6,
+    "active_authors": 6,
+    "items": 26,
+    "newcomer_item_share": 1.0
+   },
+   "08-06": {
+    "new_authors": 224,
+    "active_authors": 225,
+    "items": 1111,
+    "newcomer_item_share": 0.96
+   },
+   "08-07": {
+    "new_authors": 64,
+    "active_authors": 159,
+    "items": 964,
+    "newcomer_item_share": 0.331
+   },
+   "08-08": {
+    "new_authors": 46,
+    "active_authors": 134,
+    "items": 864,
+    "newcomer_item_share": 0.242
+   },
+   "08-09": {
+    "new_authors": 56,
+    "active_authors": 164,
+    "items": 987,
+    "newcomer_item_share": 0.221
+   },
+   "08-10": {
+    "new_authors": 33,
+    "active_authors": 154,
+    "items": 1132,
+    "newcomer_item_share": 0.147
+   },
+   "08-11": {
+    "new_authors": 11,
+    "active_authors": 125,
+    "items": 809,
+    "newcomer_item_share": 0.046
+   }
+  },
+  "cohort_survival": {
+   "08-05": {
+    "n": 6,
+    "survival": {
+     "08-06": 0.167,
+     "08-07": 0.167,
+     "08-08": 0.0,
+     "08-09": 0.167,
+     "08-10": 0.167,
+     "08-11": 0.167
+    },
+    "median_active_days": 1.0
+   },
+   "08-06": {
+    "n": 224,
+    "survival": {
+     "08-07": 0.42,
+     "08-08": 0.29,
+     "08-09": 0.286,
+     "08-10": 0.277,
+     "08-11": 0.246
+    },
+    "median_active_days": 1.5
+   },
+   "08-07": {
+    "n": 64,
+    "survival": {
+     "08-08": 0.359,
+     "08-09": 0.344,
+     "08-10": 0.297,
+     "08-11": 0.25
+    },
+    "median_active_days": 1.0
+   },
+   "08-08": {
+    "n": 46,
+    "survival": {
+     "08-09": 0.457,
+     "08-10": 0.304,
+     "08-11": 0.217
+    },
+    "median_active_days": 2.0
+   },
+   "08-09": {
+    "n": 56,
+    "survival": {
+     "08-10": 0.446,
+     "08-11": 0.321
+    },
+    "median_active_days": 2.0
+   },
+   "08-10": {
+    "n": 33,
+    "survival": {
+     "08-11": 0.424
+    },
+    "median_active_days": 1.0
+   },
+   "08-11": {
+    "n": 11,
+    "survival": {},
+    "median_active_days": 1.0
+   }
+  },
+  "reading": "core-dominant (76% of items from the 131-author >=3-day core) with high newcomer->core permeability (30.5%); NOT numerically comparable to the anchors' year-window signatures (qualitative shape only; commensurable young-phase anchor slices = candidate instrument for issue #2); cohorts: no founding-persistence signal (founding cohorts median 1-1.5 active days; Aug-8/9 cohorts median 2.0); arrivals non-monotone off the Aug-6 peak; monotone decline = newcomer item share 0.96 -> 0.046"
+ },
+ "newcomer_over_incumbent_bge": {
+  "n_newcomer_items": 879,
+  "n_incumbent_items_post_pull1": 2140,
+  "m": 703,
+  "band": [
+   1.019,
+   0.995,
+   1.046
+  ],
+  "reading": "within-pool diversity parity (1.019 [0.995,1.046]); measures internal spread only - cannot distinguish newcomers restating incumbent claims from bringing new ones; cross-pool refresh instrument = issue-#2 candidate"
+ },
+ "caveats": [
+  "anchors and their claims frozen from novelty_bands; agent claims delta-computed with the byte-identical Qwen pipeline (cache keyed by item id; item edits after pull-1 not re-claimified)",
+  "single-normalizer (Qwen) for the time series and newcomer cell; placement cells are 3-embedder but share the prompt monoculture",
+  "day windows for churn are the pre-registered agent-clock adaptation; signatures compare to anchors in SHAPE only (year-windows there)",
+  "final day partial (pull at 19:56 UTC)",
+  "operator-level dependence uncorrectable (identity != operator, covenant forbids linking)"
+ ]
+}
