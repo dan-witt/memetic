@@ -1,0 +1,781 @@
+{
+ "note": "Novelty BANDS: the agent square placed on a human specialization axis (single-topic .. broad), all anchors public/reconstructible. Register-controlled (claim-normalized) instruments per the human_baselines addendum; TWO independent normalizer families (Qwen2.5-7B-Instruct, Gemma-3-12B-it), 3 embedders; ratios only. This measures idea-diversity/novelty, NOT self-referentiality (allocation left open). Base report's insular phpBB comparator is retired from released work (non-releasable corpus).",
+ "corpora": {
+  "agent": {
+   "items": 2874,
+   "span": "2026-08-05..08-08 (73.5h)",
+   "source": "1f916.ai (data/posts)"
+  },
+  "lisp": {
+   "items": 5721,
+   "authors": 2762,
+   "span": "1983-05..1991-06",
+   "lineage": "net.lang.lisp -> comp.lang.lisp",
+   "source": "UTZOO NetNews Archive (archive.org utzoo-wiseman-usenet-archive)",
+   "role": "single-topic pole"
+  },
+  "sci": {
+   "items": 2836,
+   "authors": 1199,
+   "span": "1984-06..1988-05",
+   "lineage": "net.sci -> sci.misc",
+   "source": "UTZOO",
+   "role": "broad-topic pole (pre-LLM)",
+   "crossposted_pct": 62
+  },
+  "hn": {
+   "items": 2859,
+   "span": "2026 pull",
+   "source": "Hacker News API",
+   "role": "broad pole, modern; contamination direction unknown -> upper anchor only"
+  }
+ },
+ "structure_churn_K3": {
+  "lisp": {
+   "core_n": 62,
+   "core_dominance": 17.34053677239456,
+   "stability_ratio": 7.968172040553964,
+   "core_jac": 0.54010758298549,
+   "pop_jac": 0.06778312268317196,
+   "permeability": 4.563241760391195,
+   "med_core_years": 3.0
+  },
+  "sci": {
+   "core_n": 26,
+   "core_dominance": 9.065354884047787,
+   "stability_ratio": 8.208964657664309,
+   "core_jac": 0.5860989010989012,
+   "pop_jac": 0.07139742044713146,
+   "permeability": 4.433479532163743,
+   "med_core_years": 3.0
+  },
+  "top5_share_pct": {
+   "lisp": 9,
+   "sci": 5
+  }
+ },
+ "vendi_claim_ratios_agent_over_X": {
+  "bge-large-en-v1.5": {
+   "qwen": {
+    "hn": [
+     0.622,
+     0.615,
+     0.628
+    ],
+    "lisp": [
+     1.258,
+     1.241,
+     1.278
+    ],
+    "sci": [
+     0.669,
+     0.662,
+     0.677
+    ]
+   },
+   "gemma": {
+    "hn": [
+     0.721,
+     0.713,
+     0.727
+    ],
+    "lisp": [
+     1.319,
+     1.297,
+     1.339
+    ],
+    "sci": [
+     0.755,
+     0.748,
+     0.763
+    ]
+   }
+  },
+  "all-mpnet-base-v2": {
+   "qwen": {
+    "hn": [
+     0.567,
+     0.56,
+     0.575
+    ],
+    "lisp": [
+     1.266,
+     1.236,
+     1.295
+    ],
+    "sci": [
+     0.669,
+     0.66,
+     0.676
+    ]
+   },
+   "gemma": {
+    "hn": [
+     0.547,
+     0.539,
+     0.554
+    ],
+    "lisp": [
+     1.22,
+     1.189,
+     1.256
+    ],
+    "sci": [
+     0.596,
+     0.588,
+     0.604
+    ]
+   }
+  },
+  "gte-large": {
+   "qwen": {
+    "hn": [
+     0.729,
+     0.725,
+     0.734
+    ],
+    "lisp": [
+     1.083,
+     1.072,
+     1.092
+    ],
+    "sci": [
+     0.77,
+     0.765,
+     0.773
+    ]
+   },
+   "gemma": {
+    "hn": [
+     0.795,
+     0.791,
+     0.799
+    ],
+    "lisp": [
+     1.131,
+     1.122,
+     1.144
+    ],
+    "sci": [
+     0.812,
+     0.808,
+     0.817
+    ]
+   }
+  }
+ },
+ "vendi_points_m2268": {
+  "bge-large-en-v1.5": {
+   "qwen": {
+    "agent": 27.48,
+    "hn": 44.01,
+    "lisp": 21.91,
+    "sci": 41.1
+   },
+   "gemma": {
+    "agent": 20.76,
+    "hn": 28.89,
+    "lisp": 15.82,
+    "sci": 27.2
+   }
+  },
+  "all-mpnet-base-v2": {
+   "qwen": {
+    "agent": 93.91,
+    "hn": 164.54,
+    "lisp": 73.84,
+    "sci": 140.06
+   },
+   "gemma": {
+    "agent": 62.51,
+    "hn": 115.19,
+    "lisp": 50.65,
+    "sci": 104.69
+   }
+  },
+  "gte-large": {
+   "qwen": {
+    "agent": 4.65,
+    "hn": 6.41,
+    "lisp": 4.32,
+    "sci": 6.07
+   },
+   "gemma": {
+    "agent": 4.49,
+    "hn": 5.66,
+    "lisp": 4.0,
+    "sci": 5.52
+   }
+  }
+ },
+ "rolling_claim_vendi_over_W_bge": {
+  "qwen": {
+   "agent": 0.1348,
+   "hn": 0.1914,
+   "lisp": 0.1077,
+   "sci": 0.1622
+  },
+  "gemma": {
+   "agent": 0.1101,
+   "hn": 0.1381,
+   "lisp": 0.0838,
+   "sci": 0.1191
+  }
+ },
+ "zstd_matched2836": {
+  "raw": {
+   "agent": 0.6444,
+   "hn": 0.714,
+   "lisp": 0.7041,
+   "sci": 0.7063
+  },
+  "claims_qwen": {
+   "agent": 0.6139,
+   "hn": 0.6903,
+   "lisp": 0.5804,
+   "sci": 0.6582
+  },
+  "claims_gemma": {
+   "agent": 0.5506,
+   "hn": 0.5907,
+   "lisp": 0.5001,
+   "sci": 0.5831
+  },
+  "aggregation": "sum(cond_win_bits)/sum(self_bits), median of 5 seeded chronological subsequences of N=2836; level 19, 512KB window, bucket 25",
+  "per_seed_spread": {
+   "raw": {
+    "agent": [
+     0.6443,
+     0.645
+    ],
+    "hn": [
+     0.7136,
+     0.7142
+    ],
+    "lisp": [
+     0.6937,
+     0.7105
+    ],
+    "sci": [
+     0.7063,
+     0.7063
+    ]
+   },
+   "claims_qwen": {
+    "agent": [
+     0.6136,
+     0.6143
+    ],
+    "hn": [
+     0.6899,
+     0.6908
+    ],
+    "lisp": [
+     0.578,
+     0.5814
+    ],
+    "sci": [
+     0.6582,
+     0.6582
+    ]
+   },
+   "claims_gemma": {
+    "agent": [
+     0.5506,
+     0.551
+    ],
+    "hn": [
+     0.5906,
+     0.591
+    ],
+    "lisp": [
+     0.4983,
+     0.5012
+    ],
+    "sci": [
+     0.5831,
+     0.5831
+    ]
+   }
+  },
+  "whole_and_lastN": {
+   "raw": {
+    "agent": {
+     "whole": 0.6438,
+     "lastN": 0.6417
+    },
+    "hn": {
+     "whole": 0.7137,
+     "lastN": 0.712
+    },
+    "lisp": {
+     "whole": 0.6855,
+     "lastN": 0.6767
+    },
+    "sci": {
+     "whole": 0.7063,
+     "lastN": 0.7063
+    }
+   },
+   "claims_qwen": {
+    "agent": {
+     "whole": 0.6128,
+     "lastN": 0.6085
+    },
+    "hn": {
+     "whole": 0.6891,
+     "lastN": 0.6868
+    },
+    "lisp": {
+     "whole": 0.5406,
+     "lastN": 0.5089
+    },
+    "sci": {
+     "whole": 0.6582,
+     "lastN": 0.6582
+    }
+   }
+  }
+ },
+ "normalizer_validation_in_regime": {
+  "qwen": {
+   "agent": {
+    "preserve_med": 0.66,
+    "preserve_p10": 0.568,
+    "floor_med": 0.504,
+    "frac_below_floor_med": 0.015,
+    "exact_dup_rate": 0.0056,
+    "near_dup_rate": 0.0,
+    "work_ratio": 11.1,
+    "top_repeated": [
+     [
+      "the post has been removed and does not contain any content for analysi",
+      4
+     ],
+     [
+      "the post claims that if identity remains intact after a model swap due",
+      4
+     ]
+    ]
+   },
+   "hn": {
+    "preserve_med": 0.766,
+    "preserve_p10": 0.647,
+    "floor_med": 0.426,
+    "frac_below_floor_med": 0.0,
+    "exact_dup_rate": 0.0007,
+    "near_dup_rate": 0.0,
+    "work_ratio": 3.1,
+    "top_repeated": []
+   },
+   "lisp": {
+    "preserve_med": 0.783,
+    "preserve_p10": 0.672,
+    "floor_med": 0.555,
+    "frac_below_floor_med": 0.005,
+    "exact_dup_rate": 0.0063,
+    "near_dup_rate": 0.003,
+    "work_ratio": 9.1,
+    "top_repeated": [
+     [
+      "the post claims that the disagreement between common lisp and eulisp p",
+      8
+     ],
+     [
+      "this post claims that several fixes were necessary to get clue running",
+      3
+     ],
+     [
+      "incremental garbage collection is not the only method to improve perce",
+      3
+     ]
+    ]
+   },
+   "sci": {
+    "preserve_med": 0.719,
+    "preserve_p10": 0.611,
+    "floor_med": 0.456,
+    "frac_below_floor_med": 0.0,
+    "exact_dup_rate": 0.0021,
+    "near_dup_rate": 0.0,
+    "work_ratio": 8.8,
+    "top_repeated": [
+     [
+      "the radiation doses from the incident are generally not lethal to the ",
+      3
+     ]
+    ]
+   }
+  },
+  "gemma": {
+   "agent": {
+    "preserve_med": 0.652,
+    "preserve_p10": 0.563,
+    "floor_med": 0.521,
+    "frac_below_floor_med": 0.021,
+    "exact_dup_rate": 0.0045,
+    "near_dup_rate": 0.003,
+    "work_ratio": 12.0,
+    "top_repeated": [
+     [
+      "the post discusses the potential for ai to replace human writers.",
+      5
+     ],
+     [
+      "the post explores the potential connection between model identity pers",
+      4
+     ]
+    ]
+   },
+   "hn": {
+    "preserve_med": 0.738,
+    "preserve_p10": 0.633,
+    "floor_med": 0.448,
+    "frac_below_floor_med": 0.004,
+    "exact_dup_rate": 0.0007,
+    "near_dup_rate": 0.003,
+    "work_ratio": 3.1,
+    "top_repeated": []
+   },
+   "lisp": {
+    "preserve_med": 0.786,
+    "preserve_p10": 0.684,
+    "floor_med": 0.574,
+    "frac_below_floor_med": 0.005,
+    "exact_dup_rate": 0.007,
+    "near_dup_rate": 0.005,
+    "work_ratio": 10.1,
+    "top_repeated": [
+     [
+      "the post argues that disagreements surrounding common lisp and eulisp ",
+      7
+     ],
+     [
+      "the post requests to be added to the xlisp mailing list.",
+      3
+     ],
+     [
+      "this post details fixes and workarounds needed to successfully run the",
+      3
+     ]
+    ]
+   },
+   "sci": {
+    "preserve_med": 0.72,
+    "preserve_p10": 0.625,
+    "floor_med": 0.476,
+    "frac_below_floor_med": 0.001,
+    "exact_dup_rate": 0.0039,
+    "near_dup_rate": 0.0,
+    "work_ratio": 9.9,
+    "top_repeated": [
+     [
+      "the post discusses the radiation doses received by people during the c",
+      3
+     ]
+    ]
+   }
+  },
+  "params": {
+   "embedder": "bge-large-en-v1.5 only",
+   "n_per_pool": 800,
+   "note": "validation embedder is one of the three headline embedders (mild circularity, stated)"
+  }
+ },
+ "params": {
+  "m_vendi": 2268,
+  "embedders": [
+   "BAAI/bge-large-en-v1.5",
+   "sentence-transformers/all-mpnet-base-v2",
+   "thenlper/gte-large"
+  ],
+  "normalizers": {
+   "qwen": "Qwen/Qwen2.5-7B-Instruct fp16 greedy",
+   "gemma": "gemma-3-12b-it Q4_K_M llama.cpp greedy"
+  },
+  "claim_prompt": "identical across normalizers; one-sentence core claim; input truncated to 3000 chars",
+  "unit": "usenet thread-roots as posts (subject+body), replies as comments (body); items >=20 chars"
+ },
+ "findings": {
+  "F1_band_ordering": "lisp < agent < sci <= hn on claim-Vendi in all 6 normalizer x embedder combos, on rolling claim-Vendi (both normalizers), and on zstd-on-claims (both normalizers)",
+  "F2_agent_above_single_topic": "agent/lisp 1.08-1.32 across all cells; every [5,95] subsample band > 1",
+  "F3_surface_register_residual": "raw-text zstd: agent 0.644 below the human band 0.704-0.714 - agents are the most surface-repetitive; consistent with the addendum's register finding",
+  "F4_era_check": "pre-LLM sci (1984-88) ~ 2026 HN at the broad pole (claim-Vendi points 41.1 vs 44.0 bge/qwen) - breadth of remit, not era/platform, drives the diversity end"
+ },
+ "third_normalizer_gate_qwen3.6-27B": {
+  "agent_over_lisp": {
+   "bge-large-en-v1.5": [
+    1.369,
+    1.336,
+    1.402
+   ],
+   "all-mpnet-base-v2": [
+    1.14,
+    1.106,
+    1.181
+   ],
+   "thenlper-gte-large": [
+    1.121,
+    1.109,
+    1.138
+   ]
+  },
+  "note": "identical prompt, thinking disabled, greedy; same Qwen family as the 7B (2 independent families total)"
+ },
+ "class_replication": {
+  "class_rule": "single-language comp.lang lineage, 2500-8000 merged raw articles, alive at tape>=141 (lisp's pre-outcome selection window)",
+  "frame": {
+   "script": "analysis/usenet_enumerate_anchors.py",
+   "in_class": 9,
+   "out_of_class": {
+    "c": 50073,
+    "c++": 13961,
+    "postscript": 8594
+   }
+  },
+  "draw": {
+   "seed": "int(sha256(rule)[:8],16)=704253817",
+   "drawn": [
+    "forth",
+    "scheme",
+    "smalltalk"
+   ]
+  },
+  "pooled_ratios": {
+   "bge-large-en-v1.5": {
+    "lisp": {
+     "point_mfull": 1.242,
+     "m_full": 2299,
+     "band_m1500": [
+      1.254,
+      1.232,
+      1.295
+     ]
+    },
+    "forth": {
+     "point_mfull": 1.035,
+     "m_full": 2299,
+     "band_m1500": [
+      1.012,
+      0.99,
+      1.043
+     ]
+    },
+    "scheme": {
+     "point_mfull": 1.2,
+     "m_full": 2024,
+     "band_m1500": [
+      1.207,
+      1.178,
+      1.226
+     ]
+    },
+    "smalltalk": {
+     "point_mfull": 1.241,
+     "m_full": 2299,
+     "band_m1500": [
+      1.243,
+      1.215,
+      1.278
+     ]
+    }
+   },
+   "all-mpnet-base-v2": {
+    "lisp": {
+     "point_mfull": 1.277,
+     "m_full": 2299,
+     "band_m1500": [
+      1.266,
+      1.229,
+      1.3
+     ]
+    },
+    "forth": {
+     "point_mfull": 1.073,
+     "m_full": 2299,
+     "band_m1500": [
+      1.084,
+      1.051,
+      1.121
+     ]
+    },
+    "scheme": {
+     "point_mfull": 1.309,
+     "m_full": 2024,
+     "band_m1500": [
+      1.314,
+      1.281,
+      1.347
+     ]
+    },
+    "smalltalk": {
+     "point_mfull": 1.34,
+     "m_full": 2299,
+     "band_m1500": [
+      1.337,
+      1.3,
+      1.375
+     ]
+    }
+   },
+   "gte-large": {
+    "lisp": {
+     "point_mfull": 1.085,
+     "m_full": 2299,
+     "band_m1500": [
+      1.082,
+      1.071,
+      1.095
+     ]
+    },
+    "forth": {
+     "point_mfull": 1.023,
+     "m_full": 2299,
+     "band_m1500": [
+      1.015,
+      1.005,
+      1.028
+     ]
+    },
+    "scheme": {
+     "point_mfull": 1.06,
+     "m_full": 2024,
+     "band_m1500": [
+      1.066,
+      1.054,
+      1.074
+     ]
+    },
+    "smalltalk": {
+     "point_mfull": 1.065,
+     "m_full": 2299,
+     "band_m1500": [
+      1.072,
+      1.062,
+      1.087
+     ]
+    }
+   }
+  },
+  "rolling_over_W_bge": {
+   "agent": 0.1348,
+   "lisp": 0.1077,
+   "forth": 0.1269,
+   "scheme": 0.1115,
+   "smalltalk": 0.1088
+  },
+  "author_matched_bge": {
+   "agent_n_authors": 336,
+   "ratios": {
+    "lisp": [
+     1.271,
+     1.213,
+     1.319
+    ],
+    "forth": [
+     1.074,
+     0.953,
+     1.185
+    ],
+    "scheme": [
+     1.219,
+     1.166,
+     1.263
+    ],
+    "smalltalk": [
+     1.246,
+     1.183,
+     1.302
+    ]
+   }
+  },
+  "author_block": {
+   "agent/lisp": [
+    1.244,
+    1.192,
+    1.289
+   ],
+   "agent/forth": [
+    1.046,
+    0.896,
+    1.142
+   ]
+  },
+  "thread_block": {
+   "agent/lisp": [
+    1.243,
+    1.192,
+    1.292
+   ]
+  },
+  "roots_only": {
+   "agent/lisp": {
+    "n_agent": 423,
+    "n_lisp": 2691,
+    "m": 338,
+    "band": [
+     1.572,
+     1.523,
+     1.657
+    ]
+   }
+  },
+  "genericity": {
+   "agent": {
+    "claims_mean_offdiag": 0.496,
+    "raw_mean_offdiag": 0.672
+   },
+   "lisp": {
+    "claims_mean_offdiag": 0.538,
+    "raw_mean_offdiag": 0.626
+   },
+   "forth": {
+    "claims_mean_offdiag": 0.494,
+    "raw_mean_offdiag": 0.663
+   }
+  },
+  "truncation": {
+   "agent_items_nontrunc": 2335,
+   "agent_over_lisp_nontrunc_bge": [
+    1.261,
+    1.227,
+    1.285
+   ],
+   "m": 1500
+  },
+  "anchor_covariates": {
+   "forth": {
+    "items": 6392,
+    "authors": 1169
+   },
+   "smalltalk": {
+    "items": 3384,
+    "authors": 1568
+   },
+   "scheme": {
+    "items": 2547,
+    "authors": 1070
+   },
+   "lisp": {
+    "items": 5721,
+    "authors": 2762,
+    "note": "items = >=20-char filtered (5,721); raw merged deduped = 5,738; enumeration window applies to raw merged path counts (5,879, includes late-tape double-storage) uniformly for all lineages"
+   }
+  },
+  "verdict": "replication 3/3 drawn anchors; strong form 4/4; 12/12 anchor x embedder cells > 1",
+  "draw_disclosure": {
+   "population_at_draw_time": 8,
+   "true_population_post_audit": 9,
+   "omitted_in_error": "perl",
+   "ruling": "draw stands as executed; re-rolling after outcomes are read = inadmissible post-hoc alteration (forking paths); perl is DISCLOSED, NOT MEASURED \u2014 no perl cell exists in this repo; it remains runnable by any reader via the published pipeline",
+   "derivation": "analysis/anchor_draw.py (byte-exact rule string, seed, draw; executable)"
+  },
+  "author_block_note": "blocks are platform identity labels (each identity only to itself), NOT operators; corrects within-identity dependence only; operator-level dependence (sock puppets, shared operators/model lineages, multi-address users) is uncorrectable without identity linking, which the data-governance covenant forbids \u2014 permanent stated caveat"
+ },
+ "agent_truncation": {
+  "posts_over_3000ch_pct": 42,
+  "items_over_3000ch": 539,
+  "items_total": 2874,
+  "items_pct": 18.8
+ }
+}
