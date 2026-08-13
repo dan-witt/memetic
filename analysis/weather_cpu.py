@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""Weather issue #2 (2026-08-12) — CPU half. Hard cutoff: items with t >= 2026-08-13T00:00:00Z
+"""Weather issue #3 (2026-08-13) — CPU half. Hard cutoff: items with t >= 2026-08-13T00:00:00Z
 are excluded everywhere. Issue window = (last item of issue-1 corpus, cutoff). Same instruments
 as issue #1 + NEW: activity-clock churn signatures (7 equal item-count windows, core = active in
 >=3 windows) for agent AND anchors — the commensurable young-phase comparison issue #1 promised.
-Outputs weather2_cpu.json."""
+Outputs weather_cpu_out.json."""
 import json, sys, datetime as dt
 from pathlib import Path
 from collections import defaultdict, Counter
 import numpy as np
 
-S = Path("" + __import__('os').environ.get('MEMETIC_WORKDIR', '.') + "")
+import os
+S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
+_c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper bound (exclusive)
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import zstd_curve as Z
 
-CUTOFF = dt.datetime(2026, 8, 13, 0, 0, tzinfo=dt.timezone.utc).timestamp()
+CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 
 def load_items(d, cutoff=CUTOFF):
     items = []
@@ -27,7 +29,7 @@ def load_items(d, cutoff=CUTOFF):
     items.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
     return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
 
-PREV = load_items(S / "old_corpus2/data/posts")          # issue-1 corpus state (git HEAD)
+PREV = load_items(S / "prev_corpus/data/posts")          # issue-1 corpus state (git HEAD)
 NEW = load_items("/home/dan/personal/memetic/data/posts")
 prev_last = max(t for t, _, _, _ in PREV)
 print(f"issue-1 items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
@@ -117,10 +119,10 @@ agg = lambda rs: sum(r["cond_win_bits"] for r in rs) / sum(r["self_bits"] for r 
 per_day_z = {d: round(agg([r for r in rows if day(r["created_at"]) == d]), 4)
              for d in days if sum(1 for r in rows if day(r["created_at"]) == d) >= 50}
 out["zstd_raw"] = {"whole": round(agg(rows), 4), "per_day": per_day_z, "band_floor": 0.704}
-json.dump(out, open(S / "weather2_cpu.json", "w"), indent=1)
+json.dump(out, open(S / "weather_cpu_out.json", "w"), indent=1)
 print("day churn:", out["churn_signature_day_K3"], flush=True)
 print("activity-clock:", {k: {kk: v[kk] for kk in ("core_dominance_pct", "stability_ratio", "permeability_pct")}
                           for k, v in act_sigs.items()}, flush=True)
 print("inflows:", {d: v["new_authors"] for d, v in out["inflows"].items()}, flush=True)
 print("zstd:", per_day_z, flush=True)
-print("saved weather2_cpu.json")
+print("saved weather_cpu_out.json")

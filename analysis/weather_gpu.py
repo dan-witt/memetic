@@ -3,15 +3,17 @@
 (cache keyed by kind:id). Compute: rolling claim-Vendi series; placement vs frozen anchors (full
 pool AND issue-window-only cells, 3 embedders); newcomer cells (within-pool parity + NEW
 cross-pool refresh: union-vs-incumbent Vendi and nearest-incumbent claim distance). Outputs
-weather2_gpu.json + agent3_all.json."""
+weather_gpu_out.json + agent_claims_current.json."""
 import json, gc, datetime as dt
 from pathlib import Path
 import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-S = Path("" + __import__('os').environ.get('MEMETIC_WORKDIR', '.') + "")
-CUTOFF = dt.datetime(2026, 8, 13, 0, 0, tzinfo=dt.timezone.utc).timestamp()
+import os
+S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
+_c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper bound (exclusive)
+CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 
 def load_items(d, cutoff=CUTOFF):
     items = []
@@ -26,7 +28,7 @@ def load_items(d, cutoff=CUTOFF):
     return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
 
 NEW = load_items("/home/dan/personal/memetic/data/posts")
-prev_last = max(t for t, _, _, _ in load_items(S / "old_corpus2/data/posts"))
+prev_last = max(t for t, _, _, _ in load_items(S / "prev_corpus/data/posts"))
 cache = {(k0, int(k1)): c for (k0, k1), c in
          ((k.split(":", 1), c) for k, c in json.load(open(S / "claim_cache_agent.json")).items())}
 todo = [(i, x) for i, (t, k, x, a) in enumerate(NEW) if k not in cache]
@@ -48,10 +50,47 @@ if todo:
         if (i // 16) % 25 == 0: print(f"  {min(i+16, len(pr))}/{len(pr)}", flush=True)
     for (i, _), c in zip(todo, outs): cache[NEW[i][1]] = c
     json.dump({f"{k[0]}:{k[1]}": c for k, c in cache.items()}, open(S / "claim_cache_agent.json", "w"))
-    del gen, tok; gc.collect(); torch.cuda.empty_cache()
 
 claims = [cache[k] for _, k, _, _ in NEW]
-json.dump(claims, open(S / "agent3_all.json", "w"))
+json.dump(claims, open(S / "agent_claims_current.json", "w"))
+# --- allocation trend: delta-classify (frozen prompt), id-keyed label cache ---
+lcache = json.load(open(S / "allocation_label_cache_agent.json"))
+def lvalid(c): return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
+todo_l = [(i, claims[i]) for i, (t, k, x, a) in enumerate(NEW)
+          if f"{k[0]}:{k[1]}" not in lcache and lvalid(claims[i])]
+print(f"allocation delta-classify: {len(todo_l)}", flush=True)
+if todo_l:
+    try: tok
+    except NameError:
+        tok = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct"); tok.padding_side = "left"
+        if tok.pad_token is None: tok.pad_token = tok.eos_token
+        gen = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct", torch_dtype=torch.float16, device_map="cuda").eval()
+    ACS = "You classify one-sentence summaries of forum posts."
+    ACU = ("Claim: {c}\n\nIs this claim about the forum or community ITSELF (its rules, governance, "
+           "moderation, funds, members, norms, or meta-discussion about the group or its quality) — or "
+           "about its SUBJECT MATTER or the outside world? Answer with exactly one word: VENUE or WORLD.")
+    amsgs = [[{"role": "system", "content": ACS}, {"role": "user", "content": ACU.format(c=c[:400])}] for _, c in todo_l]
+    apr = [tok.apply_chat_template(m, tokenize=False, add_generation_prompt=True) for m in amsgs]
+    alab = []
+    for i in range(0, len(apr), 32):
+        enc = tok(apr[i:i+32], return_tensors="pt", padding=True, truncation=True, max_length=400).to("cuda")
+        with torch.no_grad():
+            o = gen.generate(**enc, max_new_tokens=6, do_sample=False, pad_token_id=tok.pad_token_id)
+        for g in o[:, enc.input_ids.shape[1]:]:
+            w = tok.decode(g, skip_special_tokens=True).strip().upper()
+            alab.append("V" if w.startswith("VENUE") else "W" if w.startswith("WORLD") else None)
+    for (i, _), l in zip(todo_l, alab):
+        if l: lcache[f"{NEW[i][1][0]}:{NEW[i][1][1]}"] = l
+    json.dump(lcache, open(S / "allocation_label_cache_agent.json", "w"))
+    del gen, tok; gc.collect(); torch.cuda.empty_cache()
+import datetime as _dt
+_day = lambda t: _dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
+_ds = {}
+for t, k, x, a in NEW:
+    l = lcache.get(f"{k[0]}:{k[1]}")
+    if l: _ds.setdefault(_day(t), []).append(l == "V")
+alloc_daily = {d: round(float(np.mean(v)), 4) for d, v in sorted(_ds.items()) if len(v) >= 50}
+print("allocation venue-share/day:", alloc_daily, flush=True)
 claims = [c if (len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR")) else "empty claim" for c in claims]
 
 from sentence_transformers import SentenceTransformer
@@ -63,7 +102,7 @@ ANCH = {"lisp": "lisp_all.json", "sci": "sci_all.json", "hn": "hn_all.json"}
 CL = {k: [c for c in json.load(open(S / "baseline_claims" / f)) if len(c.strip()) >= 5] for k, f in ANCH.items()}
 rng = np.random.default_rng(0)
 win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > prev_last]
-out = {"n_items": len(claims), "issue_window_items": len(win_idx)}
+out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily}
 W, ST = 120, 40
 for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2", "thenlper/gte-large"]:
     tag = MODEL.split("/")[-1]
@@ -121,5 +160,5 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
                   out["refresh_nn_distance"], flush=True)
     del m, Ea
 
-json.dump(out, open(S / "weather2_gpu.json", "w"), indent=1)
-print("saved weather2_gpu.json")
+json.dump(out, open(S / "weather_gpu_out.json", "w"), indent=1)
+print("saved weather_gpu_out.json")
