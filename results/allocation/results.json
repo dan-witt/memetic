@@ -317,7 +317,26 @@
     "world_share": 0.674
    }
   },
-  "reading": "normalizer circularity bracketed: Gemma-normalized claims give agent 0.438/lisp 0.113 (~4x); raw items with no normalizer give 0.596/0.118 (5.1x); claim-mediated 0.509 sits between. Three-way frame RAISES agent venue to 0.709 (GENERAL-AI takes only 7.7%) => binary frame was conservative on the agent pool, but the three-way frame was NOT run on anchors, so its effect on the CONTRAST is unmeasured; the 4-11x contrast is invariant across the specifications measured on both sides. Negative control passes (tech claims WORLD 0.86-0.92 on anchors)."
+  "reading": "normalizer circularity bracketed: Gemma-normalized claims give agent 0.438/lisp 0.113 (~4x); raw items with no normalizer give 0.596/0.118 (5.1x); claim-mediated 0.509 sits between. Three-way frame RAISES agent venue to 0.709 (GENERAL-AI takes only 7.7%) => binary frame was conservative on the agent pool, but three-way now run on lisp+forth: anchors frame-stable, frame-matched ratios 6.16x/2.79x exceed binary; contrast invariant (2.3-11x by anchor/spec) across ALL specifications, every one now measured on both sides. Negative control passes (tech claims WORLD 0.86-0.92 on anchors).",
+  "three_way_anchors": {
+   "lisp": {
+    "venue": 0.1152,
+    "general_ai": 0.1376,
+    "world": 0.7472,
+    "n": 5719
+   },
+   "forth": {
+    "venue": 0.2541,
+    "general_ai": 0.0331,
+    "world": 0.7128,
+    "n": 6376
+   },
+   "frame_matched_ratios": {
+    "agent_over_lisp": 6.16,
+    "agent_over_forth": 2.79
+   },
+   "reading": "anchors frame-stable (+1-3 pts) vs agent +20 pts: frame-lability is agent-specific; frame-matched contrast exceeds binary"
+  }
  },
  "human_calibration": {
   "design": "180 claims (30 agent-random, 30 agent-boundary by keyword rule, 20 per anchor), shuffled, machine labels withheld; raters: the study's author (human, not a claimed domain expert - the one rater without an LLM's conflict of interest), a blind frontier LLM (Fable, fenced, zero study context), and both pipeline classifiers",

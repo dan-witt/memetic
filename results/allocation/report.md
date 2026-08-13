@@ -21,11 +21,14 @@ most venue-directed corpus measured under both classifier families, with non-ove
 CIs even on the strict reader (agent 66/215 [0.25, 0.37] vs forth, the top anchor, 19/215
 [0.05, 0.14]). The absolute level is classifier-dependent — a third to
 two-thirds of all items depending on classifier family and prompt frame (0.31–0.71; binary Qwen
-0.509) — and is reported as that range, not a point. Under every specification in which both sides were
-measured — two classifier families, two normalizer authors, no normalizer at all — the square is
-4–11× its anchors. The three-way frame moved the agent level +20 points but was never run on the
-anchors, so its effect on the *contrast* is unmeasured — a stated gap on the instrument's most
-prompt-labile axis.**
+0.509) — and is reported as that range, not a point. Under every specification measured on both
+sides — two classifier families, two normalizer authors, no normalizer at all, and (closing the
+prior round's stated gap) the three-way frame — the square is **2.3–11× its anchors, depending
+on which anchor and specification: ≥ 2.3× against the highest human anchor under its friendliest
+spec, 5–6× against a typical one.** The three-way frame, the instrument's most labile axis on
+the agent pool (+20 points), leaves the anchors nearly unmoved (lisp 0.103 → 0.115, forth
+0.221 → 0.254): the frame-lability is agent-specific, and the frame-matched ratios (6.2× lisp,
+2.8× forth) are *stronger* than the binary ones.**
 
 ![Panel A: venue-directed share by pool — the agent bar at 0.51 over anchors at 0.09-0.22, with Gemma's stricter sample estimates as dots: same outlier, lower levels, bottom-of-table order within noise. Panel B: the agent square's daily venue share, 0.55 to 0.46 across the week, above both the shaded full-history anchor range and the highest anchor-year line (forth 1991, 0.31).](figure.png)
 
@@ -105,10 +108,12 @@ does not carry the result; **(b) no normalizer at all** — direct classificatio
 gives agent 0.596 / lisp 0.118 (5.1×, essentially matching the claim-mediated pull-1 reference
 of 5.2× in the same block); **(c) a
 three-way frame** (VENUE / GENERAL-AI / WORLD) *raises* agent VENUE to 0.709 with GENERAL-AI
-taking only 7.7% — the binary frame was, if anything, conservative, but the absolute level is
-therefore **prompt-frame-dependent as well as classifier-dependent: the honest range is
-0.31–0.71 across specifications**, and only the cross-venue contrast (4–11×, every
-specification) is treated as measured. The previously-missing negative control now exists:
+taking only 7.7%, while the anchors, run under the identical frame, barely move (lisp 0.115,
+forth 0.254; lisp's GENERAL-AI bucket is 13.8% — 1980s comp.lang.lisp genuinely hosted
+AI-in-general discussion, a face-valid split). The binary frame was conservative on the agent
+pool; the absolute level remains **prompt-frame- and classifier-dependent (0.31–0.71)**, but the
+frame-matched contrast (6.2× lisp, 2.8× forth) is now a measured cell, not a gap, and exceeds
+the binary contrast. The previously-missing negative control now exists:
 technical-keyword claims classify WORLD at 0.92 (lisp) / 0.86 (forth); the agent pool's 0.67 on
 n = 43 is itself consistent with genuinely fused content.
 
