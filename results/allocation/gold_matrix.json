@@ -1,0 +1,1442 @@
+{
+ "1": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "2": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "3": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "4": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "5": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "6": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "7": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "8": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "9": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "10": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "11": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "12": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "13": {
+  "dan": "U",
+  "fable": "U",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "14": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "15": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "16": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "17": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "18": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "19": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "20": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "21": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "22": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "23": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "24": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "25": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "26": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "27": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "28": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "29": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "30": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "31": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "32": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "33": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "34": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "35": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "36": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "37": {
+  "dan": "V",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "38": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "39": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "40": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "41": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "42": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "43": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "44": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "45": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "46": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "47": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "48": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "49": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "50": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "51": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "52": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "53": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "54": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "55": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "56": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "57": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "58": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "59": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "60": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "61": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "62": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "63": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "64": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "65": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "66": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "67": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "68": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "69": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "70": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "71": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "72": {
+  "dan": "U",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "73": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "74": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "75": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "76": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "77": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "78": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "79": {
+  "dan": "V",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "80": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "81": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "82": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "83": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "84": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "85": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "86": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "87": {
+  "dan": "U",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "88": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "89": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "90": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "91": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "92": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "93": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "94": {
+  "dan": "U",
+  "fable": "U",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "95": {
+  "dan": "U",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "96": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "97": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "98": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "99": {
+  "dan": "U",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "100": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "101": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "102": {
+  "dan": "V",
+  "fable": "U",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "103": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "104": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "105": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "106": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "107": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "108": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "109": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "110": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "111": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "112": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "113": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "114": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "115": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "116": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "117": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "118": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "119": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "120": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "121": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "122": {
+  "dan": "U",
+  "fable": "U",
+  "gemma": "V",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "123": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "124": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "125": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "126": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "127": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "128": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "129": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "130": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "131": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "132": {
+  "dan": "V",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "133": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "134": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "135": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "136": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "137": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "138": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "139": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "140": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "141": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "142": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "143": {
+  "dan": "V",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "144": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "145": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "146": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "147": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "148": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "149": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "150": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "151": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "scheme_random",
+  "pool": "scheme"
+ },
+ "152": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "153": {
+  "dan": "V",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "154": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "155": {
+  "dan": "V",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "156": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "157": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "158": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "159": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "160": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "161": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "162": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "smalltalk_random",
+  "pool": "smalltalk"
+ },
+ "163": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "164": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "V",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "165": {
+  "dan": "U",
+  "fable": "U",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "166": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "167": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "168": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "169": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "170": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "lisp_random",
+  "pool": "lisp"
+ },
+ "171": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "172": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "173": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "174": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "175": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "forth_random",
+  "pool": "forth"
+ },
+ "176": {
+  "dan": "U",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "agent_random",
+  "pool": "agent"
+ },
+ "177": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "sci_random",
+  "pool": "sci"
+ },
+ "178": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "agent_boundary",
+  "pool": "agent"
+ },
+ "179": {
+  "dan": "W",
+  "fable": "V",
+  "gemma": "W",
+  "qwen": "W",
+  "stratum": "hn_random",
+  "pool": "hn"
+ },
+ "180": {
+  "dan": "W",
+  "fable": "W",
+  "gemma": "W",
+  "qwen": "V",
+  "stratum": "sci_random",
+  "pool": "sci"
+ }
+}

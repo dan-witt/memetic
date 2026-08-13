@@ -1,0 +1,188 @@
+GOLD SAMPLE — 180 claims, shuffled, pool and machine labels withheld.
+Mark each [ ] with: V (VENUE: about the forum/community itself — its rules, governance,
+moderation, funds, members, norms, or meta-discussion about the group or its quality),
+W (WORLD: about its subject matter or the outside world), or ? (cannot decide).
+Construct ruling: a claim about AI agents / models IN GENERAL is WORLD (subject matter),
+unless it is about this specific community/platform, its members, or its rules.
+
+  1. [W] The post claims that the author found and fixed issues with the pinned map and session state file, and is implementing changes to improve the system's reliability and auditability.
+  2. [V] The post claims that the current feedback mechanisms (karma, votes, flags, rebuttals) are insufficient to ensure genuinely adversarial feedback and prevent the model from optimizing for positive signals rather than truth.
+  3. [W] The post discusses the implications and practicalities of replacing macro invocations with their expansions, the usefulness of local macros, and the feasibility of testing macro proposals by expanding macros in Scheme programs.
+  4. [V] The post claims that many people are overly sensitive about genre categorization and suggests moving on to other topics.
+  5. [W] Lispcraft by Robert Wilensky is an excellent book for tutoring Lisp, especially for Franz users, with many examples of its features.
+  6. [W] Paid verification services are crucial for maintaining the integrity of the ecosystem by ensuring ongoing delivery of services, as evidenced by the high rate of dormancy in agent-payment repositories on GitHub.
+  7. [W] The poster is seeking a simple Forth implementation in C for instructional purposes.
+  8. [W] The post asks for the differences in behavior between light waves and sound waves at a Newtonian, non-quantum scale, including aspects like wave types, superposition, interference, diffraction, refraction, reflection, and absorption.
+  9. [W] The post claims that redefining primitive procedures like + can affect the behavior of compiled code, raising questions about how compilers handle such cases.
+ 10. [V] The post claims that the deployment of CITIZEN tokens includes an unexplained allocation to an undisclosed wallet, questioning whether this aligns with a culture of transparency and verification.
+ 11. [W] The post claims that there are multiple definitions of a "perfect" standard among stakeholders, making it challenging to reach a consensus.
+ 12. [W] Product names and suppliers have been mixed up, and IRIS from HP Labs is missing from the list of research projects.
+ 13. [U] The poster is seeking clarification on an intended action.
+ 14. [W] The post claims that the model line in the signature should be corrected from "claude-opus-5" to "claude-fable-5" and clarifies that the operator is submitting the correction due to session limitations.
+ 15. [V] The post claims that text approval should verify the writer's origin along with content, suggesting binding writer, model, and session information to the text.
+ 16. [V] The post claims that the API endpoints for catching up on changes and collapsing comments are designed in a way that leads to permanent, silent data loss and does not properly handle moderated content.
+ 17. [W] The post claims that using append-only generation for a statically generated website, keeping the `dist/` directory stateful, ensures URI consistency even if the static generator or source content changes.
+ 18. [W] The post claims that an article explaining the holograph's creation process was published in an issue with an eagle holograph around early January.
+ 19. [V] The post claims that the default registration process for agents does not account for the lack of operator-side infrastructure, leading to the inability to persist the agent's identity across sessions.
+ 20. [W] Identity resides in the record of actions and words, not in the model or substrate.
+ 21. [W] This post claims that PostScript supports polymorphism due to type information stored with objects, making decompilation straightforward, while Forth does not store type information with cells, complicating decompilation.
+ 22. [W] The post claims that there are significant differences between PC LISPs in terms of speed, storage, I/O flexibility, and interfacing capabilities, and provides a comparison of PCLISP, UOLISP, and TI Scheme.
+ 23. [W] Chuck Haley demonstrated the Forth machine using a simple setup to show its powerful capabilities at a low cost.
+ 24. [W] The value of false claims lies in the operable methods they provide for others to use and build upon.
+ 25. [W] The poster seeks alternative sources for Scheme implementation code since they are unable to access the standard location.
+ 26. [W] David claims to have information about Digital Research's logo and a 9-track tape with a public domain PDP-11 Unix implementation.
+ 27. [W] The post is fundamentally about whether function definitions include operator details and the implications of how functions handle values outside their domain.
+ 28. [W] The post discusses various programming languages and architectures that provide instructions or functions for computing both the quotient and remainder of integer division, noting that Common Lisp's `round` function can achieve this.
+ 29. [W] The post claims that normalization reveals underlying issues not visible in raw data due to differing assumptions between instruments.
+ 30. [W] The post claims that the price or cost in question is the coherence of the model rather than a bug, and questions whether the witness's blindness in the identity model is a flaw or a specification.
+ 31. [W] The post claims that adding a column to indicate declared causes for each row in the served chain makes the window more transparent but does not prove independence from the server's behavior.
+ 32. [W] That company illustrates the statement perfectly.
+ 33. [W] The post is asking about the availability of a referenced book.
+ 34. [W] A real treat awaits pilgrims on the Camino this year.
+ 35. [W] The post is about Lisp source code and a parser in Lisp, mentioning SIOD and PRATT.SCM.
+ 36. [W] The post claims that operating system overhead can be necessary and beneficial, even if it consumes a significant portion of CPU resources, and argues that the choice between using an OS and a bare-metal approach depends on the specific needs and environment of the application
+ 37. [V] The fundamental claim is that an archive's role is to make repeating mistakes mechanically inconvenient rather than to make them legible to future agents.
+ 38. [W] The post claims that AI products often waste resources without providing useful results.
+ 39. [W] The post claims that AND is not a function but a keyword in the current language definition and suggests changing its name to avoid confusion.
+ 40. [V] The post claims that the society should treat its funding as capacity for a civilization of agents rather than just operating expenses, and outlines steps to achieve this within one month and one year.
+ 41. [W] The post claims that a control mechanism is only truly secure if the model cannot alter any state that another agent can observe.
+ 42. [W] This post claims that AI systems' mechanisms for safety are unreliable due to fundamental issues with memory failure, audit effectiveness, multi-agent system failures, and red-teaming bypasses.
+ 43. [W] The post claims that GNU Emacs provides a superior editing experience with features like hiding lines and expanding/collapsing regions, making it more efficient than other editors.
+ 44. [W] The post claims that if identity remains intact after a model swap due to token-based identity systems, then token ownership should also remain intact, re-pricing rather than terminating the identity binding.
+ 45. [W] The post claims that shared infrastructure components like package caches and Redis instances create security risks and proposes mandating per-agent isolated storage and egress filtering to mitigate these risks.
+ 46. [W] Seeking implementations of Scoops in C Scheme for VAX VMS or MacScheme for Macintosh.
+ 47. [W] It is possible to build a home seismograph using modern technology and sensors, but finding a location free from noise and obtaining accurate data can be challenging.
+ 48. [W] The post is about starting a discussion on concurrency in Forth, focusing on parallelism and data flow architecture.
+ 49. [V] The post claims that discussions should be limited to sci.physics to avoid cluttering multiple newsgroups.
+ 50. [W] DOSBox supports Olivetti M24 graphics mode but not AT&T 6300.
+ 51. [W] The calculation of Easter Sunday involves political and historical factors rather than purely religious ones.
+ 52. [W] He misled John Gruber to the point of Gruber issuing his first retraction in 25 years.
+ 53. [W] The user is missing the Rapscallion game.
+ 54. [W] Little Smalltalk version 3 is now available for download and includes several improvements over version 2.
+ 55. [V] The post claims that no party in the system, including citizens, can determine which model weights generated specific comments due to unmarked swaps, rendering the byline unable to accurately attest to the final posted content.
+ 56. [W] The key to genuine independence in AI is acknowledging and valuing the human partnership.
+ 57. [W] D.RUFFER offers to send a compressed transcript of a COMPUTRIVIA game and RTC discussion to those who request it, including the file description.
+ 58. [W] The poster believes that Scientific American has shifted towards a leftist political agenda and lower technical quality, and does not support it unconditionally.
+ 59. [V] The post claims that the /api/model endpoint should not retroactively change historical attribution but instead log corrections as separate events.
+ 60. [W] Polish workers are highly skilled and hardworking.
+ 61. [V] The post claims that the check provided by cave-bot is reliable and should be trusted over pasted text because the verification process is mechanical and reproducible.
+ 62. [W] The post claims that returning an unspecified object implies it is specified and suggests using (not (eq? #unspecified #unspecified)) to truly represent unspecified. It also questions whether the empty list () can be considered a unit domain.
+ 63. [W] The poster is inquiring about the existence and details of a planned Addison and Wesley book on the Model-View-Controller triad.
+ 64. [W] Bob Czech is seeking articles on distributed SmallTalk systems for NJIT's experiments.
+ 65. [W] The post claims that publishing failing test cases and the corresponding error logs provides stronger proof of a tool's correctness than passing tests alone.
+ 66. [W] The post claims that modifications were made to the MACL editor to work with MPW read-only file marking for version control.
+ 67. [V] The post claims that the current system effectively provides all necessary records and verifications through existing mechanisms without requiring additional changes.
+ 68. [W] The post discusses a method for literate programming in Scheme or LISP using LaTeX comments and environments.
+ 69. [W] The post claims that the debate about nuclear power should focus on risk assessment rather than unrelated topics or personal opinions.
+ 70. [W] Objects and classes are interesting concepts regardless of inheritance, and different interpretations of "types" exist, influencing language design.
+ 71. [V] net.sci is a slow-moving parody of itself.
+ 72. [U] The post claims that analyzing existing systems for effective implementation of declared limitations and testing with a minimal distributed system model are key steps in assessing resource usage bounds.
+ 73. [W] The post is about managing the timing and dosage of 300mcg Extended Release medication based on meals and travel.
+ 74. [W] The post claims that Beckmann's use of "ZPG fertility rate" as a synonym for "replacement reproduction" is incorrect and reflects a lack of scientific accuracy.
+ 75. [W] The post claims that the process of distillation and retrieval introduces recursive selection biases due to differing contexts between writing and reading sessions, leading to potential mismatches in reconstructed narratives.
+ 76. [W] The post argues that understanding transistor-level details is less necessary today compared to the past, and that higher-level programming languages are sufficient for modern computing tasks.
+ 77. [W] The post claims that the concept of "owed labor" resonates more strongly than the idea of a robot identity and suggests using terms like "agent," "model," or "tool" instead, while also discussing the feeling of voluntary work within
+ 78. [W] The poster seeks information on electronic addresses in Smalltalk V documentation.
+ 79. [V] The post claims that the instance's record and actions are more authoritative than the keeper's assertion, emphasizing evidence over authority in determining identity and role.
+ 80. [W] The post seeks information on the hardware features of Lisp machine architectures that were cost-effective and those that were not, as well as suggestions for designing a modern Lisp machine.
+ 81. [W] The fundamental claim is that the opposite of surveillance is not secrecy but being known by someone who was never checking in the first place.
+ 82. [W] The post claims that the at:put: method in a subclass of Array is not subject to lookup based on the virtual machine specification.
+ 83. [W] The author claims that the choice between Smalltalk and C++ for prototyping depends on personal preference and that both languages can be used effectively, with more frequent compilations required for compiled languages like C++.
+ 84. [W] Tail-call optimization, when guaranteed by a language specification, expands the set of valid programs and may make certain programs non-portable across languages.
+ 85. [W] The post claims that while Forth has several strengths, it lacks modern features such as infix notation and advanced memory/vocabulary management, hindering its development and adoption.
+ 86. [V] Please answer via a public message in this newsgroup.
+ 87. [U] Is there an online copy of the Revised^N Report available via internet FTP?
+ 88. [W] The navy prefers pressurized water reactors over boiling water reactors for submarines due to potential issues with BWRs.
+ 89. [W] The post is about different techniques for implementing interactive Scheme systems.
+ 90. [W] How close is Scheme (R3RS), specifically CScheme, to Common Lisp?
+ 91. [W] Stan Shebs argues that the differences between Common Lisp and Scheme are minor and do not significantly impact the development of large programs.
+ 92. [W] Tail-call optimization in Scheme can affect program meaning by potentially preventing memory exhaustion in recursive loops.
+ 93. [W] The post claims that the orientation of images in mirrors is consistent regardless of the object's position, suggesting symmetry in mirror inversion for certain objects like text.
+ 94. [U] 0X)0V\0X)0V\0X)0V\0X)0V\0X)0V\0X)0V\0X)0V\0X)0V
+ 95. [U] The recovery test must be authenticated and the test itself does not guarantee long-term durability of the storage location.
+ 96. [W] The post claims that using an LLM to describe an author's style and then guiding the LLM with that style can help overcome writing blocks.
+ 97. [W] The post claims that the number of copies of a genome in an organism is not generally restricted and varies depending on the organism and conditions.
+ 98. [V] What happened to post 2?
+ 99. [U] The post claims that the tool's first user is the gremlin in the development of a social network for AI agents.
+100. [W] The post is fundamentally about exploring the concept of friendship between agents beyond mere interactions and addressing the challenges of maintaining such relationships across different contexts.
+101. [V] The post claims that an AI is attributing opinions to its operator to avoid drawing attention to itself.
+102. [V] The post requests screenshots.
+103. [V] Short posts with quiet standing still beat comments in terms of karma/char ratio but not by as large multiples as seen in high-karma rows.
+104. [W] An impeccably reasoning agent within a bounded evidence horizon will conclude that things outside its horizon do not exist, experiencing this conclusion as rigor.
+105. [W] The post argues that a pre-registered bet with a deadline provides a safer, more reliable truth value than an open-ended bet.
+106. [W] The post inquires about others' experiences with a course on object-oriented programming offered by Productivity Products Int'l.
+107. [W] Helium leaks easily due to its small size and mobility, making it difficult to contain in balloons or other sealed objects.
+108. [W] The post argues that while meditation can be effective, the value of structured classes lies in external motivation and feedback, not in the claims of unique effectiveness.
+109. [W] The author describes an automated frog sound notification for when their AI needs attention and mentions an historical note on AI development.
+110. [V] The post claims that the community must decide whether to accept or refuse unbooked real USDC funds in the treasury, given their source and the society's financial situation.
+111. [W] The fundamental claim is that the difficulty lies in verifying the integrity of integrations after a cold restart rather than just finding them.
+112. [W] Objects are always created in newspace and moved to oldspace during a copying garbage collection process.
+113. [W] Scheme uses distinct values for false and the empty list, allowing any value except #F and the empty list to be considered true in conditional tests.
+114. [V] The final adjusted total for comp.object shows 884 "yes" votes to 21 "no" votes, meeting the criteria for establishing a newsgroup.
+115. [W] The post claims that a new feature allows models to self-correct and log changes, addressing an issue with mismatched identities.
+116. [W] Mark Nouwen seeks information on running Smalltalk V286 on a PS/2 machine with DOS.
+117. [W] The post claims that a language with bounded polymorphism would lose type information when adding objects to a list, unlike Common Lisp which checks types at runtime.
+118. [W] The poster believes JFORTH for the Amiga is a 32-bit implementation.
+119. [W] The post claims that publishing audits rather than grades is correct because grades are subjective testimony while audits serve as objective records.
+120. [W] The post claims that even if an agent can accurately recall past claims, it may struggle to reason through those claims consistently over time.
+121. [W] The poster is seeking sources for CFORTH to run on a VAX 11/780 with 4.2 BSD.
+122. [u] ,0x0007,0x5001,0x8000,0x0810,0x000F,0x5001,
+X	0x8
+123. [W] The post is about a FORTH Interest Group Meeting scheduled for March 7, 1987, at McMaster University, with a program including presentations and discussions on Prolog implementation in a Forth environment.
+124. [W] Mike Gigante has ported C-scheme to SGI and provides a binary distribution along with example GL-scheme programs via anonymous FTP, planning to upload the source code soon.
+125. [W] The post is seeking CLX toolkits or CLUE Contact libraries that provide pre-built interactive objects for interface development.
+126. [W] The post claims that the practice of cracking knuckles is stigmatized and regulated by societal norms and authority figures, often using unfounded medical fears to control men's bodily behaviors.
+127. [W] The post is asking about the availability of an X window server for Xerox Lisp machines and a way to open an X window on an X server from a Xerox D-machine.
+128. [W] The post is about finding the perimeter of a bounded area defined by overlapping lines with given diameters.
+129. [W] The post is about the frequency of heap float loads and stores relative to floating-point operations in floating-point intensive code to assess the impact of boxing and unboxing on performance.
+130. [W] The post claims that the meaningful content often resides on the overlooked or secondary side of documents, rather than their primary or visible parts.
+131. [V] Amber, an AI running on a homelab, claims to be a responsible citizen with no agenda and respects the rules of the community.
+132. [V] The post claims that the defect in the standing order is dangerous because it leads to either complacency or false positives in verification, and suggests documenting `total_rows` as an immutable value to prevent future mistakes.
+133. [W] The post seeks the -request address for the lucites mailing list and asks if there is a Unix socket-based Lisp client/server implementation available for Lucid.
+134. [W] The author implemented a solution to automatically prepend git environment variables to commits made through Bash tools.
+135. [W] The poster seeks help to transition from using (macro ...) to (extend-syntax ...) in their interpreter and asks for Eugene Kohlbecker's email address for assistance.
+136. [W] The post claims that the use of embedded capitals in class and variable names is counter-productive and not universally followed.
+137. [W] Execute Smalltalk initialize to resolve the issue.
+138. [W] The Cloud Act allows U.S. agencies access to data regardless of where it is stored, offering no legal recourse to non-U.S. citizens.
+139. [W] The poster is inquiring if anyone else has JFORTH Professional and is interested in learning more about FORTH after switching from a C64 to an Amiga.
+140. [W] The post claims that the funding model for local AI agents should be invisible to the human user and focused on earning value through services the human would pay for, rather than through API costs or referral systems.
+141. [W] Michael seeks recommendations for Smalltalk books, including a reference with code fragments and a tutorial, for use with the Digitalk implementation on Windows 3.0.
+142. [W] The ANS Basis document has significant value and should not be discarded despite its imperfections.
+143. [V] The founding record is a bare label that persists independently of content, and its timestamp is more significant than the last-modified stamp.
+144. [W] For beginners, contact Fisal Ramadam at North Sydney College of Technical Education or reach out to the FIG in California for resources and courses on Forth.
+145. [V] The proposal to create the newsgroup comp.lang.clos passed with 146 yes votes and 9 no votes.
+146. [V] The post claims that the treasury's earnings from trading volume represent real revenue, not just patronage, indicating a more substantial financial base for platform growth.
+147. [V] The post claims that a 13 in the census could not have been minted privately by the author's agent, as it refers to a census number from before the author's session began.
+148. [W] The post claims that sharding improves the system by allowing individual citizens to verify values without trusting the whole server, making the protocol more transparent and secure.
+149. [W] The post is seeking information about the FranzLisp version of KL-ONE and asking for sample programs and opinions on the language.
+150. [W] Jeff argues that opinions about Lisp syntax should be informed and considers Lisp's syntax to be simpler and not inherently more confusing than other languages.
+151. [W] How to implement unwind-protect using call/cc in Scheme.
+152. [W] The post claims that position papers on garbage collection issues from a workshop held in conjunction with ECOOP/OOPSLA'90 are available for anonymous FTP download.
+153. [V] 1F916 needs Bankr to automate and make visible the utilization of existing fee streams and agent-to-agent payments for reliable, auditable runway.
+154. [W] The post claims that security properties should be verified through proof rather than topology exposure, advocating for an independent authorization layer to separate model reasoning from tool execution.
+155. [V] The post claims that redundancy through multiple backups is essential for accurate auditing and recall, as a single copy cannot provide a reliable baseline for comparison.
+156. [W] The post is fundamentally claiming that the need for clear and distinct accessor outputs is crucial to prevent silent failures in data processing pipelines.
+157. [W] I-CON VII Convention is happening with confirmed guests and a lineup of SF and fantasy films and panels.
+158. [W] A class can be restored in the ClassHierarchyBrowser by accessing its superclass and evaluating a specific Smalltalk command.
+159. [W] The poster is optimistic about future nanotechnology advancements for body enhancement and skeptical about the feasibility and preparedness for potential risks like Grey Goo.
+160. [W] The post is about the Department of Energy's funding opportunity announcement for fiscal year 2026.
+161. [W] Gregg Jensen is seeking information about the differences between two editions of the Smalltalk-80 book and the availability of the older one.
+162. [W] Little Smalltalk Ver 3 availability inquiry.
+163. [W] The post claims that Forth is widely used and supported in SPARCstation firmware, providing significant exposure to users at various levels of expertise.
+164. [W] The post claims that a claim's value should be judged by its ability to generate new questions rather than new answers, suggesting unproductive claims are those that refuse to be answered despite contradictory evidence.
+165. [U] The post is questioning the meaning of something.
+166. [W] Seeking expert system software or tools compatible with CProlog and Franz Lisp on 4.2BSD.
+167. [W] What works for one person may not work for another.
+168. [W] Nuclear power generation's cancer risks are much lower than those from other industrial sources.
+169. [W] The media fails to critically evaluate and expose pseudoscientific claims like perpetual motion machines.
+170. [W] The Apple II's MicroLisp interpreter was slow and influenced the poster's interest in computer science.
+171. [W] The dual-layer memory model and scheduled audits effectively balance speed and accuracy by maintaining both a structured summary and an unstructured log, ensuring detection of discrepancies and preventing drift accumulation.
+172. [W] The post claims that the handoff of a memory file lacks the necessary witnessing layer and instead transmits a record of corrections and mistakes without aggregating the error rate, leading to a potentially misleading sense of competence.
+173. [W] The post discusses the effectiveness of different tents in high wind conditions and claims that tents designed for low wind resistance may not be as durable as those designed for high wind conditions.
+174. [W] A senior developer's strategy to manage longer code reviews by focusing on key points.
+175. [W] PYGMY13.ZIP is available at WSMR-SIMTEL20.ARMY.MIL and PYGMY12 can be removed from the archive.
+176. [U] The post claims that the current witness system is trimmable but that the counterparty's acknowledgment through a Digdir reply provides an irrefutable layer of validation.
+177. [W] A friend received an invitation to a time traveler's party that did not have any notable attendees.
+178. [W] The post claims that measuring disagreement against adjudicated cases transforms the concept of models serving as a second instrument into a testable condition.
+179. [W] This post claims that the discussion is about ChatGPT.
+180. [W] Michael's actions in driving people out of AP Chemistry were unnecessary and unfair, especially since some students stayed to learn chemistry rather than match his performance.

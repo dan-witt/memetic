@@ -1,0 +1,390 @@
+{
+ "note": "ALLOCATION: the construct the human_baselines addendum relocated self-referentiality to, measured. Every claim in seven claim-normalized pools classified VENUE-directed (about the forum/community itself) vs WORLD-directed, one venue-agnostic prompt fixed before any output, two classifier families, identity-blocked bands.",
+ "prompt_verbatim": "Claim: {c}\n\nIs this claim about the forum or community ITSELF (its rules, governance, moderation, funds, members, norms, or meta-discussion about the group or its quality) \u2014 or about its SUBJECT MATTER or the outside world? Answer with exactly one word: VENUE or WORLD.",
+ "venue_share_qwen_full": {
+  "agent": {
+   "venue_share": 0.5092,
+   "n_classified": 7133,
+   "unparsed": 34,
+   "identity_block_band": [
+    0.5093,
+    0.492,
+    0.5258
+   ]
+  },
+  "lisp": {
+   "venue_share": 0.1028,
+   "n_classified": 5506,
+   "unparsed": 215,
+   "identity_block_band": [
+    0.1025,
+    0.0953,
+    0.1098
+   ]
+  },
+  "sci": {
+   "venue_share": 0.0853,
+   "n_classified": 2815,
+   "unparsed": 21,
+   "identity_block_band": [
+    0.0854,
+    0.0747,
+    0.097
+   ]
+  },
+  "hn": {
+   "venue_share": 0.1394,
+   "n_classified": 2848,
+   "unparsed": 11,
+   "identity_block_band": [
+    0.1396,
+    0.1268,
+    0.1496
+   ]
+  },
+  "forth": {
+   "venue_share": 0.221,
+   "n_classified": 6225,
+   "unparsed": 153,
+   "identity_block_band": [
+    0.2184,
+    0.186,
+    0.2456
+   ]
+  },
+  "smalltalk": {
+   "venue_share": 0.1024,
+   "n_classified": 3309,
+   "unparsed": 68,
+   "identity_block_band": [
+    0.102,
+    0.0916,
+    0.1136
+   ]
+  },
+  "scheme": {
+   "venue_share": 0.183,
+   "n_classified": 2350,
+   "unparsed": 180,
+   "identity_block_band": [
+    0.1834,
+    0.1674,
+    0.1988
+   ]
+  }
+ },
+ "gemma_agreement_sample": {
+  "n": 1505,
+  "raw_agreement": 0.877,
+  "cohens_kappa": 0.506,
+  "per_pool_shares": {
+   "agent": {
+    "qwen_share": 0.479,
+    "gemma_share": 0.307,
+    "n": 215,
+    "gemma_cp95": [
+     0.246,
+     0.373
+    ],
+    "gemma_events": 66,
+    "qwen_sample_cp95": [
+     0.411,
+     0.548
+    ]
+   },
+   "lisp": {
+    "qwen_share": 0.135,
+    "gemma_share": 0.028,
+    "n": 215,
+    "gemma_cp95": [
+     0.01,
+     0.06
+    ],
+    "gemma_events": 6,
+    "qwen_sample_cp95": [
+     0.092,
+     0.188
+    ]
+   },
+   "sci": {
+    "qwen_share": 0.074,
+    "gemma_share": 0.056,
+    "n": 215,
+    "gemma_cp95": [
+     0.029,
+     0.095
+    ],
+    "gemma_events": 12,
+    "qwen_sample_cp95": [
+     0.043,
+     0.118
+    ]
+   },
+   "hn": {
+    "qwen_share": 0.13,
+    "gemma_share": 0.06,
+    "n": 215,
+    "gemma_cp95": [
+     0.033,
+     0.101
+    ],
+    "gemma_events": 13,
+    "qwen_sample_cp95": [
+     0.088,
+     0.183
+    ]
+   },
+   "forth": {
+    "qwen_share": 0.233,
+    "gemma_share": 0.088,
+    "n": 215,
+    "gemma_cp95": [
+     0.054,
+     0.135
+    ],
+    "gemma_events": 19,
+    "qwen_sample_cp95": [
+     0.178,
+     0.295
+    ]
+   },
+   "smalltalk": {
+    "qwen_share": 0.116,
+    "gemma_share": 0.023,
+    "n": 215,
+    "gemma_cp95": [
+     0.008,
+     0.053
+    ],
+    "gemma_events": 5,
+    "qwen_sample_cp95": [
+     0.077,
+     0.167
+    ]
+   },
+   "scheme": {
+    "qwen_share": 0.181,
+    "gemma_share": 0.074,
+    "n": 215,
+    "gemma_cp95": [
+     0.043,
+     0.118
+    ],
+    "gemma_events": 16,
+    "qwen_sample_cp95": [
+     0.132,
+     0.24
+    ]
+   }
+  },
+  "per_pool_kappa": {
+   "agent": 0.556,
+   "lisp": 0.311,
+   "sci": 0.619,
+   "hn": 0.389,
+   "forth": 0.418,
+   "smalltalk": 0.252,
+   "scheme": 0.451
+  },
+  "pairs_persisted": true
+ },
+ "ratio_structure": {
+  "agent_over_lisp_qwen": 4.95,
+  "agent_over_lisp_gemma_sample": 11.0,
+  "agent_over_best_anchor_qwen": 2.3,
+  "agent_over_best_anchor_gemma_sample": 3.49,
+  "notes": "gemma lisp denominator = 6/215 events: the 11x point spans ~4-36x at 95%; matched-sample qwen agent/lisp = 3.55x; era-matched worst case = agent weekly low 0.456 / forth-1991 0.31 = 1.47x"
+ },
+ "agent_daily_venue_share_qwen": {
+  "08-06": 0.548,
+  "08-07": 0.5265,
+  "08-08": 0.5249,
+  "08-09": 0.4797,
+  "08-10": 0.5156,
+  "08-11": 0.5047,
+  "08-12": 0.4561
+ },
+ "usenet_yearly_venue_share_qwen": {
+  "lisp": {
+   "1984": 0.1374,
+   "1985": 0.1005,
+   "1986": 0.1714,
+   "1987": 0.1089,
+   "1988": 0.0792,
+   "1989": 0.0816,
+   "1990": 0.108,
+   "1991": 0.1055
+  },
+  "sci": {
+   "1984": 0.0646,
+   "1985": 0.0541,
+   "1986": 0.0894,
+   "1987": 0.0593,
+   "1988": 0.1134
+  },
+  "hn": {
+   "2026": 0.1394
+  },
+  "forth": {
+   "1984": 0.0576,
+   "1985": 0.1014,
+   "1986": 0.0945,
+   "1987": 0.1968,
+   "1988": 0.1264,
+   "1989": 0.17,
+   "1990": 0.2333,
+   "1991": 0.31
+  },
+  "smalltalk": {
+   "1985": 0.1507,
+   "1986": 0.0966,
+   "1987": 0.0933,
+   "1988": 0.096,
+   "1989": 0.124,
+   "1990": 0.0792,
+   "1991": 0.1052
+  },
+  "scheme": {
+   "1988": 0.1571,
+   "1989": 0.2379,
+   "1990": 0.1369,
+   "1991": 0.2093
+  }
+ },
+ "keyword_controls": {
+  "lisp": {
+   "n_meta_keyword": 35,
+   "venue_share_among_meta_keyword": 0.886
+  },
+  "sci": {
+   "n_meta_keyword": 42,
+   "venue_share_among_meta_keyword": 0.69
+  },
+  "forth": {
+   "n_meta_keyword": 32,
+   "venue_share_among_meta_keyword": 0.969
+  }
+ },
+ "caveats": [
+  "absolute shares are classifier-dependent (Qwen ~0.51 vs Gemma ~0.31 on the agent sample; kappa 0.506) \u2014 the cross-venue CONTRAST is the robust object (>=2.2x every anchor under both families; ratio widens under the stricter classifier)",
+  "binary venue/world on one-sentence claims; boundary genres (posts about AI agents generally, platform-adjacent tooling) resolve inconsistently between families",
+  "claims are register-stripped summaries; venue-reference implicit in style but absent from the claim is invisible to this instrument",
+  "identity != operator (permanent); sci is a 62% crosspost hub (expected outward pole, and is); keyword controls are weak positive checks, stated as such",
+  "gemma confirms ~42% of qwen VENUE calls (reconstructed from marginals); pooled kappa inflated by stratification; per-item agreement pairs not persisted (per-pool kappa unrecoverable from saved artifacts)",
+  "measurand = share of items' single claims, not share of discourse (one claim per item; 42% of agent posts truncated at 3000 chars)"
+ ],
+ "robustness_addenda": {
+  "agent_pull1_gemma_norm": {
+   "venue_share": 0.4377,
+   "n": 2849
+  },
+  "lisp_gemma_norm": {
+   "venue_share": 0.1126,
+   "n": 5313
+  },
+  "agent_pull1_qwen_norm_reference": {
+   "venue_share": 0.5372,
+   "n": 2865
+  },
+  "lisp_qwen_norm_reference": {
+   "venue_share": 0.103,
+   "n": 5506
+  },
+  "agent_raw_direct": {
+   "venue_share": 0.5957,
+   "n": 799
+  },
+  "lisp_raw_direct": {
+   "venue_share": 0.1175,
+   "n": 800
+  },
+  "agent_three_way": {
+   "venue": 0.7093,
+   "general_ai": 0.0771,
+   "world": 0.2136,
+   "n": 7163
+  },
+  "negative_control": {
+   "lisp": {
+    "n_tech_keyword": 589,
+    "world_share": 0.92
+   },
+   "forth": {
+    "n_tech_keyword": 579,
+    "world_share": 0.86
+   },
+   "agent": {
+    "n_tech_keyword": 43,
+    "world_share": 0.674
+   }
+  },
+  "reading": "normalizer circularity bracketed: Gemma-normalized claims give agent 0.438/lisp 0.113 (~4x); raw items with no normalizer give 0.596/0.118 (5.1x); claim-mediated 0.509 sits between. Three-way frame RAISES agent venue to 0.709 (GENERAL-AI takes only 7.7%) => binary frame was conservative but absolute level is prompt-frame-dependent: honest range 0.31-0.71 across specifications; the 4-11x contrast is the invariant. Negative control passes (tech claims WORLD 0.86-0.92 on anchors)."
+ },
+ "human_calibration": {
+  "design": "180 claims (30 agent-random, 30 agent-boundary by keyword rule, 20 per anchor), shuffled, machine labels withheld; raters: the study's author (human, not a claimed domain expert - the one rater without an LLM's conflict of interest), a blind frontier LLM (Fable, fenced, zero study context), and both pipeline classifiers",
+  "marginals_V_W_U": {
+   "human": [
+    30,
+    141,
+    9
+   ],
+   "fable_blind": [
+    33,
+    142,
+    5
+   ],
+   "qwen": [
+    50,
+    130,
+    0
+   ],
+   "gemma": [
+    21,
+    159,
+    0
+   ]
+  },
+  "pairwise_kappa": {
+   "human_fable": 0.757,
+   "human_qwen": 0.566,
+   "human_gemma": 0.504,
+   "fable_qwen": 0.53,
+   "fable_gemma": 0.509,
+   "qwen_gemma": 0.478
+  },
+  "venue_share_by_stratum": {
+   "agent_random": {
+    "human": 0.43,
+    "fable": 0.37,
+    "qwen": 0.43,
+    "gemma": 0.17
+   },
+   "agent_boundary": {
+    "human": 0.39,
+    "fable": 0.5,
+    "qwen": 0.5,
+    "gemma": 0.2
+   },
+   "anchors_pooled": {
+    "human": 0.06,
+    "fable": 0.06,
+    "qwen": 0.18,
+    "gemma": 0.08
+   }
+  },
+  "vs_human_fable_consensus_n158": {
+   "qwen": {
+    "accuracy": 0.867,
+    "false_V": 18,
+    "missed_V": 3
+   },
+   "gemma": {
+    "accuracy": 0.911,
+    "false_V": 4,
+    "missed_V": 10
+   }
+  },
+  "reading": "construct IS human-rateable (human x blind-Fable kappa 0.757, near-identical marginals; genuine fuzz ~5% of items). Classifier biases are COMPLEMENTARY: Qwen matches the human on the agent pool (0.43 vs 0.43) but over-calls VENUE ~3x on anchors (0.18 vs 0.06); Gemma matches anchors (0.08) but under-reads the agent pool (0.17). Human-calibrated contrast ~7x (0.43/0.06, small-n) => every published specification (4-11x) is consistent with, and the primary 4.95x conservative against, the human calibration.",
+  "caveats": "n=28-30 per agent stratum (wide binomial bands ~ +/-0.18); single human rater; boundary stratum keyword-selected"
+ }
+}
