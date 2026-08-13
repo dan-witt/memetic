@@ -48,10 +48,10 @@ def score(human_txt, fable_json, gemma_json):
     for l in open(human_txt):
         m = re.match(r"\s*(\d+)\. \[([VWUvwu])\]", l)
         if m: human[m.group(1)] = m.group(2).upper()
-    R = {n: {"human": human.get(n), "fable": fable.get(n), "gemma": gemma.get(n),
+    R = {n: {"dan": human.get(n), "fable": fable.get(n), "gemma": gemma.get(n),
              "qwen": {"V": "V", "W": "W"}.get(key[n]["qwen"]),
              "stratum": key[n]["stratum"], "pool": key[n]["pool"]} for n in key}
-    raters = ["human", "fable", "qwen", "gemma"]
+    raters = ["dan", "fable", "qwen", "gemma"]  # rater key matches the executed artifact
     for i, a in enumerate(raters):
         for b in raters[i+1:]:
             pp = [(R[n][a], R[n][b]) for n in R if R[n][a] in "VW" and R[n][b] in "VW"]

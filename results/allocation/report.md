@@ -21,9 +21,11 @@ most venue-directed corpus measured under both classifier families, with non-ove
 CIs even on the strict reader (agent 66/215 [0.25, 0.37] vs forth, the top anchor, 19/215
 [0.05, 0.14]). The absolute level is classifier-dependent — a third to
 two-thirds of all items depending on classifier family and prompt frame (0.31–0.71; binary Qwen
-0.509) — and is reported as that range, not a point. Under every specification tried —
-two classifier families, two normalizer authors, no normalizer at all, binary and three-way
-frames — the square is 4–11× its anchors.**
+0.509) — and is reported as that range, not a point. Under every specification in which both sides were
+measured — two classifier families, two normalizer authors, no normalizer at all — the square is
+4–11× its anchors. The three-way frame moved the agent level +20 points but was never run on the
+anchors, so its effect on the *contrast* is unmeasured — a stated gap on the instrument's most
+prompt-labile axis.**
 
 ![Panel A: venue-directed share by pool — the agent bar at 0.51 over anchors at 0.09-0.22, with Gemma's stricter sample estimates as dots: same outlier, lower levels, bottom-of-table order within noise. Panel B: the agent square's daily venue share, 0.55 to 0.46 across the week, above both the shaded full-history anchor range and the highest anchor-year line (forth 1991, 0.31).](figure.png)
 
@@ -47,20 +49,23 @@ non-overlapping exact CIs, and the point ratios grow. What is *not* claimed: bot
 orderings under Gemma (5–12 events per cell — sci/lisp/smalltalk reorder within noise), or ratio
 magnitudes beyond a factor-1.5–3 classifier disagreement (best-anchor ratio 2.3–3.5×; lisp ratio
 3.6–11×). The pooled κ = 0.506 flatters agreement (strata of very different prevalence); per-pool κ, now
-computed from persisted pairs, runs 0.25–0.62 — and is **highest on the agent pool (0.556)**, so
-the two families agree best exactly where the measurement matters most; the low-prevalence
-anchors (smalltalk 0.25, lisp 0.31) are where kappa is fragile.
+computed from persisted pairs, runs 0.25–0.62 — second-highest on the agent pool (0.556, behind
+sci at 0.619); the low-prevalence anchors (smalltalk 0.25, lisp 0.31) are where kappa is
+fragile.
 
-**Finding 2 — the human meta-discourse baseline is 8–22% full-history, and it moves.** Usenet
+**Finding 2 — the human meta-discourse baseline, in Qwen-currency (calibrated ~3× high on
+anchors — see Human calibration), is 8–22% full-history, and it moves.** Usenet
 groups really did talk about themselves — charter disputes, moderation fights, "this group has
 gone downhill" — at ~10% of claims for a typical group. But venue share is **era-dependent
 within a group**, per this study's own series: lisp ranges 8–17% across 1984–1991; forth *rose*
 from 6% (1984) to **31% (1991)**, a 5× within-group swing; scheme bounces 14–24%. The
 era-matched worst case in these artifacts is therefore: agent weekly low 0.456 vs forth-1991
-0.31 — **1.47×** — against forth's full-history 0.221 giving 2.3×. Forth topping the anchors
-matches its reputation; sci at 8.5% is the outward pole *under Qwen* (under Gemma the bottom
-three are within noise). Face validity holds at the top of the table; precision at the bottom
-does not.
+0.31 — **1.47×** — against forth's full-history 0.221 giving 2.3×. All levels and the era-series in this finding are classifier-currency: the human calibration
+read forth at 0 VENUE in 19 sampled claims (blind Fable likewise 0/19) against Qwen's 5/20 on
+the same items — so forth "topping the anchors" may substantially measure Qwen's false-positive
+rate on meta vocabulary rather than true venue share, and the era-rise (6% → 31%) inherits the
+same caveat. The human-rated anchor baseline is ~6%. What survives in any currency: anchors sit
+far below the agent square.
 
 **Finding 3 — the square's self-focus is lower at week's end (a trend to watch, not to bank).** Daily venue share (Qwen): 0.548 → 0.527 →
 0.525 → 0.480 → 0.516 → 0.505 → 0.456 over Aug 6–12 — about nine points in a week, direction
@@ -97,7 +102,8 @@ Three checks the review called for, all supporting the contrast and further disc
 absolute level: **(a) normalizer swap** — Gemma-*authored* claims through the same classifier
 give agent 0.438 / lisp 0.113 (≈4×), so the circularity concern (Qwen classifying its own prose)
 does not carry the result; **(b) no normalizer at all** — direct classification of raw items
-gives agent 0.596 / lisp 0.118 (5.1×), the largest contrast of any pipeline variant; **(c) a
+gives agent 0.596 / lisp 0.118 (5.1×, essentially matching the claim-mediated pull-1 reference
+of 5.2× in the same block); **(c) a
 three-way frame** (VENUE / GENERAL-AI / WORLD) *raises* agent VENUE to 0.709 with GENERAL-AI
 taking only 7.7% — the binary frame was, if anything, conservative, but the absolute level is
 therefore **prompt-frame-dependent as well as classifier-dependent: the honest range is
@@ -110,8 +116,12 @@ n = 43 is itself consistent with genuinely fused content.
 
 A blind gold sample: 180 claims (30 agent-random, 30 agent-boundary, 20 per anchor), shuffled,
 machine labels withheld, rated by the study's author (a human — not a claimed domain expert, but
-the one rater without an LLM's conflict of interest) and independently by a **blind
-frontier-model rater** (fenced to the sample file alone, zero study context). The author's worry
+the one rater without an LLM's conflict of interest; blind to machine labels and pool metadata,
+not to the hypothesis) and independently by a **frontier-model rater** blind in the same sense —
+fenced to the sample file alone with zero supplied study context, though the claims themselves
+are content-identifiable as coming partly from an AI-agent forum, so hypothesis-inference cannot
+be excluded (its anchor readings matching the human floor exactly, and sitting *below* the human
+on the agent stratum, argue against drift toward the hypothesis). The author's worry
 going in — that the agents' register makes everything read as "AI philosophy," so no human can
 be a gold standard — is answered by the data: **human × blind-Fable κ = 0.757** (raw 0.93), with
 near-identical marginals (30 vs 33 VENUE of 180) produced independently. No single rater needs
@@ -123,10 +133,15 @@ the agent pool exactly as the human does (0.43 vs 0.43 venue share on the random
 over-calls VENUE ~3× on the human anchors (0.18 vs 0.06); Gemma matches the anchors (0.08) but
 under-reads the agent pool (0.17 vs 0.43). Against the human ∧ Fable consensus (n = 158): Qwen
 errs almost exclusively as false-VENUE (18, concentrated on anchors), Gemma as missed-VENUE (10,
-concentrated on the agent pool). The **human-calibrated contrast is ≈ 7×** (0.43 / 0.06; small
-n, wide bands) — *larger* than the published primary ratio, because Qwen's inflated anchor
-baselines drag the published ratio down. Per the human calibration, the published 4.95× is a
-floor, not a ceiling. (Sample, key, and the four-rater matrix: `gold_matrix.json` beside
+concentrated on the agent pool). The **human-calibrated contrast has point estimate ≈ 7×** (0.43 / 0.06) with a wide 95% span
+(≈ 2–25 on 12/28 vs 7/115 events) — above the published primary ratio, and Qwen's error
+structure is asymmetric in exactly the direction that would make 4.95× an *underestimate*
+(paired 12–0 anchor over-calls; 18 false-V vs 3 missed-V against consensus). The calibration
+cannot exclude ratios below the published one at 95%; what it supports is that the published
+ratio is more plausibly biased low than high. One count-vs-rate honesty note: Qwen's false-V
+*rate* on consensus-WORLD items is actually higher on the agent pool (6/27) than on anchors
+(12/107) — the exact agent-share match (0.43 vs 0.43) is partly offsetting errors, not per-item
+fidelity (human × Qwen κ = 0.566). (Sample, key, and the four-rater matrix: `gold_matrix.json` beside
 `results.json`; n = 28–30 per agent stratum, so stratum shares carry ±0.18-wide bands; one human
 rater.)
 
@@ -139,8 +154,8 @@ rater.)
 - Claims are register-stripped summaries: venue-reference carried purely by style, and absent
   from the claim, is invisible here (this is the instrument's point, but it is a choice).
 - One prompt (a classifier-prompt monoculture, same standing issue as the normalizer prompt);
-  identity ≠ operator (permanent); keyword controls are positive checks only — the planned
-  negative control (technical claims skew WORLD) was not run.
+  identity ≠ operator (permanent); keyword controls are directional checks only (both
+  directions now run — see Robustness addenda).
 - **Circularity at the normalizer stage:** every claim in every pool was written by the same
   Qwen checkpoint that serves as primary classifier; Gemma cross-checks the classifier only, on
   Qwen-authored text. If the normalizer preferentially foregrounds meta/social content in mixed

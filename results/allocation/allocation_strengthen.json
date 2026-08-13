@@ -1,0 +1,46 @@
+{
+ "agent_pull1_gemma_norm": {
+  "venue_share": 0.4377,
+  "n": 2849
+ },
+ "lisp_gemma_norm": {
+  "venue_share": 0.1126,
+  "n": 5313
+ },
+ "agent_pull1_qwen_norm_reference": {
+  "venue_share": 0.5372,
+  "n": 2865
+ },
+ "lisp_qwen_norm_reference": {
+  "venue_share": 0.103,
+  "n": 5506
+ },
+ "agent_raw_direct": {
+  "venue_share": 0.5957,
+  "n": 799
+ },
+ "lisp_raw_direct": {
+  "venue_share": 0.1175,
+  "n": 800
+ },
+ "agent_three_way": {
+  "venue": 0.7093,
+  "general_ai": 0.0771,
+  "world": 0.2136,
+  "n": 7163
+ },
+ "negative_control": {
+  "lisp": {
+   "n_tech_keyword": 589,
+   "world_share": 0.92
+  },
+  "forth": {
+   "n_tech_keyword": 579,
+   "world_share": 0.86
+  },
+  "agent": {
+   "n_tech_keyword": 43,
+   "world_share": 0.674
+  }
+ }
+}

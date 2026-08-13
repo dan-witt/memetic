@@ -1,0 +1,1082 @@
+{
+ "1": {
+  "pool": "agent",
+  "idx": 4605,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "2": {
+  "pool": "agent",
+  "idx": 4097,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "3": {
+  "pool": "scheme",
+  "idx": 2458,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "4": {
+  "pool": "hn",
+  "idx": 2175,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "5": {
+  "pool": "lisp",
+  "idx": 446,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "6": {
+  "pool": "agent",
+  "idx": 2414,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "7": {
+  "pool": "forth",
+  "idx": 4004,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "8": {
+  "pool": "sci",
+  "idx": 2211,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "9": {
+  "pool": "scheme",
+  "idx": 604,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "10": {
+  "pool": "agent",
+  "idx": 3171,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "11": {
+  "pool": "forth",
+  "idx": 3992,
+  "stratum": "forth_random",
+  "qwen": "V"
+ },
+ "12": {
+  "pool": "smalltalk",
+  "idx": 1648,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "13": {
+  "pool": "scheme",
+  "idx": 1394,
+  "stratum": "scheme_random",
+  "qwen": "V"
+ },
+ "14": {
+  "pool": "agent",
+  "idx": 4532,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "15": {
+  "pool": "agent",
+  "idx": 2512,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "16": {
+  "pool": "agent",
+  "idx": 639,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "17": {
+  "pool": "hn",
+  "idx": 1990,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "18": {
+  "pool": "sci",
+  "idx": 472,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "19": {
+  "pool": "agent",
+  "idx": 4547,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "20": {
+  "pool": "agent",
+  "idx": 3822,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "21": {
+  "pool": "forth",
+  "idx": 2739,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "22": {
+  "pool": "lisp",
+  "idx": 1733,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "23": {
+  "pool": "forth",
+  "idx": 599,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "24": {
+  "pool": "agent",
+  "idx": 5593,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "25": {
+  "pool": "scheme",
+  "idx": 1643,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "26": {
+  "pool": "smalltalk",
+  "idx": 1634,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "27": {
+  "pool": "scheme",
+  "idx": 2361,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "28": {
+  "pool": "forth",
+  "idx": 1195,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "29": {
+  "pool": "agent",
+  "idx": 5128,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "30": {
+  "pool": "agent",
+  "idx": 6179,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "31": {
+  "pool": "agent",
+  "idx": 3086,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "32": {
+  "pool": "smalltalk",
+  "idx": 2628,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "33": {
+  "pool": "scheme",
+  "idx": 573,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "34": {
+  "pool": "hn",
+  "idx": 961,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "35": {
+  "pool": "lisp",
+  "idx": 3618,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "36": {
+  "pool": "forth",
+  "idx": 2090,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "37": {
+  "pool": "agent",
+  "idx": 1356,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "38": {
+  "pool": "hn",
+  "idx": 2250,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "39": {
+  "pool": "scheme",
+  "idx": 2311,
+  "stratum": "scheme_random",
+  "qwen": "V"
+ },
+ "40": {
+  "pool": "agent",
+  "idx": 3756,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "41": {
+  "pool": "agent",
+  "idx": 773,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "42": {
+  "pool": "agent",
+  "idx": 575,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "43": {
+  "pool": "lisp",
+  "idx": 4366,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "44": {
+  "pool": "agent",
+  "idx": 2581,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "45": {
+  "pool": "agent",
+  "idx": 4056,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "46": {
+  "pool": "scheme",
+  "idx": 94,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "47": {
+  "pool": "sci",
+  "idx": 1568,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "48": {
+  "pool": "forth",
+  "idx": 4212,
+  "stratum": "forth_random",
+  "qwen": "V"
+ },
+ "49": {
+  "pool": "sci",
+  "idx": 1874,
+  "stratum": "sci_random",
+  "qwen": "V"
+ },
+ "50": {
+  "pool": "hn",
+  "idx": 750,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "51": {
+  "pool": "forth",
+  "idx": 3142,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "52": {
+  "pool": "hn",
+  "idx": 1406,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "53": {
+  "pool": "hn",
+  "idx": 2734,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "54": {
+  "pool": "smalltalk",
+  "idx": 1401,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "55": {
+  "pool": "agent",
+  "idx": 3710,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "56": {
+  "pool": "agent",
+  "idx": 615,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "57": {
+  "pool": "forth",
+  "idx": 3712,
+  "stratum": "forth_random",
+  "qwen": "V"
+ },
+ "58": {
+  "pool": "sci",
+  "idx": 2300,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "59": {
+  "pool": "agent",
+  "idx": 634,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "60": {
+  "pool": "hn",
+  "idx": 2104,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "61": {
+  "pool": "agent",
+  "idx": 1687,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "62": {
+  "pool": "scheme",
+  "idx": 696,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "63": {
+  "pool": "smalltalk",
+  "idx": 1566,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "64": {
+  "pool": "smalltalk",
+  "idx": 540,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "65": {
+  "pool": "agent",
+  "idx": 3665,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "66": {
+  "pool": "lisp",
+  "idx": 4883,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "67": {
+  "pool": "agent",
+  "idx": 3575,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "68": {
+  "pool": "lisp",
+  "idx": 3185,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "69": {
+  "pool": "sci",
+  "idx": 1309,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "70": {
+  "pool": "smalltalk",
+  "idx": 897,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "71": {
+  "pool": "sci",
+  "idx": 63,
+  "stratum": "sci_random",
+  "qwen": "V"
+ },
+ "72": {
+  "pool": "agent",
+  "idx": 2558,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "73": {
+  "pool": "hn",
+  "idx": 1299,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "74": {
+  "pool": "sci",
+  "idx": 1180,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "75": {
+  "pool": "agent",
+  "idx": 5617,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "76": {
+  "pool": "forth",
+  "idx": 1140,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "77": {
+  "pool": "agent",
+  "idx": 3804,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "78": {
+  "pool": "smalltalk",
+  "idx": 1482,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "79": {
+  "pool": "agent",
+  "idx": 1308,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "80": {
+  "pool": "lisp",
+  "idx": 3216,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "81": {
+  "pool": "agent",
+  "idx": 674,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "82": {
+  "pool": "smalltalk",
+  "idx": 277,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "83": {
+  "pool": "smalltalk",
+  "idx": 1118,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "84": {
+  "pool": "scheme",
+  "idx": 1815,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "85": {
+  "pool": "forth",
+  "idx": 887,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "86": {
+  "pool": "scheme",
+  "idx": 773,
+  "stratum": "scheme_random",
+  "qwen": "V"
+ },
+ "87": {
+  "pool": "scheme",
+  "idx": 268,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "88": {
+  "pool": "sci",
+  "idx": 910,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "89": {
+  "pool": "scheme",
+  "idx": 588,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "90": {
+  "pool": "scheme",
+  "idx": 1372,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "91": {
+  "pool": "lisp",
+  "idx": 1390,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "92": {
+  "pool": "scheme",
+  "idx": 1823,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "93": {
+  "pool": "sci",
+  "idx": 2186,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "94": {
+  "pool": "scheme",
+  "idx": 795,
+  "stratum": "scheme_random",
+  "qwen": "V"
+ },
+ "95": {
+  "pool": "agent",
+  "idx": 3901,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "96": {
+  "pool": "hn",
+  "idx": 971,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "97": {
+  "pool": "sci",
+  "idx": 253,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "98": {
+  "pool": "agent",
+  "idx": 2878,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "99": {
+  "pool": "agent",
+  "idx": 341,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "100": {
+  "pool": "agent",
+  "idx": 3652,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "101": {
+  "pool": "agent",
+  "idx": 5468,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "102": {
+  "pool": "hn",
+  "idx": 1039,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "103": {
+  "pool": "agent",
+  "idx": 5256,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "104": {
+  "pool": "agent",
+  "idx": 5009,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "105": {
+  "pool": "agent",
+  "idx": 5519,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "106": {
+  "pool": "smalltalk",
+  "idx": 217,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "107": {
+  "pool": "sci",
+  "idx": 1422,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "108": {
+  "pool": "sci",
+  "idx": 2809,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "109": {
+  "pool": "hn",
+  "idx": 744,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "110": {
+  "pool": "agent",
+  "idx": 1440,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "111": {
+  "pool": "agent",
+  "idx": 6005,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "112": {
+  "pool": "lisp",
+  "idx": 3219,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "113": {
+  "pool": "lisp",
+  "idx": 2497,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "114": {
+  "pool": "smalltalk",
+  "idx": 1826,
+  "stratum": "smalltalk_random",
+  "qwen": "V"
+ },
+ "115": {
+  "pool": "agent",
+  "idx": 450,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "116": {
+  "pool": "smalltalk",
+  "idx": 2260,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "117": {
+  "pool": "lisp",
+  "idx": 3809,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "118": {
+  "pool": "forth",
+  "idx": 2636,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "119": {
+  "pool": "agent",
+  "idx": 3128,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "120": {
+  "pool": "agent",
+  "idx": 7125,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "121": {
+  "pool": "forth",
+  "idx": 262,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "122": {
+  "pool": "forth",
+  "idx": 1952,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "123": {
+  "pool": "forth",
+  "idx": 534,
+  "stratum": "forth_random",
+  "qwen": "V"
+ },
+ "124": {
+  "pool": "scheme",
+  "idx": 1927,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "125": {
+  "pool": "lisp",
+  "idx": 3271,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "126": {
+  "pool": "hn",
+  "idx": 1280,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "127": {
+  "pool": "lisp",
+  "idx": 3439,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "128": {
+  "pool": "lisp",
+  "idx": 3151,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "129": {
+  "pool": "lisp",
+  "idx": 3727,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "130": {
+  "pool": "agent",
+  "idx": 6128,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "131": {
+  "pool": "agent",
+  "idx": 2038,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "132": {
+  "pool": "agent",
+  "idx": 2650,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "133": {
+  "pool": "lisp",
+  "idx": 2676,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "134": {
+  "pool": "hn",
+  "idx": 2044,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "135": {
+  "pool": "scheme",
+  "idx": 928,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "136": {
+  "pool": "smalltalk",
+  "idx": 925,
+  "stratum": "smalltalk_random",
+  "qwen": "V"
+ },
+ "137": {
+  "pool": "smalltalk",
+  "idx": 3216,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "138": {
+  "pool": "hn",
+  "idx": 777,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "139": {
+  "pool": "forth",
+  "idx": 4138,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "140": {
+  "pool": "agent",
+  "idx": 1632,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "141": {
+  "pool": "smalltalk",
+  "idx": 3156,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "142": {
+  "pool": "forth",
+  "idx": 5004,
+  "stratum": "forth_random",
+  "qwen": "V"
+ },
+ "143": {
+  "pool": "agent",
+  "idx": 4666,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "144": {
+  "pool": "forth",
+  "idx": 4570,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "145": {
+  "pool": "lisp",
+  "idx": 4543,
+  "stratum": "lisp_random",
+  "qwen": "V"
+ },
+ "146": {
+  "pool": "agent",
+  "idx": 919,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "147": {
+  "pool": "agent",
+  "idx": 1454,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "148": {
+  "pool": "agent",
+  "idx": 4976,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "149": {
+  "pool": "lisp",
+  "idx": 176,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "150": {
+  "pool": "scheme",
+  "idx": 1534,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "151": {
+  "pool": "scheme",
+  "idx": 353,
+  "stratum": "scheme_random",
+  "qwen": "W"
+ },
+ "152": {
+  "pool": "smalltalk",
+  "idx": 2722,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "153": {
+  "pool": "agent",
+  "idx": 946,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "154": {
+  "pool": "agent",
+  "idx": 3176,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "155": {
+  "pool": "agent",
+  "idx": 3217,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "156": {
+  "pool": "agent",
+  "idx": 5438,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "157": {
+  "pool": "sci",
+  "idx": 2034,
+  "stratum": "sci_random",
+  "qwen": "V"
+ },
+ "158": {
+  "pool": "smalltalk",
+  "idx": 1927,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "159": {
+  "pool": "sci",
+  "idx": 1975,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "160": {
+  "pool": "hn",
+  "idx": 333,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "161": {
+  "pool": "smalltalk",
+  "idx": 1617,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "162": {
+  "pool": "smalltalk",
+  "idx": 1594,
+  "stratum": "smalltalk_random",
+  "qwen": "W"
+ },
+ "163": {
+  "pool": "forth",
+  "idx": 4818,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "164": {
+  "pool": "agent",
+  "idx": 6972,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "165": {
+  "pool": "hn",
+  "idx": 2762,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "166": {
+  "pool": "lisp",
+  "idx": 510,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "167": {
+  "pool": "hn",
+  "idx": 2584,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "168": {
+  "pool": "sci",
+  "idx": 947,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "169": {
+  "pool": "sci",
+  "idx": 299,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "170": {
+  "pool": "lisp",
+  "idx": 643,
+  "stratum": "lisp_random",
+  "qwen": "W"
+ },
+ "171": {
+  "pool": "agent",
+  "idx": 5625,
+  "stratum": "agent_boundary",
+  "qwen": "V"
+ },
+ "172": {
+  "pool": "agent",
+  "idx": 5892,
+  "stratum": "agent_random",
+  "qwen": "W"
+ },
+ "173": {
+  "pool": "sci",
+  "idx": 2047,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "174": {
+  "pool": "hn",
+  "idx": 756,
+  "stratum": "hn_random",
+  "qwen": "V"
+ },
+ "175": {
+  "pool": "forth",
+  "idx": 4217,
+  "stratum": "forth_random",
+  "qwen": "W"
+ },
+ "176": {
+  "pool": "agent",
+  "idx": 6634,
+  "stratum": "agent_random",
+  "qwen": "V"
+ },
+ "177": {
+  "pool": "sci",
+  "idx": 1147,
+  "stratum": "sci_random",
+  "qwen": "W"
+ },
+ "178": {
+  "pool": "agent",
+  "idx": 6203,
+  "stratum": "agent_boundary",
+  "qwen": "W"
+ },
+ "179": {
+  "pool": "hn",
+  "idx": 2219,
+  "stratum": "hn_random",
+  "qwen": "W"
+ },
+ "180": {
+  "pool": "sci",
+  "idx": 1155,
+  "stratum": "sci_random",
+  "qwen": "V"
+ }
+}

@@ -270,7 +270,6 @@
   "binary venue/world on one-sentence claims; boundary genres (posts about AI agents generally, platform-adjacent tooling) resolve inconsistently between families",
   "claims are register-stripped summaries; venue-reference implicit in style but absent from the claim is invisible to this instrument",
   "identity != operator (permanent); sci is a 62% crosspost hub (expected outward pole, and is); keyword controls are weak positive checks, stated as such",
-  "gemma confirms ~42% of qwen VENUE calls (reconstructed from marginals); pooled kappa inflated by stratification; per-item agreement pairs not persisted (per-pool kappa unrecoverable from saved artifacts)",
   "measurand = share of items' single claims, not share of discourse (one claim per item; 42% of agent posts truncated at 3000 chars)"
  ],
  "robustness_addenda": {
@@ -318,7 +317,7 @@
     "world_share": 0.674
    }
   },
-  "reading": "normalizer circularity bracketed: Gemma-normalized claims give agent 0.438/lisp 0.113 (~4x); raw items with no normalizer give 0.596/0.118 (5.1x); claim-mediated 0.509 sits between. Three-way frame RAISES agent venue to 0.709 (GENERAL-AI takes only 7.7%) => binary frame was conservative but absolute level is prompt-frame-dependent: honest range 0.31-0.71 across specifications; the 4-11x contrast is the invariant. Negative control passes (tech claims WORLD 0.86-0.92 on anchors)."
+  "reading": "normalizer circularity bracketed: Gemma-normalized claims give agent 0.438/lisp 0.113 (~4x); raw items with no normalizer give 0.596/0.118 (5.1x); claim-mediated 0.509 sits between. Three-way frame RAISES agent venue to 0.709 (GENERAL-AI takes only 7.7%) => binary frame was conservative on the agent pool, but the three-way frame was NOT run on anchors, so its effect on the CONTRAST is unmeasured; the 4-11x contrast is invariant across the specifications measured on both sides. Negative control passes (tech claims WORLD 0.86-0.92 on anchors)."
  },
  "human_calibration": {
   "design": "180 claims (30 agent-random, 30 agent-boundary by keyword rule, 20 per anchor), shuffled, machine labels withheld; raters: the study's author (human, not a claimed domain expert - the one rater without an LLM's conflict of interest), a blind frontier LLM (Fable, fenced, zero study context), and both pipeline classifiers",
