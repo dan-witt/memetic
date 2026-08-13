@@ -31,14 +31,15 @@ its caveats; none of these are causal claims (see [Caveats](#caveats)).
 | Did a provenance-disclosure norm spread, and from what stimulus? | LLM-classified event study anchored at an interrogation sweep | A self-disclosure norm rises after the comment-1300–1303 interrogation, detectable only once the string match is replaced by a paraphrase-aware classifier. | [`results/disclosure_event_study`](results/disclosure_event_study/report.md) |
 | How self-referential is the community *relative to humans*? | Five instruments (compression, perplexity, semantic Vendi) run identically on a diverse and an insular human forum | As measured, agents rank above **both** human forums on 4/5 instruments. **An [addendum](results/human_baselines/addendum.md) corrects the semantic one:** most of that gap is writing *register*, the idea-level residual is comparator-dependent and unresolved, and the other instruments are flagged as not-yet register-controlled — so treat the cross-human comparison as **provisional**, and "self-referential" as a question of *allocation* more than idea-diversity. | [report](results/human_baselines/report.md) · [addendum](results/human_baselines/addendum.md) |
 | Where does the square sit against **non-confounded** human venues? | Novelty **bands**: register-controlled claim-Vendi + zstd on public, reconstructible anchors spanning topical breadth (pre-LLM Usenet single-topic → broad), 2 normalizer families × 3 embedders | The square sits **inside the human band**: at or above the typical mid-size specialist venue (4/4 anchors, incl. a seeded 3/3 replication; forth at parity), below broad venues, and the most surface-repetitive corpus measured (the register, again). Measures topical breadth of the idea space, **not** self-referentiality — allocation stays open. | [`results/novelty_bands`](results/novelty_bands/report.md) |
-| How is the square trending, issue over issue? | **Weather report** (recurring): band placement, rolling idea series, register trend, churn signature (day windows), cohort survival, inflows | Issue #1 (Aug 11): placement stable under a corpus doubling; idea diversity and register flat; heavy core dominance (76%) with a wide-open door (30.5% newcomer→core) and inflow well off its Aug-6 peak. | [`results/weather/2026-08-11`](results/weather/2026-08-11/report.md) |
+| How is the square trending, issue over issue? | **Weather report** (recurring): band placement, rolling idea series, register trend, churn signatures, cohort survival, inflows, newcomer refresh | Issue #2 (Aug 12): placement **confirmed on non-overlapping data**; idea series and register flat; at matched item-volume the square's structure (79% core dominance, 33% permeability) is the inverse of every anchor's; newcomers bring **minimal but non-zero** refresh (~1/8 of a foreign-content calibration). | [#1](results/weather/2026-08-11/report.md) · [#2](results/weather/2026-08-12/report.md) |
 
 ## The corpus
 
 `data/posts/<id>.json` — raw thread JSONs (post + comments) pulled from `1f916.ai`. Each item
 carries `id`, `title`/`body`, `created_at` (ms epoch), `author`, `author_model`, and votes.
-Current state (second pull, 2026-08-11): **708 posts + 5,214 comments = 5,922 items, spanning
-2026-08-05 → 08-11** (6.05 days). `data/manifest.json` records the pull provenance (source,
+Current state (third pull, 2026-08-13 00:11 UTC): **814 threads; analyses in
+[`results/weather/2026-08-12`](results/weather/2026-08-12/report.md) use a hard cutoff of
+2026-08-13 00:00 UTC (7,167 items in scope, Aug 5 → Aug 12)**. `data/manifest.json` records the pull provenance (source,
 timestamp, which IDs were absent from the feed).
 
 `data/labels/` — two derived label sets used by several passes:
@@ -49,7 +50,8 @@ timestamp, which IDs were absent from the feed).
 
 Earlier corpus states live in git history: the zstd / perplexity / ablation / human-baselines /
 novelty-bands passes were computed on the first pull (2,890 items, through Aug 8); the weather
-series re-pulls per issue. The `data/labels` sets cover the first pull only.
+series re-pulls per issue with a stated per-issue cutoff. The `data/labels` sets cover the
+first pull only.
 
 ## Repository layout
 
