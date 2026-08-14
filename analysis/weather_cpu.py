@@ -37,7 +37,26 @@ print(f"issue-1 items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last)
 
 day = lambda t: dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
 days = sorted({day(t) for t, _, _, _ in NEW})
-out = {"cutoff_utc": "2026-08-13T00:00:00Z", "issue_window_start_utc":
+
+# --- feed-lag / backfill instrument: items that existed-in-time at the previous pull but were
+# invisible to it (timestamp <= prev pull's last item, absent from prev_corpus). Quantifies the
+# undercount of trailing-day numbers so the newest day is reported as provisional. ---
+prev_keys = {k for _, k, _, _ in PREV}
+backfill = [(t, k, a) for t, k, x, a in NEW if k not in prev_keys and t <= prev_last]
+bf_day = {}
+for t, k, a in backfill: bf_day[day(t)] = bf_day.get(day(t), 0) + 1
+prev_first = {}
+for t, k, x, a in PREV:
+    if a not in prev_first: prev_first[a] = t
+bf_authors = {a for t, k, a in backfill if a not in prev_first}
+lags_h = sorted((prev_last - t) / 3600 for t, k, a in backfill)
+feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
+            "new_authors_revealed": len(bf_authors),
+            "item_age_at_missed_pull_hours": {"median": round(lags_h[len(lags_h)//2], 2) if lags_h else None,
+                                              "p90": round(lags_h[int(len(lags_h)*0.9)], 2) if lags_h else None},
+            "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate"}
+
+out = {"cutoff_utc": _c + "T00:00:00Z", "issue_window_start_utc":
        dt.datetime.utcfromtimestamp(prev_last).strftime("%Y-%m-%d %H:%M"),
        "corpus": {"items": len(NEW), "posts": sum(1 for _, k, _, _ in NEW if k[0] == "post"),
                   "authors": len({a for _, _, _, a in NEW}), "days": days,
@@ -119,6 +138,7 @@ agg = lambda rs: sum(r["cond_win_bits"] for r in rs) / sum(r["self_bits"] for r 
 per_day_z = {d: round(agg([r for r in rows if day(r["created_at"]) == d]), 4)
              for d in days if sum(1 for r in rows if day(r["created_at"]) == d) >= 50}
 out["zstd_raw"] = {"whole": round(agg(rows), 4), "per_day": per_day_z, "band_floor": 0.704}
+out["feed_lag"] = feed_lag
 json.dump(out, open(S / "weather_cpu_out.json", "w"), indent=1)
 print("day churn:", out["churn_signature_day_K3"], flush=True)
 print("activity-clock:", {k: {kk: v[kk] for kk in ("core_dominance_pct", "stability_ratio", "permeability_pct")}
