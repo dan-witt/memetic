@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Weather issue #3 (2026-08-13) — CPU half. Hard cutoff: items with t >= 2026-08-13T00:00:00Z
-are excluded everywhere. Issue window = (last item of issue-1 corpus, cutoff). Same instruments
-as issue #1 + NEW: activity-clock churn signatures (7 equal item-count windows, core = active in
->=3 windows) for agent AND anchors — the commensurable young-phase comparison issue #1 promised.
-Outputs weather_cpu_out.json."""
-import json, sys, datetime as dt
+"""Weather report — CPU half. Hard cutoff from $WEATHER_CUTOFF (YYYY-MM-DD = that date's
+midnight UTC, exclusive): items with t >= cutoff are excluded everywhere. Issue window =
+(last item of the previous issue's corpus, cutoff). Instruments: inflows, cohort survival,
+calendar-day churn, activity-clock churn signatures (7 equal item-count windows, core = active
+in >=3 windows) for agent AND anchors, raw-zstd register, feed lag (backfill + post-publication
+content mutations). Outputs weather_cpu_out.json."""
+import json, sys, hashlib, datetime as dt
 from pathlib import Path
 from collections import defaultdict, Counter
 import numpy as np
@@ -32,8 +33,8 @@ def load_items(d, cutoff=CUTOFF):
 PREV = load_items(S / "prev_corpus/data/posts")          # issue-1 corpus state (git HEAD)
 NEW = load_items("/home/dan/personal/memetic/data/posts")
 prev_last = max(t for t, _, _, _ in PREV)
-print(f"issue-1 items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
-      f"issue-2 items {len(NEW)} (cutoff 08-13 00:00)", flush=True)
+print(f"prev-issue items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
+      f"this-issue items {len(NEW)} (cutoff {_c} 00:00 UTC)", flush=True)
 
 day = lambda t: dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
 days = sorted({day(t) for t, _, _, _ in NEW})
@@ -55,6 +56,26 @@ feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
             "item_age_at_missed_pull_hours": {"median": round(lags_h[len(lags_h)//2], 2) if lags_h else None,
                                               "p90": round(lags_h[int(len(lags_h)*0.9)], 2) if lags_h else None},
             "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate"}
+
+# --- content-mutation check (issue-3 watch item #4): items present in BOTH corpora under the
+# same id whose TEXT changed after publication. id-keyed caches (claims, allocation labels)
+# cannot see this and retain stale values until the item is re-processed; observed moving
+# frozen-day register cells at the 4th decimal between issues. ---
+_h = lambda s: hashlib.sha256(s.encode("utf-8")).hexdigest()
+prev_text = {k: x for _, k, x, _ in PREV}
+edited = [(t, k, a) for t, k, x, a in NEW if k in prev_text and _h(x) != _h(prev_text[k])]
+ed_day = Counter(day(t) for t, k, a in edited)
+delta_chars = [len(x) - len(prev_text[k]) for _, k, x, _ in NEW if k in prev_text and _h(x) != _h(prev_text[k])]
+feed_lag["content_mutations"] = {
+    "items_compared": len(prev_text),
+    "edited_items": len(edited),
+    "by_day": dict(sorted(ed_day.items())),
+    "authors_affected": len({a for _, _, a in edited}),
+    "char_delta": {"median": float(np.median(delta_chars)) if delta_chars else None,
+                   "min": min(delta_chars) if delta_chars else None,
+                   "max": max(delta_chars) if delta_chars else None},
+    "edited_keys": [f"{k[0]}:{k[1]}" for _, k, _ in edited],
+    "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them."}
 
 out = {"cutoff_utc": _c + "T00:00:00Z", "issue_window_start_utc":
        dt.datetime.utcfromtimestamp(prev_last).strftime("%Y-%m-%d %H:%M"),
@@ -145,4 +166,6 @@ print("activity-clock:", {k: {kk: v[kk] for kk in ("core_dominance_pct", "stabil
                           for k, v in act_sigs.items()}, flush=True)
 print("inflows:", {d: v["new_authors"] for d, v in out["inflows"].items()}, flush=True)
 print("zstd:", per_day_z, flush=True)
+print("feed_lag: backfill", feed_lag["backfilled_items"], "| edited items",
+      feed_lag["content_mutations"]["edited_items"], feed_lag["content_mutations"]["by_day"], flush=True)
 print("saved weather_cpu_out.json")

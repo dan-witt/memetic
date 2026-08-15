@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Weather issue #2 — GPU half. Cutoff 2026-08-13T00:00Z everywhere. Delta-claimify new items
-(cache keyed by kind:id). Compute: rolling claim-Vendi series; placement vs frozen anchors (full
-pool AND issue-window-only cells, 3 embedders); newcomer cells (within-pool parity + NEW
-cross-pool refresh: union-vs-incumbent Vendi and nearest-incumbent claim distance). Outputs
-weather_gpu_out.json + agent_claims_current.json."""
-import json, gc, datetime as dt
+"""Weather report — GPU half. Cutoff from $WEATHER_CUTOFF (that date's midnight UTC, exclusive)
+everywhere. Delta-claimify new items (cache keyed by kind:id) and evict cache entries for items
+EDITED since the previous corpus. Compute: rolling claim-Vendi series; placement vs frozen
+anchors (full pool AND issue-window-only cells, 3 embedders); allocation venue share/day;
+newcomer cells (within-pool parity + cross-pool refresh: union-vs-incumbent Vendi and
+matched-pool nearest-incumbent claim distance). Outputs weather_gpu_out.json +
+agent_claims_current.json."""
+import json, gc, sys, hashlib, datetime as dt
 from pathlib import Path
 import numpy as np
+sys.path.insert(0, "/home/dan/personal/memetic/analysis")
+import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -28,9 +32,17 @@ def load_items(d, cutoff=CUTOFF):
     return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
 
 NEW = load_items("/home/dan/personal/memetic/data/posts")
-prev_last = max(t for t, _, _, _ in load_items(S / "prev_corpus/data/posts"))
+PREV = load_items(S / "prev_corpus/data/posts")
+prev_last = max(t for t, _, _, _ in PREV)
+# items EDITED after publication: same id, different text. The id-keyed caches cannot see this,
+# so evict them here and let the delta pass re-claimify / re-label them (issue-3 watch item #4).
+_h = lambda s: hashlib.sha256(s.encode("utf-8")).hexdigest()
+_ph = {k: _h(x) for _, k, x, _ in PREV}
+EDITED = [k for _, k, x, _ in NEW if k in _ph and _h(x) != _ph[k]]
+print(f"edited items (cache eviction): {len(EDITED)}", flush=True)
 cache = {(k0, int(k1)): c for (k0, k1), c in
          ((k.split(":", 1), c) for k, c in json.load(open(S / "claim_cache_agent.json")).items())}
+for k in EDITED: cache.pop(k, None)
 todo = [(i, x) for i, (t, k, x, a) in enumerate(NEW) if k not in cache]
 print(f"delta to claimify: {len(todo)}", flush=True)
 
@@ -55,6 +67,7 @@ claims = [cache[k] for _, k, _, _ in NEW]
 json.dump(claims, open(S / "agent_claims_current.json", "w"))
 # --- allocation trend: delta-classify (frozen prompt), id-keyed label cache ---
 lcache = json.load(open(S / "allocation_label_cache_agent.json"))
+for k in EDITED: lcache.pop(f"{k[0]}:{k[1]}", None)   # edited text -> new claim -> re-label
 def lvalid(c): return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
 todo_l = [(i, claims[i]) for i, (t, k, x, a) in enumerate(NEW)
           if f"{k[0]}:{k[1]}" not in lcache and lvalid(claims[i])]
@@ -132,7 +145,12 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
         idx_newc = [i for i in win_idx if first[NEW[i][3]] > prev_last]
         idx_inc = [i for i in win_idx if first[NEW[i][3]] <= prev_last]
         out["newcomer_counts"] = {"newcomer_items": len(idx_newc), "incumbent_items": len(idx_inc)}
-        if len(idx_newc) >= 100 and len(idx_inc) >= 100:
+        # Two floors, deliberately different. The Vendi-based parity/union cells need enough items
+        # for a stable spectrum -> m >= 100. The NN cell is a median of distances against a
+        # permutation null that widens automatically as m shrinks, so it stays interpretable lower
+        # -> m >= 50, and any run below VENDI_FLOOR is flagged below_standing_vendi_floor.
+        VENDI_FLOOR, NN_FLOOR = 100, 50
+        if len(idx_newc) >= VENDI_FLOOR and len(idx_inc) >= VENDI_FLOOR:
             mm = int(0.8 * min(len(idx_newc), len(idx_inc)))
             rs = [vendi(Ea[np.array(idx_newc)][rng.choice(len(idx_newc), mm, replace=False)]) /
                   vendi(Ea[np.array(idx_inc)][rng.choice(len(idx_inc), mm, replace=False)]) for _ in range(40)]
@@ -148,16 +166,25 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
             ratio = [round(float(np.percentile(np.array(rs_u) / np.array(rs_i), p)), 3) for p in (50, 5, 95)]
             out["refresh_union_over_incumbent"] = {"m": mm2, "band": ratio,
                 "read": ">1 = newcomer claims add effective distinct content beyond incumbents'"}
-            # cross-pool refresh 2: nearest-incumbent distance
+        else:
+            out["newcomer_vendi_cells_skipped"] = (
+                f"newcomer_items={len(idx_newc)} below the standing m>={VENDI_FLOOR} floor for the "
+                f"Vendi-based parity/union cells; not computed")
+        # cross-pool refresh 2: nearest-incumbent distance, MATCHED candidate pools. Construction,
+        # rationale and the superseded version live in weather_nn_refresh.py — imported rather
+        # than duplicated so the pipeline and the standalone run cannot drift apart.
+        # weather_nn_validate.py is its synthetic null/power check.
+        if len(idx_newc) >= NN_FLOOR and len(idx_inc) >= 3 * NN_FLOOR:
             En, Ei = Ea[np.array(idx_newc)], Ea[np.array(idx_inc)]
-            nn_new = 1 - (En @ Ei.T).max(1)
-            half = rng.permutation(len(Ei)); h1, h2 = half[:len(half)//2], half[len(half)//2:]
-            nn_base = 1 - (Ei[h1] @ Ei[h2].T).max(1)
-            out["refresh_nn_distance"] = {"newcomer_to_incumbent_median": round(float(np.median(nn_new)), 4),
-                                          "incumbent_to_incumbent_median": round(float(np.median(nn_base)), 4),
-                                          "read": "newcomer >> baseline = newcomers far from the incumbent claim cloud"}
-            print("newcomer cells:", out["newcomer_within_pool_parity"], out["refresh_union_over_incumbent"],
-                  out["refresh_nn_distance"], flush=True)
+            out["refresh_nn_distance_matched"] = dict(
+                NNR.matched_nn(En, Ei),
+                below_standing_vendi_floor=len(idx_newc) < VENDI_FLOOR,
+                read="same reference pool R, same size, disjoint from every query set; delta > null"
+                     " = newcomer claims sit farther from the incumbent cloud than incumbents do"
+                     " from each other. Null centres on 0 by construction; see"
+                     " weather_nn_validate.py for the synthetic null/power check.")
+            out["refresh_nn_distance_legacy_asymmetric"] = NNR.legacy_asymmetric(En, Ei)
+            print("newcomer NN cell:", out["refresh_nn_distance_matched"], flush=True)
     del m, Ea
 
 json.dump(out, open(S / "weather_gpu_out.json", "w"), indent=1)

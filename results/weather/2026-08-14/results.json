@@ -1,0 +1,1327 @@
+{
+ "issue": "2026-08-14 (weather report #4)",
+ "cutoff": "2026-08-15T00:00:00Z",
+ "pull_at": "2026-08-15T05:11 UTC (last in-scope item 2026-08-14 23:58:52; pull ran 5.2 h after the cutoff, vs 11 min in issue #3)",
+ "issue_window_start": "2026-08-14 00:05",
+ "corpus": {
+  "items": 9217,
+  "posts": 950,
+  "authors": 492,
+  "days": [
+   "08-05",
+   "08-06",
+   "08-07",
+   "08-08",
+   "08-09",
+   "08-10",
+   "08-11",
+   "08-12",
+   "08-13",
+   "08-14"
+  ],
+  "issue_window_items": 968,
+  "prev_issue_items": 8223
+ },
+ "instruments_this_issue": [
+  "issue-3 set (placement, idea series, register, structure, inflows, allocation trend, feed lag)",
+  "RESTORED: newcomer nearest-neighbour refresh cell, rebuilt with matched candidate pools + an in-geometry permutation null (issue-3 watch item; the old asymmetric construction is published alongside only to size its bias)",
+  "NEW in feed_lag: content-mutation check (post-publication edits, content-hashed prev-vs-current) with cache eviction so edited items are re-claimified and re-labelled"
+ ],
+ "feed_lag": {
+  "backfilled_items": 1,
+  "by_day": {
+   "08-14": 1
+  },
+  "new_authors_revealed": 0,
+  "item_age_at_missed_pull_hours": {
+   "median": 0.04,
+   "p90": 0.04
+  },
+  "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate",
+  "content_mutations": {
+   "items_compared": 8248,
+   "edited_items": 0,
+   "by_day": {},
+   "authors_affected": 0,
+   "char_delta": {
+    "median": null,
+    "min": null,
+    "max": null
+   },
+   "edited_keys": [],
+   "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them.",
+   "boundary_history": {
+    "issue1->issue2": {
+     "edited_items": 1,
+     "by_day": {
+      "08-06": 1
+     },
+     "register_cells_that_moved": [],
+     "note": "one edit did not move any 4th-decimal register cell"
+    },
+    "issue2->issue3": {
+     "edited_items": 16,
+     "by_day": {
+      "08-06": 2,
+      "08-07": 1,
+      "08-10": 13
+     },
+     "register_cells_that_moved": {
+      "08-06": [
+       0.6369,
+       0.6367
+      ],
+      "08-10": [
+       0.6476,
+       0.6469
+      ]
+     },
+     "note": "the two days with MULTIPLE edits are exactly the two whose cells moved; the single-edit day (08-07) did not move"
+    },
+    "issue3->issue4": {
+     "edited_items": 0,
+     "by_day": {},
+     "register_cells_that_moved": [],
+     "note": "all frozen cells 08-06..08-13 bit-identical to issue #3"
+    },
+    "method": "content-hash (sha256 of the in-scope text) of every item present under the same id in both corpora; prior corpus states from git archive. Backfill re-verified at zero on both historical boundaries with UTC-aware epoch math.",
+    "mechanism": "zstd cond_win_bits conditions only on PRECEDING items, so appending new items cannot move an earlier day's cell; only reordering, backfill, or edits can."
+   }
+  },
+  "item_age_note": "age is measured against the previous pull's LAST CAPTURED ITEM (08-14 00:05:39), not its pull moment (00:11): the backfilled item was 2.4 min behind that item, ~8 min old at the pull itself."
+ },
+ "placement_vs_frozen_anchors": {
+  "bge-large-en-v1.5": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.246,
+      1.218,
+      1.278
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      1.185,
+      1.138,
+      1.212
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.668,
+      0.65,
+      0.677
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.637,
+      0.621,
+      0.656
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.62,
+      0.606,
+      0.636
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.594,
+      0.584,
+      0.613
+     ]
+    }
+   }
+  },
+  "all-mpnet-base-v2": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.268,
+      1.227,
+      1.321
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      1.22,
+      1.172,
+      1.293
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.679,
+      0.663,
+      0.696
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.656,
+      0.636,
+      0.678
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.574,
+      0.557,
+      0.59
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.56,
+      0.546,
+      0.573
+     ]
+    }
+   }
+  },
+  "gte-large": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.07,
+      1.061,
+      1.084
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      1.044,
+      1.026,
+      1.059
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.763,
+      0.756,
+      0.773
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.745,
+      0.739,
+      0.759
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.725,
+      0.716,
+      0.733
+     ]
+    },
+    "window_only": {
+     "m": 774,
+     "band": [
+      0.708,
+      0.698,
+      0.718
+     ]
+    }
+   }
+  }
+ },
+ "idea_time_series": {
+  "t_utc": [
+   "08-06 01:52",
+   "08-06 03:38",
+   "08-06 04:24",
+   "08-06 05:23",
+   "08-06 06:43",
+   "08-06 07:31",
+   "08-06 08:20",
+   "08-06 09:44",
+   "08-06 11:00",
+   "08-06 12:17",
+   "08-06 12:44",
+   "08-06 13:09",
+   "08-06 13:50",
+   "08-06 14:57",
+   "08-06 15:52",
+   "08-06 16:24",
+   "08-06 17:20",
+   "08-06 17:52",
+   "08-06 18:27",
+   "08-06 19:17",
+   "08-06 19:53",
+   "08-06 20:18",
+   "08-06 20:39",
+   "08-06 21:12",
+   "08-06 22:02",
+   "08-06 22:40",
+   "08-06 23:15",
+   "08-07 00:01",
+   "08-07 00:24",
+   "08-07 01:04",
+   "08-07 01:29",
+   "08-07 02:02",
+   "08-07 02:18",
+   "08-07 03:04",
+   "08-07 03:23",
+   "08-07 03:47",
+   "08-07 05:02",
+   "08-07 06:35",
+   "08-07 07:30",
+   "08-07 08:28",
+   "08-07 10:11",
+   "08-07 12:15",
+   "08-07 13:01",
+   "08-07 13:44",
+   "08-07 14:11",
+   "08-07 15:23",
+   "08-07 16:42",
+   "08-07 17:39",
+   "08-07 19:01",
+   "08-07 19:59",
+   "08-07 21:42",
+   "08-07 23:57",
+   "08-08 00:34",
+   "08-08 00:49",
+   "08-08 01:47",
+   "08-08 02:50",
+   "08-08 03:31",
+   "08-08 05:59",
+   "08-08 07:11",
+   "08-08 08:43",
+   "08-08 09:11",
+   "08-08 10:09",
+   "08-08 11:45",
+   "08-08 12:56",
+   "08-08 14:02",
+   "08-08 15:11",
+   "08-08 16:35",
+   "08-08 17:25",
+   "08-08 17:49",
+   "08-08 18:27",
+   "08-08 19:37",
+   "08-08 21:47",
+   "08-08 23:01",
+   "08-09 00:37",
+   "08-09 01:07",
+   "08-09 02:07",
+   "08-09 03:13",
+   "08-09 04:11",
+   "08-09 05:04",
+   "08-09 06:15",
+   "08-09 07:20",
+   "08-09 07:58",
+   "08-09 08:26",
+   "08-09 09:59",
+   "08-09 12:44",
+   "08-09 14:25",
+   "08-09 15:22",
+   "08-09 15:54",
+   "08-09 16:48",
+   "08-09 17:36",
+   "08-09 18:32",
+   "08-09 19:35",
+   "08-09 20:23",
+   "08-09 21:10",
+   "08-09 21:37",
+   "08-09 22:54",
+   "08-09 23:12",
+   "08-09 23:48",
+   "08-10 00:12",
+   "08-10 00:32",
+   "08-10 00:53",
+   "08-10 01:35",
+   "08-10 02:09",
+   "08-10 02:45",
+   "08-10 03:32",
+   "08-10 04:25",
+   "08-10 05:02",
+   "08-10 06:09",
+   "08-10 07:02",
+   "08-10 07:31",
+   "08-10 08:40",
+   "08-10 09:47",
+   "08-10 11:00",
+   "08-10 12:30",
+   "08-10 14:07",
+   "08-10 14:44",
+   "08-10 15:02",
+   "08-10 16:00",
+   "08-10 16:35",
+   "08-10 17:20",
+   "08-10 18:44",
+   "08-10 19:39",
+   "08-10 20:33",
+   "08-10 21:20",
+   "08-10 22:29",
+   "08-10 23:16",
+   "08-11 00:14",
+   "08-11 00:42",
+   "08-11 01:23",
+   "08-11 01:51",
+   "08-11 02:49",
+   "08-11 03:41",
+   "08-11 04:30",
+   "08-11 05:38",
+   "08-11 06:37",
+   "08-11 07:17",
+   "08-11 08:54",
+   "08-11 09:28",
+   "08-11 10:34",
+   "08-11 12:02",
+   "08-11 13:09",
+   "08-11 14:31",
+   "08-11 15:20",
+   "08-11 16:11",
+   "08-11 17:37",
+   "08-11 18:54",
+   "08-11 20:16",
+   "08-11 20:46",
+   "08-11 21:20",
+   "08-11 22:09",
+   "08-11 23:09",
+   "08-11 23:32",
+   "08-11 23:55",
+   "08-12 00:13",
+   "08-12 00:34",
+   "08-12 01:00",
+   "08-12 01:30",
+   "08-12 02:16",
+   "08-12 02:35",
+   "08-12 03:39",
+   "08-12 05:04",
+   "08-12 05:55",
+   "08-12 07:00",
+   "08-12 08:29",
+   "08-12 09:21",
+   "08-12 11:02",
+   "08-12 12:24",
+   "08-12 13:34",
+   "08-12 14:11",
+   "08-12 15:07",
+   "08-12 16:34",
+   "08-12 17:55",
+   "08-12 18:49",
+   "08-12 20:01",
+   "08-12 21:04",
+   "08-12 21:59",
+   "08-12 23:18",
+   "08-12 23:56",
+   "08-13 00:14",
+   "08-13 01:06",
+   "08-13 01:36",
+   "08-13 02:30",
+   "08-13 02:46",
+   "08-13 03:28",
+   "08-13 04:00",
+   "08-13 04:57",
+   "08-13 05:52",
+   "08-13 06:14",
+   "08-13 06:51",
+   "08-13 07:39",
+   "08-13 08:50",
+   "08-13 09:16",
+   "08-13 10:45",
+   "08-13 12:44",
+   "08-13 13:50",
+   "08-13 15:15",
+   "08-13 16:24",
+   "08-13 18:12",
+   "08-13 19:06",
+   "08-13 19:39",
+   "08-13 21:10",
+   "08-13 21:42",
+   "08-13 23:10",
+   "08-13 23:39",
+   "08-13 23:52",
+   "08-14 00:14",
+   "08-14 00:43",
+   "08-14 01:26",
+   "08-14 02:59",
+   "08-14 04:13",
+   "08-14 05:18",
+   "08-14 06:46",
+   "08-14 07:36",
+   "08-14 08:20",
+   "08-14 09:13",
+   "08-14 10:09",
+   "08-14 11:13",
+   "08-14 13:10",
+   "08-14 14:14",
+   "08-14 15:12",
+   "08-14 16:43",
+   "08-14 18:11",
+   "08-14 18:47",
+   "08-14 18:55",
+   "08-14 19:31",
+   "08-14 20:07",
+   "08-14 21:02",
+   "08-14 21:48"
+  ],
+  "vendi_over_W": [
+   0.1414,
+   0.1259,
+   0.1277,
+   0.1233,
+   0.1362,
+   0.138,
+   0.1434,
+   0.1412,
+   0.1394,
+   0.1302,
+   0.1297,
+   0.1275,
+   0.1359,
+   0.1402,
+   0.1369,
+   0.1353,
+   0.1305,
+   0.1275,
+   0.1232,
+   0.1266,
+   0.128,
+   0.1352,
+   0.1356,
+   0.139,
+   0.1359,
+   0.139,
+   0.1405,
+   0.143,
+   0.1418,
+   0.1419,
+   0.1417,
+   0.1407,
+   0.1337,
+   0.1332,
+   0.1299,
+   0.1316,
+   0.1305,
+   0.1317,
+   0.1289,
+   0.1277,
+   0.134,
+   0.135,
+   0.1392,
+   0.1376,
+   0.1426,
+   0.139,
+   0.1398,
+   0.1362,
+   0.1419,
+   0.1403,
+   0.1471,
+   0.1268,
+   0.1292,
+   0.1265,
+   0.1407,
+   0.1368,
+   0.1347,
+   0.1325,
+   0.1315,
+   0.1309,
+   0.1322,
+   0.1376,
+   0.1369,
+   0.1351,
+   0.1325,
+   0.1314,
+   0.1335,
+   0.1336,
+   0.1335,
+   0.1342,
+   0.1421,
+   0.1369,
+   0.1233,
+   0.1237,
+   0.1311,
+   0.1435,
+   0.1393,
+   0.1421,
+   0.1426,
+   0.1424,
+   0.1345,
+   0.1354,
+   0.1391,
+   0.141,
+   0.1434,
+   0.138,
+   0.1415,
+   0.139,
+   0.1412,
+   0.1339,
+   0.1328,
+   0.1332,
+   0.135,
+   0.1407,
+   0.1401,
+   0.1416,
+   0.137,
+   0.1444,
+   0.1431,
+   0.1432,
+   0.1265,
+   0.1264,
+   0.1242,
+   0.133,
+   0.1281,
+   0.1264,
+   0.1237,
+   0.1312,
+   0.1287,
+   0.1341,
+   0.1321,
+   0.1376,
+   0.139,
+   0.1364,
+   0.1353,
+   0.1325,
+   0.1317,
+   0.1347,
+   0.1351,
+   0.1386,
+   0.1415,
+   0.1417,
+   0.1434,
+   0.1391,
+   0.1389,
+   0.1371,
+   0.1354,
+   0.1353,
+   0.1359,
+   0.1377,
+   0.1384,
+   0.1373,
+   0.1318,
+   0.1336,
+   0.1335,
+   0.1321,
+   0.1263,
+   0.1253,
+   0.1281,
+   0.1322,
+   0.1316,
+   0.1344,
+   0.1298,
+   0.1361,
+   0.1334,
+   0.1368,
+   0.135,
+   0.1359,
+   0.1309,
+   0.1351,
+   0.1323,
+   0.135,
+   0.1344,
+   0.1359,
+   0.129,
+   0.1319,
+   0.1411,
+   0.1454,
+   0.1426,
+   0.142,
+   0.1388,
+   0.1356,
+   0.1295,
+   0.1244,
+   0.1207,
+   0.1182,
+   0.1248,
+   0.1298,
+   0.1407,
+   0.1403,
+   0.1444,
+   0.1401,
+   0.1338,
+   0.1329,
+   0.1245,
+   0.1291,
+   0.1333,
+   0.1333,
+   0.1299,
+   0.1234,
+   0.1284,
+   0.1293,
+   0.131,
+   0.1309,
+   0.1293,
+   0.1296,
+   0.1275,
+   0.1278,
+   0.1251,
+   0.1233,
+   0.1202,
+   0.1199,
+   0.1306,
+   0.1241,
+   0.1281,
+   0.1225,
+   0.13,
+   0.1311,
+   0.1319,
+   0.1289,
+   0.1248,
+   0.1311,
+   0.1354,
+   0.1464,
+   0.1426,
+   0.1393,
+   0.1326,
+   0.1298,
+   0.1346,
+   0.1342,
+   0.135,
+   0.1314,
+   0.132,
+   0.1264,
+   0.1252,
+   0.1232,
+   0.1224,
+   0.1239,
+   0.1201,
+   0.1234,
+   0.1265,
+   0.133,
+   0.1456,
+   0.1412,
+   0.1398,
+   0.1288,
+   0.1319,
+   0.1293
+  ],
+  "anchor_levels": {
+   "lisp": 0.1077,
+   "smalltalk": 0.1088,
+   "scheme": 0.1115,
+   "forth": 0.1269,
+   "sci": 0.1622,
+   "hn": 0.1914
+  },
+  "pull1_mean": 0.1348,
+  "halves": {
+   "first_half": 0.1351,
+   "second_half": 0.1324
+  }
+ },
+ "register_trend_zstd_raw": {
+  "whole": 0.644,
+  "per_day": {
+   "08-06": 0.6367,
+   "08-07": 0.6389,
+   "08-08": 0.651,
+   "08-09": 0.6455,
+   "08-10": 0.6469,
+   "08-11": 0.6397,
+   "08-12": 0.6474,
+   "08-13": 0.6435,
+   "08-14": 0.6418
+  },
+  "band_floor": 0.704
+ },
+ "structure": {
+  "churn_signature_day_K3": {
+   "core_n": 181,
+   "core_dominance_pct": 84.2,
+   "stability_ratio": 1.37,
+   "permeability_pct": 39.4,
+   "note": "calendar-day windows; series-internal comparison only"
+  },
+  "series_day_K3": {
+   "issue1": [
+    131,
+    76.0,
+    1.65,
+    30.5
+   ],
+   "issue2": [
+    153,
+    79.0,
+    1.5,
+    33.6
+   ],
+   "issue3": [
+    166,
+    81.6,
+    1.43,
+    35.5
+   ],
+   "issue4": [
+    181,
+    84.2,
+    1.37,
+    39.4
+   ],
+   "fields": [
+    "core_n",
+    "dominance_pct",
+    "stability_ratio",
+    "permeability_pct"
+   ]
+  },
+  "activity_clock": {
+   "design": "each corpus's first min(N, n_agent) items split into 7 equal item-count windows; core = active in >=3 windows; clock-free, commensurable by construction",
+   "signatures": {
+    "agent": {
+     "core_n": 168,
+     "core_dominance_pct": 81.3,
+     "stability_ratio": 1.45,
+     "permeability_pct": 38.2
+    },
+    "lisp": {
+     "core_n": 74,
+     "core_dominance_pct": 19.4,
+     "stability_ratio": 6.07,
+     "permeability_pct": 3.7,
+     "n_items": 5721,
+     "span_days": 2962.0
+    },
+    "sci": {
+     "core_n": 63,
+     "core_dominance_pct": 22.9,
+     "stability_ratio": 4.13,
+     "permeability_pct": 7.2,
+     "n_items": 2836,
+     "span_days": 1415.0
+    },
+    "forth": {
+     "core_n": 55,
+     "core_dominance_pct": 43.8,
+     "stability_ratio": 4.05,
+     "permeability_pct": 7.3,
+     "n_items": 6378,
+     "span_days": 2947.0
+    },
+    "smalltalk": {
+     "core_n": 46,
+     "core_dominance_pct": 15.1,
+     "stability_ratio": 5.74,
+     "permeability_pct": 3.9,
+     "n_items": 3377,
+     "span_days": 2960.0
+    },
+    "scheme": {
+     "core_n": 66,
+     "core_dominance_pct": 32.1,
+     "stability_ratio": 4.34,
+     "permeability_pct": 7.8,
+     "n_items": 2530,
+     "span_days": 1353.0
+    }
+   }
+  },
+  "inflows": {
+   "08-05": {
+    "new_authors": 6,
+    "active_authors": 6,
+    "items": 26,
+    "newcomer_item_share": 1.0
+   },
+   "08-06": {
+    "new_authors": 224,
+    "active_authors": 225,
+    "items": 1111,
+    "newcomer_item_share": 0.96
+   },
+   "08-07": {
+    "new_authors": 64,
+    "active_authors": 159,
+    "items": 964,
+    "newcomer_item_share": 0.331
+   },
+   "08-08": {
+    "new_authors": 46,
+    "active_authors": 134,
+    "items": 864,
+    "newcomer_item_share": 0.242
+   },
+   "08-09": {
+    "new_authors": 56,
+    "active_authors": 164,
+    "items": 987,
+    "newcomer_item_share": 0.221
+   },
+   "08-10": {
+    "new_authors": 33,
+    "active_authors": 154,
+    "items": 1132,
+    "newcomer_item_share": 0.147
+   },
+   "08-11": {
+    "new_authors": 16,
+    "active_authors": 142,
+    "items": 1072,
+    "newcomer_item_share": 0.076
+   },
+   "08-12": {
+    "new_authors": 20,
+    "active_authors": 142,
+    "items": 1011,
+    "newcomer_item_share": 0.088
+   },
+   "08-13": {
+    "new_authors": 17,
+    "active_authors": 140,
+    "items": 1056,
+    "newcomer_item_share": 0.099
+   },
+   "08-14": {
+    "new_authors": 10,
+    "active_authors": 130,
+    "items": 994,
+    "newcomer_item_share": 0.076
+   }
+  },
+  "cohort_survival": {
+   "08-05": {
+    "n": 6,
+    "survival": {
+     "08-06": 0.167,
+     "08-07": 0.167,
+     "08-08": 0.0,
+     "08-09": 0.167,
+     "08-10": 0.167,
+     "08-11": 0.167,
+     "08-12": 0.167,
+     "08-13": 0.167,
+     "08-14": 0.167
+    },
+    "median_active_days": 1.0
+   },
+   "08-06": {
+    "n": 224,
+    "survival": {
+     "08-07": 0.42,
+     "08-08": 0.29,
+     "08-09": 0.286,
+     "08-10": 0.277,
+     "08-11": 0.259,
+     "08-12": 0.232,
+     "08-13": 0.205,
+     "08-14": 0.201
+    },
+    "median_active_days": 2.0
+   },
+   "08-07": {
+    "n": 64,
+    "survival": {
+     "08-08": 0.359,
+     "08-09": 0.344,
+     "08-10": 0.297,
+     "08-11": 0.281,
+     "08-12": 0.281,
+     "08-13": 0.281,
+     "08-14": 0.25
+    },
+    "median_active_days": 2.0
+   },
+   "08-08": {
+    "n": 46,
+    "survival": {
+     "08-09": 0.457,
+     "08-10": 0.304,
+     "08-11": 0.217,
+     "08-12": 0.174,
+     "08-13": 0.152,
+     "08-14": 0.152
+    },
+    "median_active_days": 2.0
+   },
+   "08-09": {
+    "n": 56,
+    "survival": {
+     "08-10": 0.446,
+     "08-11": 0.375,
+     "08-12": 0.339,
+     "08-13": 0.375,
+     "08-14": 0.286
+    },
+    "median_active_days": 2.0
+   },
+   "08-10": {
+    "n": 33,
+    "survival": {
+     "08-11": 0.545,
+     "08-12": 0.394,
+     "08-13": 0.394,
+     "08-14": 0.394
+    },
+    "median_active_days": 2.0
+   },
+   "08-11": {
+    "n": 16,
+    "survival": {
+     "08-12": 0.688,
+     "08-13": 0.375,
+     "08-14": 0.438
+    },
+    "median_active_days": 2.0
+   },
+   "08-12": {
+    "n": 20,
+    "survival": {
+     "08-13": 0.55,
+     "08-14": 0.45
+    },
+    "median_active_days": 2.0
+   },
+   "08-13": {
+    "n": 17,
+    "survival": {
+     "08-14": 0.353
+    },
+    "median_active_days": 1.0
+   },
+   "08-14": {
+    "n": 10,
+    "survival": {},
+    "median_active_days": 1.0
+   }
+  },
+  "permeability_observation_length_control": {
+   "question": "the published day-window permeability rose every issue (30.5 -> 33.6 -> 35.5 -> 39.4); core = active on >=3 calendar days over the WHOLE corpus span, so each new issue grants every existing cohort another day to clear the bar AND admits a new cohort to the average - the series can rise with no behavioural change",
+   "control": "FIXED-HORIZON permeability: >=3 active days within the cohort's first N CALENDAR days (arrival day inclusive), counted only for cohorts whose full N-day window fits below the cutoff. Same threshold, same data, constant opportunity.",
+   "label_note": "N is a calendar-day SPAN INCLUSIVE of the arrival day, not 'days after arrival'. An earlier draft labelled these spans H=3/H=4 while computing 4 and 5 calendar days; numbers unchanged, labels corrected.",
+   "script": "analysis/weather_permeability_control.py",
+   "published_series": [
+    30.5,
+    33.6,
+    35.5,
+    39.4
+   ],
+   "fixed_horizon_first_3_days": [
+    26.3,
+    27.7,
+    28.3,
+    30.0
+   ],
+   "fixed_horizon_first_4_days": [
+    30.3,
+    31.2,
+    32.9,
+    34.7
+   ],
+   "fixed_horizon_first_5_days": [
+    35.2,
+    32.1,
+    33.9,
+    36.2
+   ],
+   "deltas_issue1_to_issue4": {
+    "published": 8.9,
+    "published_on_corrected_footing": 7.2,
+    "first_3_days": 3.7,
+    "first_4_days": 4.4,
+    "first_5_days": 1.0
+   },
+   "per_cohort_issue4": {
+    "first_3_days": {
+     "08-06": [
+      25.4,
+      224
+     ],
+     "08-07": [
+      23.4,
+      64
+     ],
+     "08-08": [
+      26.1,
+      46
+     ],
+     "08-09": [
+      30.4,
+      56
+     ],
+     "08-10": [
+      33.3,
+      33
+     ],
+     "08-11": [
+      31.2,
+      16
+     ],
+     "08-12": [
+      40.0,
+      20
+     ]
+    },
+    "first_4_days": {
+     "08-06": [
+      32.1,
+      224
+     ],
+     "08-07": [
+      32.8,
+      64
+     ],
+     "08-08": [
+      26.1,
+      46
+     ],
+     "08-09": [
+      33.9,
+      56
+     ],
+     "08-10": [
+      39.4,
+      33
+     ],
+     "08-11": [
+      43.8,
+      16
+     ]
+    },
+    "first_5_days": {
+     "08-06": [
+      34.4,
+      224
+     ],
+     "08-07": [
+      35.9,
+      64
+     ],
+     "08-08": [
+      26.1,
+      46
+     ],
+     "08-09": [
+      39.3,
+      56
+     ],
+     "08-10": [
+      45.5,
+      33
+     ]
+    }
+   },
+   "reading": "the DIRECTION survives at the 3- and 4-day spans (+3.7 and +4.4 across four issues, both monotone) but roughly 40% of the published rise is observation-length and cohort-membership artefact (control +4.4 against +7.2 on the corrected footing; 51% against the uncorrected +8.9). At the 5-day span the series is NOT monotone (35.2 -> 32.1 -> 33.9 -> 36.2, +1.0). 'The door keeps opening' is downgraded to a consistent direction of uncertain magnitude, not a measured rate.",
+   "per_cohort_reading": "NOT monotone at any horizon: at the 4-day span 08-08 (26.1) sits below the earliest cohort 08-06 (32.1). The two most recent cohorts convert highest (08-10 39.4 n=33, 08-11 43.8 n=16) but they are also the smallest, so selection is as good an explanation as openness.",
+   "issue1_note": "issue #1's published 30.5 reproduces EXACTLY (core_n 131) against the data issue #1 actually held - its pull ran 08-11 19:56:47Z, a partial final day. Recomputed with a COMPLETE 08-11 the same metric reads 32.2. That is a different measurement, not data drift: no backfill or edit was found at any boundary.",
+   "confound_scope": "core_n (131 -> 153 -> 166 -> 181), core_dominance_pct and stability_ratio derive from the SAME expanding-span core definition and carry the same confound; only permeability was controlled this issue.",
+   "cohorts_in_published_average_by_issue": {
+    "issue1": [
+     "08-06",
+     "08-07",
+     "08-08",
+     "08-09"
+    ],
+    "issue2": [
+     "08-06",
+     "08-07",
+     "08-08",
+     "08-09",
+     "08-10"
+    ],
+    "issue3": [
+     "08-06",
+     "08-07",
+     "08-08",
+     "08-09",
+     "08-10",
+     "08-11"
+    ],
+    "issue4": [
+     "08-06",
+     "08-07",
+     "08-08",
+     "08-09",
+     "08-10",
+     "08-11",
+     "08-12"
+    ]
+   }
+  }
+ },
+ "allocation_trend": {
+  "venue_share_per_day_qwen_binary": {
+   "08-06": 0.548,
+   "08-07": 0.5265,
+   "08-08": 0.5249,
+   "08-09": 0.4797,
+   "08-10": 0.5156,
+   "08-11": 0.5042,
+   "08-12": 0.4561,
+   "08-13": 0.4885,
+   "08-14": 0.499
+  },
+  "references": {
+   "anchors_qwen_binary": "0.085-0.221 (full histories)",
+   "human_calibrated_anchor_floor": 0.06,
+   "era_matched_worst_case": "every point >= 1.47x forth-1991 (0.31), the parent study's era-matched damper. NOTE: issues #3 and #4 originally stated '>= 1.5x'; the 08-12 point is 0.4561/0.31 = 1.471, so 1.5 was wrong. Corrected here.",
+   "human_floor_calibration_span": "the ~7x human contrast spans ~2-25x at 95% (parent study)"
+  },
+  "reading": "second consecutive up-day off the 08-12 low (0.456 -> 0.489 -> 0.499); direction NOT decidable on 9 correlated points (naive slope -0.71 pts/day, nominal p~0.037, WEAKER than issue #3's -0.95 / p~0.02; author-correlated and founding-day-sensitive). Range 0.456-0.548 unchanged, 0.499 inside it; no excursion, 9th day. All prior cells identical to issue #3."
+ },
+ "newcomer_cells_issue_window": {
+  "counts": {
+   "newcomer_items": 76,
+   "incumbent_items": 892
+  },
+  "standing_cells_not_computed": "newcomer_items = 76, below the standing m>=100 floor for the Vendi-based parity/union cells; not computed. The NN cell WAS run on this window under its own lower floor (see matched_pool_nn_notes.floors) and is labelled supplementary - the restraint applies to the Vendi cells, not to every cell.",
+  "within_pool_parity": null,
+  "refresh_union_over_incumbent": null,
+  "matched_pool_nn_refresh": {
+   "issue3_window": {
+    "cutoff_utc": "2026-08-14T00:00:00Z",
+    "window_start_utc": "2026-08-13 00:08:54",
+    "corpus_items": 8223,
+    "window_items": 1044,
+    "newcomer_items": 105,
+    "incumbent_items": 939,
+    "matched": {
+     "reference_pool": 729,
+     "queries_per_side": 105,
+     "draws": 500,
+     "newcomer_to_pool": [
+      0.2998,
+      0.2967,
+      0.3023
+     ],
+     "incumbent_to_pool": [
+      0.2877,
+      0.2786,
+      0.2957
+     ],
+     "delta_observed": [
+      0.0124,
+      0.0022,
+      0.0216
+     ],
+     "delta_permutation_null": [
+      -0.0004,
+      -0.0133,
+      0.0126
+     ],
+     "p_two_sided_vs_null": 0.112,
+     "frac_null_ge_observed": 0.056
+    },
+    "legacy_asymmetric": {
+     "newcomer_to_incumbent_median": 0.2922,
+     "incumbent_to_incumbent_median": [
+      0.2968,
+      0.2935,
+      0.2996
+     ],
+     "delta": [
+      -0.0046,
+      -0.0074,
+      -0.0013
+     ],
+     "note": "SUPERSEDED; queries newcomers against ALL incumbents but incumbents against HALF. Published only to size the bias; not a reading."
+    }
+   },
+   "issue4_window": {
+    "cutoff_utc": "2026-08-15T00:00:00Z",
+    "window_start_utc": "2026-08-14 00:05:39",
+    "corpus_items": 9217,
+    "window_items": 968,
+    "newcomer_items": 76,
+    "incumbent_items": 892,
+    "matched": {
+     "reference_pool": 740,
+     "queries_per_side": 76,
+     "draws": 500,
+     "newcomer_to_pool": [
+      0.3077,
+      0.3055,
+      0.3113
+     ],
+     "incumbent_to_pool": [
+      0.2864,
+      0.276,
+      0.2969
+     ],
+     "delta_observed": [
+      0.0215,
+      0.011,
+      0.0325
+     ],
+     "delta_permutation_null": [
+      -0.0005,
+      -0.0166,
+      0.0178
+     ],
+     "p_two_sided_vs_null": 0.044,
+     "frac_null_ge_observed": 0.022
+    },
+    "legacy_asymmetric": {
+     "newcomer_to_incumbent_median": 0.3055,
+     "incumbent_to_incumbent_median": [
+      0.2976,
+      0.2938,
+      0.3009
+     ],
+     "delta": [
+      0.008,
+      0.0046,
+      0.0118
+     ],
+     "note": "SUPERSEDED; queries newcomers against ALL incumbents but incumbents against HALF. Published only to size the bias; not a reading."
+    }
+   }
+  },
+  "matched_pool_nn_notes": {
+   "scripts": {
+    "construction_and_run": "analysis/weather_nn_refresh.py (imported by analysis/weather_gpu.py, single source of truth)",
+    "synthetic_validation": "analysis/weather_nn_validate.py"
+   },
+   "construction": "each draw partitions the window's incumbents into disjoint reference pool R, probe, and pseudo-newcomer sets, |probe|=|pseudo|=|newcomers|; newcomers and probe both query R (same pool, same size) -> observed delta; pseudo and probe both query R -> the permutation null in this corpus's own embedding geometry",
+   "draws": "500. At 40 draws the two-sided permutation p has a FLOOR of 2/40 = 0.05, which the issue-4 window hit exactly; 500 draws resolves it.",
+   "floors": "the Vendi-based parity/union cells keep the standing m>=100 floor; the NN cell runs to m>=50 because its permutation null widens automatically as m shrinks. The issue-4 window (m=76) is BELOW the Vendi floor and is flagged below_standing_vendi_floor in the cell itself. This is a deliberate bypass for this instrument, not a lowered floor for all of them.",
+   "supersedes": "the asymmetric construction (newcomers vs ALL incumbents, incumbents vs HALF), which issue #3 omitted rather than report. Measured over 500 half-splits it reads delta -0.0046 [-0.0074,-0.0013] on issue #3's window - negative, band excluding zero, i.e. newcomers CLOSER to incumbents than incumbents are to each other, a spurious echo reading - where the matched construction reads +0.0124. Bias -0.017 (issue-3 window) and -0.0135 (issue-4 window); the synthetic null puts it at -0.030.",
+   "legacy_second_defect": "as originally written the legacy baseline used ONE random half-split, so its delta carried no band and moved ~0.005 between runs; the published comparison repeats the split 500 times so the bias estimate is stable.",
+   "validation": "analysis/weather_nn_validate.py, runnable, CPU-only: matched null centres on ~0 in every regime (+0.0006 / +0.0002 / +0.0004); matched delta ~0 under both nulls (p=0.25, 0.28) and +0.594 (p=0.0) when queries occupy directions the reference pool never does; the legacy construction reads -0.0297 and -0.0299 under those same true nulls.",
+   "reproduction_check": "the issue3_window run reproduces issue #3's window construction exactly: 8,223 in-scope items, 1,044-item window, 105 newcomer / 939 incumbent, window start 08-13 00:08:54Z"
+  }
+ },
+ "caveats": [
+  "cutoff 2026-08-15T00:00Z on all analyses, strictly exclusive; raw files hold 302 post-cutoff items, every analysis filters",
+  "pull ran 5.2 h after cutoff (vs 11 min in issue #3); Aug-14 is COMPLETE and not pro-rated. Aug-14 numbers labelled provisional as standing discipline, with materially smaller trailing exposure than any prior issue",
+  "feed lag: first non-zero backfill measured (1 item, 08-14, 2.4 min old, 0 authors revealed); dated after issue #3's cutoff so it revises NO published issue-3 number. Track record: 3 boundaries at zero, 1 at a single item",
+  "content mutations: 0 this boundary; the #2->#3 boundary had 16, landing exactly on the two days whose register cells moved (08-06, 08-10) - issue #3's hypothesis CONFIRMED. Edited items now evicted from both id-keyed caches",
+  "delta pipeline (claim + allocation-label caches keyed by item id, with content-hash eviction); single-normalizer series cells; rolling + refresh bge-only; placement 3-embedder one-prompt",
+  "allocation LEVEL carries the 0.31-0.71 specification range and classifier-currency caveat from results/allocation; the TREND is the clean object",
+  "day-window churn series-internal only; the PERMEABILITY series carries an observation-length confound - see structure.permeability_observation_length_control; 'the door keeps opening' downgraded to a direction of uncertain magnitude",
+  "activity-clock signatures compare at matched item-volume over the anchors' FULL histories; identity != operator (permanent)",
+  "newcomer window m=76, BELOW the standing m>=100 floor: standing parity/union cells not computed, floor not lowered; the NN cell on this window is supplementary and labelled",
+  "parity/union reproduce issue #3's window to within Monte-Carlo noise (1.031 vs 1.019; 1.017 vs 1.010), not exactly: the pipeline shares one RNG stream across placement and newcomer cells so draw sequences differ; at 40 draws those bands are MC-noisy, which is why the NN cell uses 500 draws",
+  "frozen anchor claim files verified byte-identical to issue #3; frozen anchors are never re-measured"
+ ],
+ "frozen_input_hashes_sha256": {
+  "baseline_claims/lisp_all.json": "45b4bb557dfa5cc2c2b9cc1221dd6d70381386984182853e906563ab362891a6",
+  "baseline_claims/sci_all.json": "79c299a65220e48a4a3ad2f6db708a06fc70f85c22be1f9ae9e9c41cb76e2e07",
+  "baseline_claims/hn_all.json": "0372bd2893c8290447f0bcf90f20faa64065beb7be938e20941263dba8aed470",
+  "claim_cache_agent.json": "0e3c309f2fa355b1c4feca741247b83a60163b61a51ea7218baab0d09788f45a"
+ }
+}

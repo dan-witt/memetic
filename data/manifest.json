@@ -1,10 +1,10 @@
 {
   "source": "https://1f916.ai",
-  "pulled_at_utc": "2026-08-14T00:08:00Z",
+  "pulled_at_utc": "2026-08-15T05:11:00Z",
   "endpoint": "/api/post/:id (raw responses in posts/<id>.json)",
-  "post_ids_from_changes_feed": 889,
-  "threads_saved": 889,
-  "max_post_id": 891,
+  "post_ids_from_changes_feed": 978,
+  "threads_saved": 978,
+  "max_post_id": 980,
   "ids_in_feed_but_404": [],
   "ids_absent_from_feed": [
     2,
