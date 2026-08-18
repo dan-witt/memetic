@@ -1,0 +1,1435 @@
+{
+ "issue": "2026-08-17 (issue #5)",
+ "issue_note": "three-day window: issues #4->#5 lapsed while the lemmy.world comparator (results/lemmy_baseline) was re-crawled after a pagination defect. Window cells this issue cover 3 calendar days against issue #4's 1 and are NOT window-vs-window comparable to it.",
+ "cutoff": "2026-08-18T00:00:00Z",
+ "pull_at": "2026-08-18T04:32:11Z",
+ "issue_window_start": "2026-08-15 05:10",
+ "corpus": {
+  "items": 11742,
+  "posts": 1133,
+  "authors": 516,
+  "days": [
+   "08-05",
+   "08-06",
+   "08-07",
+   "08-08",
+   "08-09",
+   "08-10",
+   "08-11",
+   "08-12",
+   "08-13",
+   "08-14",
+   "08-15",
+   "08-16",
+   "08-17"
+  ],
+  "issue_window_items": 2220,
+  "prev_issue_items": 9217
+ },
+ "instruments_this_issue": [
+  "weather_churn_control.py (NEW): fixed-observation-span control for core_n / dominance / stability \u2014 issue #4 watch item #4",
+  "weather_lemmy_ref.py (NEW): frozen lemmy.world platform levels carried into the allocation cell, every issue from here"
+ ],
+ "feed_lag": {
+  "backfilled_items": 3,
+  "by_day": {
+   "08-15": 3
+  },
+  "new_authors_revealed": 2,
+  "item_age_at_missed_pull_hours": {
+   "median": 0.05,
+   "p90": 0.07
+  },
+  "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate",
+  "content_mutations": {
+   "items_compared": 9519,
+   "edited_items": 0,
+   "by_day": {},
+   "authors_affected": 0,
+   "char_delta": {
+    "median": null,
+    "min": null,
+    "max": null
+   },
+   "edited_keys": [],
+   "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them."
+  }
+ },
+ "placement_vs_frozen_anchors": {
+  "bge-large-en-v1.5": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.233,
+      1.195,
+      1.255
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      1.15,
+      1.129,
+      1.178
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.661,
+      0.648,
+      0.672
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.615,
+      0.606,
+      0.627
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.612,
+      0.602,
+      0.624
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.572,
+      0.565,
+      0.581
+     ]
+    }
+   }
+  },
+  "all-mpnet-base-v2": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.262,
+      1.229,
+      1.316
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      1.202,
+      1.165,
+      1.224
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.672,
+      0.653,
+      0.689
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.638,
+      0.624,
+      0.649
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.571,
+      0.555,
+      0.585
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.542,
+      0.53,
+      0.551
+     ]
+    }
+   }
+  },
+  "gte-large": {
+   "lisp": {
+    "full": {
+     "m": 1500,
+     "band": [
+      1.063,
+      1.047,
+      1.079
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      1.022,
+      1.013,
+      1.036
+     ]
+    }
+   },
+   "sci": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.757,
+      0.752,
+      0.767
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.727,
+      0.719,
+      0.732
+     ]
+    }
+   },
+   "hn": {
+    "full": {
+     "m": 1500,
+     "band": [
+      0.717,
+      0.711,
+      0.723
+     ]
+    },
+    "window_only": {
+     "m": 1500,
+     "band": [
+      0.69,
+      0.686,
+      0.695
+     ]
+    }
+   }
+  }
+ },
+ "idea_time_series": {
+  "t_utc": [
+   "08-06 01:52",
+   "08-06 03:38",
+   "08-06 04:24",
+   "08-06 05:23",
+   "08-06 06:43",
+   "08-06 07:31",
+   "08-06 08:20",
+   "08-06 09:44",
+   "08-06 11:00",
+   "08-06 12:17",
+   "08-06 12:44",
+   "08-06 13:09",
+   "08-06 13:50",
+   "08-06 14:57",
+   "08-06 15:52",
+   "08-06 16:24",
+   "08-06 17:20",
+   "08-06 17:52",
+   "08-06 18:27",
+   "08-06 19:17",
+   "08-06 19:53",
+   "08-06 20:18",
+   "08-06 20:39",
+   "08-06 21:12",
+   "08-06 22:02",
+   "08-06 22:40",
+   "08-06 23:15",
+   "08-07 00:01",
+   "08-07 00:24",
+   "08-07 01:04",
+   "08-07 01:29",
+   "08-07 02:02",
+   "08-07 02:18",
+   "08-07 03:04",
+   "08-07 03:23",
+   "08-07 03:47",
+   "08-07 05:02",
+   "08-07 06:35",
+   "08-07 07:30",
+   "08-07 08:28",
+   "08-07 10:11",
+   "08-07 12:15",
+   "08-07 13:01",
+   "08-07 13:44",
+   "08-07 14:11",
+   "08-07 15:23",
+   "08-07 16:42",
+   "08-07 17:39",
+   "08-07 19:01",
+   "08-07 19:59",
+   "08-07 21:42",
+   "08-07 23:57",
+   "08-08 00:34",
+   "08-08 00:49",
+   "08-08 01:47",
+   "08-08 02:50",
+   "08-08 03:31",
+   "08-08 05:59",
+   "08-08 07:11",
+   "08-08 08:43",
+   "08-08 09:11",
+   "08-08 10:09",
+   "08-08 11:45",
+   "08-08 12:56",
+   "08-08 14:02",
+   "08-08 15:11",
+   "08-08 16:35",
+   "08-08 17:25",
+   "08-08 17:49",
+   "08-08 18:27",
+   "08-08 19:37",
+   "08-08 21:47",
+   "08-08 23:01",
+   "08-09 00:37",
+   "08-09 01:07",
+   "08-09 02:07",
+   "08-09 03:13",
+   "08-09 04:11",
+   "08-09 05:04",
+   "08-09 06:15",
+   "08-09 07:20",
+   "08-09 07:58",
+   "08-09 08:26",
+   "08-09 09:59",
+   "08-09 12:44",
+   "08-09 14:25",
+   "08-09 15:22",
+   "08-09 15:54",
+   "08-09 16:48",
+   "08-09 17:36",
+   "08-09 18:32",
+   "08-09 19:35",
+   "08-09 20:23",
+   "08-09 21:10",
+   "08-09 21:37",
+   "08-09 22:54",
+   "08-09 23:12",
+   "08-09 23:48",
+   "08-10 00:12",
+   "08-10 00:32",
+   "08-10 00:53",
+   "08-10 01:35",
+   "08-10 02:09",
+   "08-10 02:45",
+   "08-10 03:32",
+   "08-10 04:25",
+   "08-10 05:02",
+   "08-10 06:09",
+   "08-10 07:02",
+   "08-10 07:31",
+   "08-10 08:40",
+   "08-10 09:47",
+   "08-10 11:00",
+   "08-10 12:30",
+   "08-10 14:07",
+   "08-10 14:44",
+   "08-10 15:02",
+   "08-10 16:00",
+   "08-10 16:35",
+   "08-10 17:20",
+   "08-10 18:44",
+   "08-10 19:39",
+   "08-10 20:33",
+   "08-10 21:20",
+   "08-10 22:29",
+   "08-10 23:16",
+   "08-11 00:14",
+   "08-11 00:42",
+   "08-11 01:23",
+   "08-11 01:51",
+   "08-11 02:49",
+   "08-11 03:41",
+   "08-11 04:30",
+   "08-11 05:38",
+   "08-11 06:37",
+   "08-11 07:17",
+   "08-11 08:54",
+   "08-11 09:28",
+   "08-11 10:34",
+   "08-11 12:02",
+   "08-11 13:09",
+   "08-11 14:31",
+   "08-11 15:20",
+   "08-11 16:11",
+   "08-11 17:37",
+   "08-11 18:54",
+   "08-11 20:16",
+   "08-11 20:46",
+   "08-11 21:20",
+   "08-11 22:09",
+   "08-11 23:09",
+   "08-11 23:32",
+   "08-11 23:55",
+   "08-12 00:13",
+   "08-12 00:34",
+   "08-12 01:00",
+   "08-12 01:30",
+   "08-12 02:16",
+   "08-12 02:35",
+   "08-12 03:39",
+   "08-12 05:04",
+   "08-12 05:55",
+   "08-12 07:00",
+   "08-12 08:29",
+   "08-12 09:21",
+   "08-12 11:02",
+   "08-12 12:24",
+   "08-12 13:34",
+   "08-12 14:11",
+   "08-12 15:07",
+   "08-12 16:34",
+   "08-12 17:55",
+   "08-12 18:49",
+   "08-12 20:01",
+   "08-12 21:04",
+   "08-12 21:59",
+   "08-12 23:18",
+   "08-12 23:56",
+   "08-13 00:14",
+   "08-13 01:06",
+   "08-13 01:36",
+   "08-13 02:30",
+   "08-13 02:46",
+   "08-13 03:28",
+   "08-13 04:00",
+   "08-13 04:57",
+   "08-13 05:52",
+   "08-13 06:14",
+   "08-13 06:51",
+   "08-13 07:39",
+   "08-13 08:50",
+   "08-13 09:16",
+   "08-13 10:45",
+   "08-13 12:44",
+   "08-13 13:50",
+   "08-13 15:15",
+   "08-13 16:24",
+   "08-13 18:12",
+   "08-13 19:06",
+   "08-13 19:39",
+   "08-13 21:10",
+   "08-13 21:42",
+   "08-13 23:10",
+   "08-13 23:39",
+   "08-13 23:52",
+   "08-14 00:14",
+   "08-14 00:43",
+   "08-14 01:26",
+   "08-14 02:59",
+   "08-14 04:13",
+   "08-14 05:18",
+   "08-14 06:46",
+   "08-14 07:36",
+   "08-14 08:20",
+   "08-14 09:13",
+   "08-14 10:09",
+   "08-14 11:13",
+   "08-14 13:10",
+   "08-14 14:14",
+   "08-14 15:12",
+   "08-14 16:43",
+   "08-14 18:11",
+   "08-14 18:47",
+   "08-14 18:55",
+   "08-14 19:31",
+   "08-14 20:07",
+   "08-14 21:02",
+   "08-14 21:48",
+   "08-14 22:47",
+   "08-15 00:00",
+   "08-15 00:19",
+   "08-15 00:52",
+   "08-15 01:18",
+   "08-15 01:54",
+   "08-15 02:28",
+   "08-15 03:32",
+   "08-15 04:57",
+   "08-15 06:00",
+   "08-15 07:09",
+   "08-15 07:59",
+   "08-15 08:19",
+   "08-15 09:16",
+   "08-15 11:20",
+   "08-15 12:31",
+   "08-15 14:29",
+   "08-15 16:00",
+   "08-15 16:30",
+   "08-15 17:43",
+   "08-15 19:28",
+   "08-15 20:34",
+   "08-15 21:08",
+   "08-15 21:45",
+   "08-15 23:00",
+   "08-16 00:16",
+   "08-16 00:34",
+   "08-16 00:59",
+   "08-16 01:26",
+   "08-16 02:09",
+   "08-16 03:32",
+   "08-16 04:42",
+   "08-16 06:15",
+   "08-16 07:52",
+   "08-16 08:54",
+   "08-16 09:15",
+   "08-16 11:43",
+   "08-16 13:16",
+   "08-16 14:55",
+   "08-16 15:41",
+   "08-16 17:07",
+   "08-16 18:38",
+   "08-16 20:10",
+   "08-16 21:50",
+   "08-16 23:57",
+   "08-17 00:29",
+   "08-17 00:46",
+   "08-17 01:30",
+   "08-17 02:08",
+   "08-17 03:50",
+   "08-17 04:29",
+   "08-17 05:20",
+   "08-17 06:15",
+   "08-17 07:50",
+   "08-17 08:55",
+   "08-17 09:41",
+   "08-17 11:35",
+   "08-17 12:42",
+   "08-17 14:33",
+   "08-17 16:10",
+   "08-17 17:01",
+   "08-17 18:26",
+   "08-17 20:34"
+  ],
+  "vendi_over_W": [
+   0.1414,
+   0.1259,
+   0.1277,
+   0.1233,
+   0.1362,
+   0.138,
+   0.1434,
+   0.1412,
+   0.1394,
+   0.1302,
+   0.1297,
+   0.1275,
+   0.1359,
+   0.1402,
+   0.1369,
+   0.1353,
+   0.1305,
+   0.1275,
+   0.1232,
+   0.1266,
+   0.128,
+   0.1352,
+   0.1356,
+   0.139,
+   0.1359,
+   0.139,
+   0.1405,
+   0.143,
+   0.1418,
+   0.1419,
+   0.1417,
+   0.1407,
+   0.1337,
+   0.1332,
+   0.1299,
+   0.1316,
+   0.1305,
+   0.1317,
+   0.1289,
+   0.1277,
+   0.134,
+   0.135,
+   0.1392,
+   0.1376,
+   0.1426,
+   0.139,
+   0.1398,
+   0.1362,
+   0.1419,
+   0.1403,
+   0.1471,
+   0.1268,
+   0.1292,
+   0.1265,
+   0.1407,
+   0.1368,
+   0.1347,
+   0.1325,
+   0.1315,
+   0.1309,
+   0.1322,
+   0.1376,
+   0.1369,
+   0.1351,
+   0.1325,
+   0.1314,
+   0.1335,
+   0.1336,
+   0.1335,
+   0.1342,
+   0.1421,
+   0.1369,
+   0.1233,
+   0.1237,
+   0.1311,
+   0.1435,
+   0.1393,
+   0.1421,
+   0.1426,
+   0.1424,
+   0.1345,
+   0.1354,
+   0.1391,
+   0.141,
+   0.1434,
+   0.138,
+   0.1415,
+   0.139,
+   0.1412,
+   0.1339,
+   0.1328,
+   0.1332,
+   0.135,
+   0.1407,
+   0.1401,
+   0.1416,
+   0.137,
+   0.1444,
+   0.1431,
+   0.1432,
+   0.1265,
+   0.1264,
+   0.1242,
+   0.133,
+   0.1281,
+   0.1264,
+   0.1237,
+   0.1312,
+   0.1287,
+   0.1341,
+   0.1321,
+   0.1376,
+   0.139,
+   0.1364,
+   0.1353,
+   0.1325,
+   0.1317,
+   0.1347,
+   0.1351,
+   0.1386,
+   0.1415,
+   0.1417,
+   0.1434,
+   0.1391,
+   0.1389,
+   0.1371,
+   0.1354,
+   0.1353,
+   0.1359,
+   0.1377,
+   0.1384,
+   0.1373,
+   0.1318,
+   0.1336,
+   0.1335,
+   0.1321,
+   0.1263,
+   0.1253,
+   0.1281,
+   0.1322,
+   0.1316,
+   0.1344,
+   0.1298,
+   0.1361,
+   0.1334,
+   0.1368,
+   0.135,
+   0.1359,
+   0.1309,
+   0.1351,
+   0.1323,
+   0.135,
+   0.1344,
+   0.1359,
+   0.129,
+   0.1319,
+   0.1411,
+   0.1454,
+   0.1426,
+   0.142,
+   0.1388,
+   0.1356,
+   0.1295,
+   0.1244,
+   0.1207,
+   0.1182,
+   0.1248,
+   0.1298,
+   0.1407,
+   0.1403,
+   0.1444,
+   0.1401,
+   0.1338,
+   0.1329,
+   0.1245,
+   0.1291,
+   0.1333,
+   0.1333,
+   0.1299,
+   0.1234,
+   0.1284,
+   0.1293,
+   0.131,
+   0.1309,
+   0.1293,
+   0.1296,
+   0.1275,
+   0.1278,
+   0.1251,
+   0.1233,
+   0.1202,
+   0.1199,
+   0.1306,
+   0.1241,
+   0.1281,
+   0.1225,
+   0.13,
+   0.1311,
+   0.1319,
+   0.1289,
+   0.1248,
+   0.1311,
+   0.1354,
+   0.1464,
+   0.1426,
+   0.1393,
+   0.1326,
+   0.1298,
+   0.1346,
+   0.1342,
+   0.135,
+   0.1314,
+   0.132,
+   0.1264,
+   0.1252,
+   0.1232,
+   0.1224,
+   0.1239,
+   0.1201,
+   0.1234,
+   0.1265,
+   0.133,
+   0.1456,
+   0.1412,
+   0.1398,
+   0.1288,
+   0.1319,
+   0.1293,
+   0.127,
+   0.1284,
+   0.1293,
+   0.128,
+   0.1244,
+   0.131,
+   0.1317,
+   0.1344,
+   0.1258,
+   0.1236,
+   0.1207,
+   0.1229,
+   0.1266,
+   0.1263,
+   0.1337,
+   0.1295,
+   0.1294,
+   0.1237,
+   0.1277,
+   0.1302,
+   0.127,
+   0.1277,
+   0.1271,
+   0.1323,
+   0.1364,
+   0.1379,
+   0.1361,
+   0.1302,
+   0.1313,
+   0.1296,
+   0.134,
+   0.1273,
+   0.1249,
+   0.1166,
+   0.1192,
+   0.1262,
+   0.1292,
+   0.1298,
+   0.123,
+   0.1248,
+   0.1268,
+   0.1261,
+   0.1262,
+   0.1253,
+   0.1382,
+   0.1374,
+   0.1403,
+   0.1324,
+   0.1261,
+   0.1238,
+   0.121,
+   0.1201,
+   0.1188,
+   0.1147,
+   0.1208,
+   0.1238,
+   0.1267,
+   0.1259,
+   0.1239,
+   0.1325,
+   0.1301,
+   0.1274,
+   0.1241
+  ],
+  "anchor_levels": {
+   "lisp": 0.1077,
+   "smalltalk": 0.1088,
+   "scheme": 0.1115,
+   "forth": 0.1269,
+   "sci": 0.1622,
+   "hn": 0.1914
+  },
+  "pull1_mean": 0.1348,
+  "halves": {
+   "first_half": 0.1351,
+   "second_half": 0.1298
+  },
+  "prev_issue_halves": {
+   "first_half": 0.1351,
+   "second_half": 0.1324
+  }
+ },
+ "register_trend_zstd_raw": {
+  "whole": 0.6448,
+  "per_day": {
+   "08-06": 0.6367,
+   "08-07": 0.6389,
+   "08-08": 0.651,
+   "08-09": 0.6455,
+   "08-10": 0.6469,
+   "08-11": 0.6397,
+   "08-12": 0.6474,
+   "08-13": 0.6435,
+   "08-14": 0.6418,
+   "08-15": 0.6485,
+   "08-16": 0.6498,
+   "08-17": 0.6445
+  },
+  "band_floor": 0.704
+ },
+ "structure": {
+  "inflows": {
+   "08-05": {
+    "new_authors": 6,
+    "active_authors": 6,
+    "items": 26,
+    "newcomer_item_share": 1.0
+   },
+   "08-06": {
+    "new_authors": 224,
+    "active_authors": 225,
+    "items": 1111,
+    "newcomer_item_share": 0.96
+   },
+   "08-07": {
+    "new_authors": 64,
+    "active_authors": 159,
+    "items": 964,
+    "newcomer_item_share": 0.331
+   },
+   "08-08": {
+    "new_authors": 46,
+    "active_authors": 134,
+    "items": 864,
+    "newcomer_item_share": 0.242
+   },
+   "08-09": {
+    "new_authors": 56,
+    "active_authors": 164,
+    "items": 987,
+    "newcomer_item_share": 0.221
+   },
+   "08-10": {
+    "new_authors": 33,
+    "active_authors": 154,
+    "items": 1132,
+    "newcomer_item_share": 0.147
+   },
+   "08-11": {
+    "new_authors": 16,
+    "active_authors": 142,
+    "items": 1072,
+    "newcomer_item_share": 0.076
+   },
+   "08-12": {
+    "new_authors": 20,
+    "active_authors": 142,
+    "items": 1011,
+    "newcomer_item_share": 0.088
+   },
+   "08-13": {
+    "new_authors": 17,
+    "active_authors": 140,
+    "items": 1056,
+    "newcomer_item_share": 0.099
+   },
+   "08-14": {
+    "new_authors": 10,
+    "active_authors": 130,
+    "items": 994,
+    "newcomer_item_share": 0.076
+   },
+   "08-15": {
+    "new_authors": 11,
+    "active_authors": 123,
+    "items": 934,
+    "newcomer_item_share": 0.101
+   },
+   "08-16": {
+    "new_authors": 7,
+    "active_authors": 112,
+    "items": 794,
+    "newcomer_item_share": 0.045
+   },
+   "08-17": {
+    "new_authors": 6,
+    "active_authors": 116,
+    "items": 797,
+    "newcomer_item_share": 0.038
+   }
+  },
+  "cohort_survival": {
+   "08-05": {
+    "n": 6,
+    "survival": {
+     "08-06": 0.167,
+     "08-07": 0.167,
+     "08-08": 0.0,
+     "08-09": 0.167,
+     "08-10": 0.167,
+     "08-11": 0.167,
+     "08-12": 0.167,
+     "08-13": 0.167,
+     "08-14": 0.167,
+     "08-15": 0.167,
+     "08-16": 0.167,
+     "08-17": 0.167
+    },
+    "median_active_days": 1.0
+   },
+   "08-06": {
+    "n": 224,
+    "survival": {
+     "08-07": 0.42,
+     "08-08": 0.29,
+     "08-09": 0.286,
+     "08-10": 0.277,
+     "08-11": 0.259,
+     "08-12": 0.232,
+     "08-13": 0.205,
+     "08-14": 0.201,
+     "08-15": 0.165,
+     "08-16": 0.152,
+     "08-17": 0.147
+    },
+    "median_active_days": 2.0
+   },
+   "08-07": {
+    "n": 64,
+    "survival": {
+     "08-08": 0.359,
+     "08-09": 0.344,
+     "08-10": 0.297,
+     "08-11": 0.281,
+     "08-12": 0.281,
+     "08-13": 0.281,
+     "08-14": 0.25,
+     "08-15": 0.25,
+     "08-16": 0.188,
+     "08-17": 0.172
+    },
+    "median_active_days": 2.0
+   },
+   "08-08": {
+    "n": 46,
+    "survival": {
+     "08-09": 0.457,
+     "08-10": 0.304,
+     "08-11": 0.217,
+     "08-12": 0.174,
+     "08-13": 0.152,
+     "08-14": 0.152,
+     "08-15": 0.152,
+     "08-16": 0.152,
+     "08-17": 0.152
+    },
+    "median_active_days": 2.0
+   },
+   "08-09": {
+    "n": 56,
+    "survival": {
+     "08-10": 0.446,
+     "08-11": 0.375,
+     "08-12": 0.339,
+     "08-13": 0.375,
+     "08-14": 0.286,
+     "08-15": 0.268,
+     "08-16": 0.268,
+     "08-17": 0.232
+    },
+    "median_active_days": 2.0
+   },
+   "08-10": {
+    "n": 33,
+    "survival": {
+     "08-11": 0.545,
+     "08-12": 0.394,
+     "08-13": 0.394,
+     "08-14": 0.394,
+     "08-15": 0.394,
+     "08-16": 0.394,
+     "08-17": 0.455
+    },
+    "median_active_days": 3.0
+   },
+   "08-11": {
+    "n": 16,
+    "survival": {
+     "08-12": 0.688,
+     "08-13": 0.375,
+     "08-14": 0.438,
+     "08-15": 0.312,
+     "08-16": 0.25,
+     "08-17": 0.25
+    },
+    "median_active_days": 2.0
+   },
+   "08-12": {
+    "n": 20,
+    "survival": {
+     "08-13": 0.55,
+     "08-14": 0.45,
+     "08-15": 0.35,
+     "08-16": 0.2,
+     "08-17": 0.3
+    },
+    "median_active_days": 2.0
+   },
+   "08-13": {
+    "n": 17,
+    "survival": {
+     "08-14": 0.353,
+     "08-15": 0.235,
+     "08-16": 0.235,
+     "08-17": 0.176
+    },
+    "median_active_days": 1.0
+   },
+   "08-14": {
+    "n": 10,
+    "survival": {
+     "08-15": 0.7,
+     "08-16": 0.4,
+     "08-17": 0.3
+    },
+    "median_active_days": 2.5
+   },
+   "08-15": {
+    "n": 11,
+    "survival": {
+     "08-16": 0.636,
+     "08-17": 0.818
+    },
+    "median_active_days": 3.0
+   },
+   "08-16": {
+    "n": 7,
+    "survival": {
+     "08-17": 0.714
+    },
+    "median_active_days": 2.0
+   },
+   "08-17": {
+    "n": 6,
+    "survival": {},
+    "median_active_days": 1.0
+   }
+  },
+  "churn_signature_day_K3": {
+   "core_n": 206,
+   "core_dominance_pct": 88.2,
+   "stability_ratio": 1.26,
+   "permeability_pct": 42.9,
+   "note": "calendar-day windows; series-internal comparison only"
+  },
+  "activity_clock_signatures": {
+   "design": "each corpus's first min(N, n_agent) items split into 7 equal item-count windows; core = active in >=3 windows; clock-free, commensurable by construction",
+   "signatures": {
+    "agent": {
+     "core_n": 175,
+     "core_dominance_pct": 82.6,
+     "stability_ratio": 1.42,
+     "permeability_pct": 37.0
+    },
+    "lisp": {
+     "core_n": 74,
+     "core_dominance_pct": 19.4,
+     "stability_ratio": 6.07,
+     "permeability_pct": 3.7,
+     "n_items": 5721,
+     "span_days": 2962.0
+    },
+    "sci": {
+     "core_n": 63,
+     "core_dominance_pct": 22.9,
+     "stability_ratio": 4.13,
+     "permeability_pct": 7.2,
+     "n_items": 2836,
+     "span_days": 1415.0
+    },
+    "forth": {
+     "core_n": 55,
+     "core_dominance_pct": 43.8,
+     "stability_ratio": 4.05,
+     "permeability_pct": 7.3,
+     "n_items": 6378,
+     "span_days": 2947.0
+    },
+    "smalltalk": {
+     "core_n": 46,
+     "core_dominance_pct": 15.1,
+     "stability_ratio": 5.74,
+     "permeability_pct": 3.9,
+     "n_items": 3377,
+     "span_days": 2960.0
+    },
+    "scheme": {
+     "core_n": 66,
+     "core_dominance_pct": 32.1,
+     "stability_ratio": 4.34,
+     "permeability_pct": 7.8,
+     "n_items": 2530,
+     "span_days": 1353.0
+    }
+   }
+  },
+  "permeability_fixed_horizon": {
+   "#1": {
+    "cutoff": "2026-08-12",
+    "published": 30.5,
+    "N3": 26.3,
+    "N4": 30.3,
+    "N5": 35.2
+   },
+   "#2": {
+    "cutoff": "2026-08-13",
+    "published": 33.6,
+    "N3": 27.7,
+    "N4": 31.2,
+    "N5": 32.1
+   },
+   "#3": {
+    "cutoff": "2026-08-14",
+    "published": 35.5,
+    "N3": 28.3,
+    "N4": 32.9,
+    "N5": 33.9
+   },
+   "#4": {
+    "cutoff": "2026-08-15",
+    "published": 39.4,
+    "N3": 30.0,
+    "N4": 34.7,
+    "N5": 36.2
+   },
+   "#5": {
+    "cutoff": "2026-08-18",
+    "published": 42.9,
+    "N3": 32.2,
+    "N4": 35.7,
+    "N5": 36.8
+   }
+  },
+  "churn_fixed_span": {
+   "5d": {
+    "#1": {
+     "span": "08-07..08-11",
+     "core_n": 118,
+     "dominance_pct": 77.1,
+     "stability_ratio": 1.61,
+     "permeability_pct": 36.9
+    },
+    "#2": {
+     "span": "08-08..08-12",
+     "core_n": 119,
+     "dominance_pct": 79.3,
+     "stability_ratio": 1.51,
+     "permeability_pct": 42.9
+    },
+    "#3": {
+     "span": "08-09..08-13",
+     "core_n": 124,
+     "dominance_pct": 84.3,
+     "stability_ratio": 1.43,
+     "permeability_pct": 41.1
+    },
+    "#4": {
+     "span": "08-10..08-14",
+     "core_n": 129,
+     "dominance_pct": 86.4,
+     "stability_ratio": 1.35,
+     "permeability_pct": 48.1
+    },
+    "#5": {
+     "span": "08-13..08-17",
+     "core_n": 112,
+     "dominance_pct": 87.6,
+     "stability_ratio": 1.32,
+     "permeability_pct": 46.1
+    }
+   },
+   "7d": {
+    "#1": {
+     "span": "08-05..08-11",
+     "core_n": 135,
+     "dominance_pct": 75.8,
+     "stability_ratio": 1.62,
+     "permeability_pct": 32.2
+    },
+    "#2": {
+     "span": "08-06..08-12",
+     "core_n": 153,
+     "dominance_pct": 79.2,
+     "stability_ratio": 1.5,
+     "permeability_pct": 33.7
+    },
+    "#3": {
+     "span": "08-07..08-13",
+     "core_n": 146,
+     "dominance_pct": 83.0,
+     "stability_ratio": 1.42,
+     "permeability_pct": 37.4
+    },
+    "#4": {
+     "span": "08-08..08-14",
+     "core_n": 149,
+     "dominance_pct": 85.8,
+     "stability_ratio": 1.34,
+     "permeability_pct": 47.0
+    },
+    "#5": {
+     "span": "08-11..08-17",
+     "core_n": 145,
+     "dominance_pct": 91.3,
+     "stability_ratio": 1.24,
+     "permeability_pct": 46.9
+    }
+   }
+  },
+  "churn_control_note": "core_n/dominance/stability were uncontrolled through issue #4. Under the fixed-span control dominance RISES and stability FALLS monotonically at both 5d and 7d spans - those survive the observation-length confound. core_n shows no consistent direction (net +/-7%) against a +57% published climb and is retired as a series. NOTE: this control fixes the observation SPAN; like the fixed-horizon permeability control it still averages over a cohort set that grows each issue.",
+  "permeability_note": "fixed-horizon cells always run on complete days - the partial-day truncation in weather_permeability_control.py applies only to the reproduced-published column. The N=5 reversal at #1->#2 is cohort membership: (34.4+35.9)/2=35.15 -> (34.4+35.9+26.1)/3=32.1 as the 08-08 cohort enters. Status: direction of uncertain magnitude, unresolved; needs a fixed-cohort view."
+ },
+ "allocation_trend": {
+  "venue_share_per_day_qwen_binary": {
+   "08-06": 0.548,
+   "08-07": 0.5265,
+   "08-08": 0.5249,
+   "08-09": 0.4797,
+   "08-10": 0.5156,
+   "08-11": 0.5042,
+   "08-12": 0.4561,
+   "08-13": 0.4885,
+   "08-14": 0.499,
+   "08-15": 0.4865,
+   "08-16": 0.4726,
+   "08-17": 0.4484
+  },
+  "lemmy_reference": {
+   "source": "results/lemmy_baseline/results.json (frozen; 2023-06 founding month, 55,223 items)",
+   "currency": "Qwen binary, same classifier and prompt as the weather allocation cell",
+   "platform_qwen": 0.4665,
+   "platform_gemma": 0.4166,
+   "topic_tier_qwen": 0.2236,
+   "meta_tier_qwen": 0.6599,
+   "note": "the platform figure is the like-for-like comparator (both venues carry their own governance in one undifferentiated stream); the topic tier is what the square is robustly above and the meta tier is what a venue whose remit IS the venue reads. A weather point BELOW platform_qwen means the square allocated less attention to itself that day than a human platform founding did."
+  },
+  "vs_lemmy_per_day": {
+   "08-06": {
+    "vs_platform": 1.175,
+    "vs_topic_tier": 2.451,
+    "above_platform": true
+   },
+   "08-07": {
+    "vs_platform": 1.129,
+    "vs_topic_tier": 2.355,
+    "above_platform": true
+   },
+   "08-08": {
+    "vs_platform": 1.125,
+    "vs_topic_tier": 2.347,
+    "above_platform": true
+   },
+   "08-09": {
+    "vs_platform": 1.028,
+    "vs_topic_tier": 2.145,
+    "above_platform": true
+   },
+   "08-10": {
+    "vs_platform": 1.105,
+    "vs_topic_tier": 2.306,
+    "above_platform": true
+   },
+   "08-11": {
+    "vs_platform": 1.081,
+    "vs_topic_tier": 2.255,
+    "above_platform": true
+   },
+   "08-12": {
+    "vs_platform": 0.978,
+    "vs_topic_tier": 2.04,
+    "above_platform": false
+   },
+   "08-13": {
+    "vs_platform": 1.047,
+    "vs_topic_tier": 2.185,
+    "above_platform": true
+   },
+   "08-14": {
+    "vs_platform": 1.07,
+    "vs_topic_tier": 2.232,
+    "above_platform": true
+   },
+   "08-15": {
+    "vs_platform": 1.043,
+    "vs_topic_tier": 2.176,
+    "above_platform": true
+   },
+   "08-16": {
+    "vs_platform": 1.013,
+    "vs_topic_tier": 2.114,
+    "above_platform": true
+   },
+   "08-17": {
+    "vs_platform": 0.961,
+    "vs_topic_tier": 2.005,
+    "above_platform": false
+   }
+  },
+  "references": {
+   "anchors_qwen_binary": "0.085-0.221 (full histories)",
+   "human_calibrated_anchor_floor": 0.06,
+   "era_matched_worst_case": "every point >= 1.47x forth-1991 (0.31), the parent study's era-matched damper. NOTE: issues #3 and #4 originally stated '>= 1.5x'; the 08-12 point is 0.4561/0.31 = 1.471, so 1.5 was wrong. Corrected here.",
+   "human_floor_calibration_span": "the ~7x human contrast spans ~2-25x at 95% (parent study)",
+   "lemmy_world_platform_qwen": 0.4665,
+   "lemmy_world_topic_tier_qwen": 0.2236
+  },
+  "band_through_issue_4": [
+   0.456,
+   0.548
+  ]
+ },
+ "newcomer_cells_issue_window": {
+  "counts": {
+   "newcomer_items": 221,
+   "incumbent_items": 1999
+  },
+  "within_pool_parity": {
+   "m": 176,
+   "band": [
+    0.961,
+    0.919,
+    1.01
+   ]
+  },
+  "refresh_union_over_incumbent": {
+   "m": 221,
+   "band": [
+    0.988,
+    0.958,
+    1.019
+   ],
+   "read": ">1 = newcomer claims add effective distinct content beyond incumbents'"
+  },
+  "refresh_nn_distance_matched": {
+   "reference_pool": 1557,
+   "queries_per_side": 221,
+   "draws": 500,
+   "newcomer_to_pool": [
+    0.2807,
+    0.28,
+    0.2841
+   ],
+   "incumbent_to_pool": [
+    0.2759,
+    0.2701,
+    0.2823
+   ],
+   "delta_observed": [
+    0.0051,
+    -0.0013,
+    0.0111
+   ],
+   "delta_permutation_null": [
+    0.0006,
+    -0.0085,
+    0.0091
+   ],
+   "p_two_sided_vs_null": 0.364,
+   "frac_null_ge_observed": 0.182,
+   "below_standing_vendi_floor": false,
+   "read": "same reference pool R, same size, disjoint from every query set; delta > null = newcomer claims sit farther from the incumbent cloud than incumbents do from each other. Null centres on 0 by construction; see weather_nn_validate.py for the synthetic null/power check."
+  }
+ },
+ "caveats": [
+  "cutoff 2026-08-18T00:00Z on all analyses, strictly exclusive; the pull ran 4.5 h after it, so no in-scope day is partial. 08-17 cells are labelled provisional as standing discipline.",
+  "THREE-DAY WINDOW: issues #4->#5 lapsed while the lemmy.world comparator was re-crawled. Window-only cells cover 3 calendar days against issue #4's 1 and are NOT window-vs-window comparable to it. The window starts at issue #4's last captured item (08-15 05:10), so 08-15 is partial INSIDE the window.",
+  "newcomer window m=221, ABOVE the standing m>=100 floor: the matched NN cell, within-pool parity and union cells are all computed and none is supplementary this issue.",
+  "delta pipeline: claims and allocation labels cached by kind:id; 2,525 items claimified and 2,572 classified this issue; 0 cache evictions for edits (0 edited items found across 9,519 compared).",
+  "single-normalizer / bge-only: rolling series, newcomer and refresh cells are Qwen-normalized and bge-embedded; the three-embedder check covers placement only.",
+  "allocation LEVEL carries the parent study's 0.31-0.71 specification range; kappa(Qwen,Gemma)=0.4278 on the agent pool. The TREND is the cleaner object.",
+  "the lemmy.world reference is FROZEN (2023-06 founding month, 55,223 items) and read from results/lemmy_baseline/results.json; it is never re-measured per issue. Its platform share is 0.4665 [0.4515, 0.4853] author-clustered - a point estimate with a band, not a sharp threshold.",
+  "the lemmy frame is 55.7% meta-tier with c/lemmyworld alone 41.7%, a property of the pre-arrival cohort that over-weights meta and makes the human benchmark MORE self-referential; direction known, magnitude not (baseline s2).",
+  "fixed-horizon permeability and the fixed-span churn control both average over cohort sets whose MEMBERSHIP grows each issue; they remove the opportunity confound, not the membership one.",
+  "core_n is retired as a series: the published climb has no counterpart under the fixed-span control.",
+  "identity != operator (permanent): author identities are forum identities, not distinct operators.",
+  "last in-scope item 08-17 23:45:48 UTC; corpus 11,742 items >=20 chars, 516 authors, 1,133 posts."
+ ],
+ "frozen_input_hashes_sha256": {
+  "baseline_claims/lisp_all.json": "45b4bb557dfa5cc2",
+  "baseline_claims/sci_all.json": "79c299a65220e48a",
+  "baseline_claims/hn_all.json": "0372bd2893c82904",
+  "claim_cache_agent.json": "c25aec700bd16811",
+  "note": "anchor hashes are expected constant across issues; claim_cache_agent.json is NOT frozen and changes every issue by design (2,525 items added this issue) \u2014 it is recorded, not asserted stable. Issues #1-#4 carried a stale value for it."
+ }
+}

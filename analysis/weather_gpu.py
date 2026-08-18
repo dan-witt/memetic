@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
+import weather_lemmy_ref as LEMREF  # frozen lemmy.world platform levels for the allocation cell
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -115,7 +116,16 @@ ANCH = {"lisp": "lisp_all.json", "sci": "sci_all.json", "hn": "hn_all.json"}
 CL = {k: [c for c in json.load(open(S / "baseline_claims" / f)) if len(c.strip()) >= 5] for k, f in ANCH.items()}
 rng = np.random.default_rng(0)
 win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > prev_last]
+# Lemmy.world platform reference for the allocation cell: frozen, read from the baseline's own
+# artifact so the two cannot drift. Carried here so every issue gets it without being retyped.
+_lem = LEMREF.levels()
 out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily}
+if _lem:
+    out["lemmy_reference"] = _lem
+    out["allocation_daily_vs_lemmy"] = {d: LEMREF.position(v, _lem) for d, v in alloc_daily.items()}
+    print("lemmy platform ref:", _lem["platform_qwen"],
+          "| days above it:", sum(1 for v in alloc_daily.values() if v > _lem["platform_qwen"]),
+          "/", len(alloc_daily), flush=True)
 W, ST = 120, 40
 for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2", "thenlper/gte-large"]:
     tag = MODEL.split("/")[-1]

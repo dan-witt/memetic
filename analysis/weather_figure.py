@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Weather-report figure: (A) rolling claim-Vendi/W over the community's own timeline against the
-frozen anchor levels; (B) daily author inflow; (C) daily raw-zstd novelty vs the human band floor.
+frozen anchor levels; (B) daily author inflow; (C) daily raw-zstd novelty vs the human band floor;
+(D) daily venue share against the lemmy.world platform founding — the matched human comparator,
+frozen, from results/lemmy_baseline. Panel D exists because the anchors' 0.085-0.221 band cannot
+show what a human PLATFORM does: the square oscillates around lemmy's level, not far above it.
 Usage: weather_figure.py <issue dir, e.g. results/weather/2026-08-11>"""
 import json, sys
 from pathlib import Path
@@ -14,10 +17,15 @@ d = json.load(open(R / "results.json"))
 SURFACE = "#fcfcfb"; INK = "#0b0b0b"; MUTED = "#898781"; GRID = "#e1e0d9"; BASE = "#c3c2b7"
 C_MAIN = "#2a78d6"; C_ANCHOR = "#898781"; C_BAR = "#c3c2b7"
 
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12.5, 4.0), dpi=200,
-                                    gridspec_kw={"width_ratios": [1.6, 1, 1]})
+_alloc = (d.get("allocation_trend") or {}).get("venue_share_per_day_qwen_binary")
+_lem = ((d.get("allocation_trend") or {}).get("lemmy_reference") or {}).get("platform_qwen")
+_axes = 4 if _alloc else 3
+fig, axs = plt.subplots(1, _axes, figsize=(12.5 if _axes == 3 else 16.0, 4.0), dpi=200,
+                        gridspec_kw={"width_ratios": [1.6, 1, 1] + ([1.25] if _axes == 4 else [])})
+ax1, ax2, ax3 = axs[0], axs[1], axs[2]
+ax4 = axs[3] if _axes == 4 else None
 fig.set_facecolor(SURFACE)
-for ax in (ax1, ax2, ax3):
+for ax in axs:
     ax.set_facecolor(SURFACE); ax.grid(True, color=GRID, linewidth=.7, axis="y")
     for sp in ("top", "right"): ax.spines[sp].set_visible(False)
     for sp in ("bottom", "left"): ax.spines[sp].set_color(BASE)
@@ -54,6 +62,21 @@ ax3.set_xticks(range(len(zd))); ax3.set_xticklabels(zd, fontsize=8, rotation=45)
 ax3.set_ylabel("raw zstd novelty (lower = more recycling)", color=MUTED, fontsize=8.5)
 ax3.set_ylim(min(z["per_day"].values()) - 0.02, z["band_floor"] + 0.02)
 ax3.set_title("C · Register (surface style)", loc="left", color=INK, fontsize=10)
+
+if ax4 is not None:
+    ad = list(_alloc)
+    ax4.plot(range(len(ad)), [_alloc[k] for k in ad], color=C_MAIN, lw=1.8, marker="o", ms=4)
+    if _lem:
+        ax4.axhline(_lem, color="#c2410c", lw=1.2, ls="--")
+        ax4.text(len(ad) - 1, _lem + 0.004, "lemmy.world platform", ha="right", va="bottom",
+                 color="#c2410c", fontsize=8)
+    band = (d.get("allocation_trend") or {}).get("band_through_issue_4")
+    if band:
+        ax4.axhspan(band[0], band[1], color=BASE, alpha=.25, lw=0)
+        ax4.text(0, band[0] - 0.006, "prior band", ha="left", va="top", color=MUTED, fontsize=8)
+    ax4.set_xticks(range(len(ad))); ax4.set_xticklabels(ad, fontsize=8, rotation=45)
+    ax4.set_ylabel("venue share / day (Qwen binary)", color=MUTED, fontsize=8.5)
+    ax4.set_title("D · Allocation vs a human platform", loc="left", color=INK, fontsize=10)
 
 fig.suptitle("1f916 weather · " + d["issue"].split(" (")[0], x=0.01, ha="left", color=INK,
              fontsize=11.5, fontweight="bold")

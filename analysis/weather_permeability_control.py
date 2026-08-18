@@ -71,7 +71,8 @@ def fixed_horizon_permeability(ev, N):
 # (issue #1's pull ran mid-day on 08-11, so its final day was partial — its cell is not on the
 # same footing as #2-#4 and only reproduces against that truncation, not against a complete 08-11)
 ISSUES = [("#1", "2026-08-12", 30.5, "2026-08-11T19:56:47Z"), ("#2", "2026-08-13", 33.6, None),
-          ("#3", "2026-08-14", 35.5, None), ("#4", "2026-08-15", 39.4, None)]
+          ("#3", "2026-08-14", 35.5, None), ("#4", "2026-08-15", 39.4, None),
+          ("#5", "2026-08-18", 42.9, None)]
 D = "/home/dan/personal/memetic/data/posts"
 print(f"{'issue':6s} {'cutoff':12s} {'published':>10s} {'reproduced':>11s}  {'N=3':>6s} {'N=4':>6s} {'N=5':>6s}")
 for tag, cut, pub, trunc in ISSUES:

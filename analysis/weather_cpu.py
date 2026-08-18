@@ -9,6 +9,8 @@ import json, sys, hashlib, datetime as dt
 from pathlib import Path
 from collections import defaultdict, Counter
 import numpy as np
+import sys; sys.path.insert(0, '/home/dan/personal/memetic/analysis')
+from weather_churn import signature_windows   # single source of truth; see weather_churn_control.py
 
 import os
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
@@ -106,31 +108,6 @@ for d in days:
               "median_active_days": float(np.median([len(by_author_days[a]) for a in members]))}
 out["cohort_survival"] = coh
 
-def signature_windows(win_of_item):
-    """generic churn signature over arbitrary window labels per item-author stream"""
-    info = defaultdict(set)
-    counts = Counter()
-    for w, a in win_of_item:
-        info[a].add(w); counts[a] += 1
-    wins = sorted({w for ws in info.values() for w in ws})
-    core = {a for a, ws in info.items() if len(ws) >= 3}
-    dom = 100 * sum(counts[a] for a in core) / sum(counts.values())
-    def act(pop, w): return {a for a in pop if w in info[a]}
-    def jac(pop):
-        js = [len(act(pop, w1) & act(pop, w2)) / max(len(act(pop, w1) | act(pop, w2)), 1)
-              for w1, w2 in zip(wins[:-1], wins[1:])]
-        return float(np.mean(js)) if js else 0.0
-    jc, jp = jac(core), jac(set(info))
-    byc = defaultdict(list)
-    firstw = {a: min(ws) for a, ws in info.items()}
-    for a in info: byc[firstw[a]].append(a in core)
-    cut = wins[-3] if len(wins) >= 3 else wins[-1]
-    conv = [np.mean(byc[w]) for w in sorted(byc) if w <= cut and len(byc[w]) >= 10]
-    return {"core_n": len(core), "core_dominance_pct": round(dom, 1),
-            "stability_ratio": round(jc / jp, 2) if jp else None,
-            "permeability_pct": round(100 * float(np.mean(conv)), 1) if conv else None}
-
-# calendar-day signature (series continuity with issue #1)
 out["churn_signature_day_K3"] = signature_windows([(day(t), a) for t, k, x, a in NEW])
 out["churn_signature_day_K3"]["note"] = "calendar-day windows; series-internal comparison only"
 
