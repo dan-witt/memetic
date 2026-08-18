@@ -44,17 +44,39 @@ def hn_rows():
     out.sort(key=lambda x: x[0])
     return [(t, a) for t, x, a in out if len(x) >= 20]
 
-POOLS = {
-    "agent": (json.load(open(S / "agent3_all.json")), agent_rows()),
-    "lisp": (json.load(open(S / "baseline_claims/lisp_all.json")), usenet_rows("lisp", "baseline_corpora.json")),
-    "sci": (json.load(open(S / "baseline_claims/sci_all.json")), usenet_rows("sci", "baseline_corpora.json")),
-    "hn": (json.load(open(S / "baseline_claims/hn_all.json")), hn_rows()),
-    "forth": (json.load(open(S / "baseline_claims/forth_all.json")), usenet_rows("forth", "baseline_corpora2.json")),
-    "smalltalk": (json.load(open(S / "baseline_claims/smalltalk_all.json")), usenet_rows("smalltalk", "baseline_corpora2.json")),
-    "scheme": (json.load(open(S / "baseline_claims/scheme_all.json")), usenet_rows("scheme", "baseline_corpora2.json")),
+def lemmy_rows():
+    C = json.load(open(S / "baseline_corpora_lemmy.json"))["lemmy"]
+    return [(r["ts"], r["author"]) for r in C if len(r["text"]) >= 20]
+
+# Loaders are lazy so a pool can be selected without materialising (or requiring the files
+# of) the others. Default behaviour -- no argv -- is every pool, exactly as before.
+LOADERS = {
+    "agent": lambda: (json.load(open(S / "agent3_all.json")), agent_rows()),
+    "lisp": lambda: (json.load(open(S / "baseline_claims/lisp_all.json")), usenet_rows("lisp", "baseline_corpora.json")),
+    "sci": lambda: (json.load(open(S / "baseline_claims/sci_all.json")), usenet_rows("sci", "baseline_corpora.json")),
+    "hn": lambda: (json.load(open(S / "baseline_claims/hn_all.json")), hn_rows()),
+    "forth": lambda: (json.load(open(S / "baseline_claims/forth_all.json")), usenet_rows("forth", "baseline_corpora2.json")),
+    "smalltalk": lambda: (json.load(open(S / "baseline_claims/smalltalk_all.json")), usenet_rows("smalltalk", "baseline_corpora2.json")),
+    "scheme": lambda: (json.load(open(S / "baseline_claims/scheme_all.json")), usenet_rows("scheme", "baseline_corpora2.json")),
+    "lemmy": lambda: (json.load(open(S / "baseline_claims/lemmy_all.json")), lemmy_rows()),
+    # Usenet PLATFORM-GOVERNANCE groups -- the network's own meta tier, the analogue of
+    # lemmy's c/newcommunities / c/lemmyworld. See analysis/usenet_corpus_meta.py.
+    "groups": lambda: (json.load(open(S / "baseline_claims/groups_all.json")), usenet_rows("groups", "baseline_corpora_meta.json")),
+    "admin": lambda: (json.load(open(S / "baseline_claims/admin_all.json")), usenet_rows("admin", "baseline_corpora_meta.json")),
+    "netmeta": lambda: (json.load(open(S / "baseline_claims/netmeta_all.json")), usenet_rows("netmeta", "baseline_corpora_meta.json")),
 }
+import os as _os, sys as _sys
+_sel = [a for a in _sys.argv[1:] if not a.startswith("-")] or list(LOADERS)
+SUF = _os.environ.get("ALLOC_SUFFIX", "")
+POOLS = {}
+for k in _sel:
+    try:
+        POOLS[k] = LOADERS[k]()
+    except FileNotFoundError as e:
+        print(f"skip {k}: missing {e.filename}", flush=True)
 for k, (cl, rows) in POOLS.items():
     assert len(cl) == len(rows), f"{k}: {len(cl)} claims vs {len(rows)} rows"
+print(f"pools: {list(POOLS)}  (output suffix {SUF!r})", flush=True)
 
 def valid(c): return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
 
@@ -90,7 +112,7 @@ for k, (cl, rows) in POOLS.items():
     full = [None] * len(cl)
     for i, l in zip(idx, lab): full[i] = l
     labels[k] = full
-    json.dump(labels, open(S / "allocation_labels.json", "w"))
+    json.dump(labels, open(S / f"allocation_labels{SUF}.json", "w"))
 del gen, tok; gc.collect(); torch.cuda.empty_cache()
 
 # ---------- shares, identity-blocked bands, series, controls ----------
@@ -112,7 +134,7 @@ for k, (cl, rows) in POOLS.items():
                         "unparsed": len(cl) - len([c for c in cl if not valid(c)]) - len(ok),
                         "identity_block_band": [round(float(np.percentile(bs, p)), 4) for p in (50, 5, 95)]}
     print(f"{k}: venue share {share:.3f} [{res['shares'][k]['identity_block_band'][1]}, {res['shares'][k]['identity_block_band'][2]}] n={len(ok)}", flush=True)
-    if k == "agent":
+    if k in ("agent", "lemmy"):     # both span days, not years -- yearly would be one cell
         day = lambda t: dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
         for d in sorted({day(rows[i][0]) for i in ok}):
             di = [i for i in ok if day(rows[i][0]) == d]
@@ -128,11 +150,12 @@ for k, (cl, rows) in POOLS.items():
 import re
 META = re.compile(r"newsgroup|moderat|charter|killfile|flame|netiquette|this group|the group|crosspost|signal.to.noise", re.I)
 for k in ("lisp", "sci", "forth"):
+    if k not in POOLS: continue          # pool selection may exclude the control pools
     cl, rows = POOLS[k]; lab = labels[k]
     hits = [i for i, c in enumerate(cl) if valid(c) and lab[i] is not None and META.search(c)]
     if hits:
         res["controls"][k] = {"n_meta_keyword": len(hits),
                               "venue_share_among_meta_keyword": round(float(np.mean([lab[i] == "V" for i in hits])), 3)}
 print("controls:", res["controls"], flush=True)
-json.dump(res, open(S / "allocation_results.json", "w"), indent=1)
-print("saved allocation_results.json")
+json.dump(res, open(S / f"allocation_results{SUF}.json", "w"), indent=1)
+print(f"saved allocation_results{SUF}.json")

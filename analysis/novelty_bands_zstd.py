@@ -34,8 +34,8 @@ def forum_texts(d):
     items.sort(key=lambda x: x[0])
     return [(t, x, k) for t, x, k in items if len(x) >= 20]
 
-def usenet_texts(fam):
-    C = json.load(open(S / "baseline_corpora.json"))[fam]
+def usenet_texts(fam, src="baseline_corpora.json"):
+    C = json.load(open(S / src))[fam]
     out = []
     for r in C:
         if len(r["text"]) < 20: continue
@@ -43,6 +43,15 @@ def usenet_texts(fam):
         out.append((r["ts"], (r["subject"] + "\n\n" + r["text"]).strip() if is_root else r["text"],
                     "post" if is_root else "comment"))
     return out
+
+
+def agent_texts_aligned():
+    """Agent pool aligned to agent_claims_aligned.json (9,217) -- the weather pipeline's
+    incremental claim cache. baseline_claims/agent_all.json is pull-1 (2,874) and no longer
+    matches the corpus, which is why agent was previously excluded from this pass."""
+    import json as _j
+    n = len(_j.load(open(S / "agent_claims_aligned.json")))
+    return forum_texts("/home/dan/personal/memetic/data/posts")[:n]
 
 OUTNAME = sys.argv[1] if len(sys.argv) > 1 else "band_zstd.json"
 CLAIMS_DIR = sys.argv[2] if len(sys.argv) > 2 else "baseline_claims"
@@ -53,9 +62,15 @@ LOADERS = {
     "hn": lambda: forum_texts(S / "hn/posts"),
     "lisp": lambda: usenet_texts("lisp"),
     "sci": lambda: usenet_texts("sci"),
+    "forth": lambda: usenet_texts("forth", "baseline_corpora2.json"),
+    "smalltalk": lambda: usenet_texts("smalltalk", "baseline_corpora2.json"),
+    "scheme": lambda: usenet_texts("scheme", "baseline_corpora2.json"),
+    "lemmy": lambda: usenet_texts("lemmy", "baseline_corpora_lemmy.json"),
+    "agentcur": lambda: agent_texts_aligned(),
 }
 CORPORA = {k: LOADERS[k]() for k in POOLS}
-CLAIMS = {k: json.load(open(S / CLAIMS_DIR / f"{k}_all.json")) for k in POOLS}
+CLAIMS = {k: json.load(open(S / ("agent_claims_aligned.json" if k=="agentcur"
+          else f"{CLAIMS_DIR}/{k}_all.json"))) for k in POOLS}
 for k in CORPORA:
     assert len(CORPORA[k]) == len(CLAIMS[k]), f"{k}: {len(CORPORA[k])} texts vs {len(CLAIMS[k])} claims"
 

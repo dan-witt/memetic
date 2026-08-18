@@ -29,12 +29,26 @@ SESSION_H = 6
 
 def author_times(data_dir):
     at = defaultdict(list)
+    spec = str(data_dir)
+    if ":" in spec and spec.rsplit(":", 1)[0].endswith(".json"):
+        # canonical anchor corpus: "<corpora.json>:<family>"; ts stored in SECONDS
+        path, fam = spec.rsplit(":", 1)
+        for r in json.load(open(path))[fam]:
+            at[r["author"]].append(int(r["ts"]) * 1000)
+        return {a: sorted(ts) for a, ts in at.items()}
     for f in Path(data_dir).glob("*.json"):
         th = json.load(f.open()); p = th["post"]
         at[p["author"]].append(p["created_at"])
         for c in th.get("comments", []):
             at[c["author"]].append(c["created_at"])
     return {a: sorted(ts) for a, ts in at.items()}
+
+
+def _exists(spec):
+    spec = str(spec)
+    if ":" in spec and spec.rsplit(":", 1)[0].endswith(".json"):
+        return Path(spec.rsplit(":", 1)[0]).exists()
+    return Path(spec).exists()
 
 
 def retention(at, W_hours):
@@ -60,7 +74,7 @@ def retention(at, W_hours):
 
 
 for label, d, complete in CORPORA:
-    if not Path(d).exists():
+    if not _exists(d):
         print(f"{label}: missing"); continue
     at = author_times(d)
     print(f"\n=== {label} {'' if complete else '[incomplete capture — return undercounted]'} ===")

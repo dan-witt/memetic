@@ -12,7 +12,10 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 S = Path("" + __import__('os').environ.get('MEMETIC_WORKDIR', '.') + "")
-POOLS = ["agent", "hn", "lisp", "sci"]
+import os as _os
+# Pools selectable so the CURRENT-vintage agent pool (agentcur, 9,217 items) can be substituted
+# for the pull-1 agent pool (2,874) without forking the instrument. Default is unchanged.
+POOLS = _os.environ.get("BAND_POOLS", "agent,hn,lisp,sci,lemmy").split(",")
 DIRS = {"qwen": "baseline_claims", "gemma": "baseline_claims_gemma"}
 claims = {n: {k: [c for c in json.load(open(S / d / f"{k}_all.json")) if len(c.strip()) >= 5] for k in POOLS}
           for n, d in DIRS.items()}
@@ -36,8 +39,9 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
         pv = {k: round(vendi(E[k][rng.choice(len(E[k]), mm, replace=False)]), 2) for k in POOLS}
         out["vendi_point"].setdefault(tag, {})[norm] = pv
         rat = {}
-        for k in ("hn", "lisp", "sci"):
-            rs = [vendi(E["agent"][rng.choice(len(E["agent"]), mm, replace=False)]) /
+        _ref = "agentcur" if "agentcur" in POOLS else "agent"
+        for k in [p for p in POOLS if p not in ("agent", "agentcur")]:
+            rs = [vendi(E[_ref][rng.choice(len(E[_ref]), mm, replace=False)]) /
                   vendi(E[k][rng.choice(len(E[k]), mm, replace=False)]) for _ in range(DRAWS)]
             rat[k] = [round(float(np.percentile(rs, p)), 3) for p in (50, 5, 95)]
         out["ratios_agent_over_X"].setdefault(tag, {})[norm] = rat
@@ -54,5 +58,7 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
         del E
     del emb
 
-json.dump(out, open(S / "band_final.json", "w"), indent=1)
-print("saved band_final.json")
+import os as _os
+_suf = _os.environ.get("BAND_SUFFIX", "")
+json.dump(out, open(S / f"band_final{_suf}.json", "w"), indent=1)
+print(f"saved band_final{_suf}.json")

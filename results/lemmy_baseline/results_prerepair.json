@@ -1,0 +1,947 @@
+{
+ "note": "Emitted by analysis/lemmy_baseline_stats.py. Author-clustered bootstrap; ratios null=1, differences null=0; envelope = union of Qwen and Gemma intervals.",
+ "draws": 3000,
+ "generated_at": "2026-08-16T09:23:00.477743+00:00",
+ "corpus": {
+  "items": 40296,
+  "ge20char": 34280,
+  "authors": 10150,
+  "communities_present": 52,
+  "median_chars_ge20": 126,
+  "median_chars_topic": 131,
+  "median_chars_agent": 1376,
+  "pct_local": 60.8,
+  "pagination_caps": [
+   {
+    "community": "lemmyworld",
+    "kind": "comments",
+    "page": 101
+   },
+   {
+    "community": "selfhosted",
+    "kind": "comments",
+    "page": 101
+   }
+  ],
+  "communities_ending_early": [
+   "acnh",
+   "allaboutfantasymedia",
+   "australia",
+   "biblicalstudies",
+   "culinary",
+   "etsysellers",
+   "fellowkids",
+   "missouri",
+   "paymoney_wubby",
+   "pentesting",
+   "pinball",
+   "publicdomain",
+   "pythonhelp",
+   "rc_cars",
+   "stlouis",
+   "ubc"
+  ]
+ },
+ "allocation": {
+  "all_items": {
+   "qwen": {
+    "n": {
+     "agent": 9170,
+     "lemmy_all": 34242,
+     "topic": 21596,
+     "meta": 12646,
+     "founding_topic": 8649,
+     "settled_topic": 6034,
+     "founding_all": 14779,
+     "settled_all": 9911
+    },
+    "share_agent": {
+     "point": 0.5057,
+     "ci95": [
+      0.4858,
+      0.5244
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.3965,
+     "ci95": [
+      0.3725,
+      0.4327
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.2262,
+     "ci95": [
+      0.2166,
+      0.236
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6872,
+     "ci95": [
+      0.6631,
+      0.7172
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 1.2754,
+     "ci95": [
+      1.1689,
+      1.3719
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 2.2351,
+     "ci95": [
+      2.1086,
+      2.3633
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0208,
+     "ci95": [
+      0.0018,
+      0.0401
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.0997,
+     "ci95": [
+      1.0031,
+      1.2062
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.0419,
+     "ci95": [
+      -0.0036,
+      0.085
+     ],
+     "null": 0.0,
+     "spans_null": true
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 2.4255,
+     "ci95": [
+      2.2439,
+      2.6298
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 2.2055,
+     "ci95": [
+      2.0679,
+      2.3587
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "gemma": {
+    "n": {
+     "agent": 9170,
+     "lemmy_all": 34242,
+     "topic": 21596,
+     "meta": 12646,
+     "founding_topic": 8649,
+     "settled_topic": 6034,
+     "founding_all": 14779,
+     "settled_all": 9911
+    },
+    "share_agent": {
+     "point": 0.2752,
+     "ci95": [
+      0.2576,
+      0.2925
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.3416,
+     "ci95": [
+      0.3217,
+      0.3698
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1796,
+     "ci95": [
+      0.1709,
+      0.1886
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6182,
+     "ci95": [
+      0.6037,
+      0.6325
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 0.8058,
+     "ci95": [
+      0.7331,
+      0.8789
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 1.5328,
+     "ci95": [
+      1.4118,
+      1.6576
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0441,
+     "ci95": [
+      0.0263,
+      0.0616
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.2977,
+     "ci95": [
+      1.1664,
+      1.4585
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.0676,
+     "ci95": [
+      0.0312,
+      0.1033
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 1.8598,
+     "ci95": [
+      1.6712,
+      2.0694
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 1.4332,
+     "ci95": [
+      1.3085,
+      1.5726
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy_all": {
+     "ci95": [
+      0.7331,
+      1.3719
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "ratio_agent_over_topic": {
+     "ci95": [
+      1.4118,
+      2.3633
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "ci95": [
+      1.3085,
+      2.3587
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "ci95": [
+      0.0018,
+      0.0616
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "ci95": [
+      1.0031,
+      1.4585
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "ci95": [
+      -0.0036,
+      0.1033
+     ],
+     "null": 0.0,
+     "spans_null": true
+    }
+   }
+  },
+  "ge400ch": {
+   "qwen": {
+    "n": {
+     "agent": 8132,
+     "lemmy_all": 4446,
+     "topic": 3060,
+     "meta": 1386,
+     "founding_topic": 1305,
+     "settled_topic": 772,
+     "founding_all": 1893,
+     "settled_all": 1248
+    },
+    "share_agent": {
+     "point": 0.4998,
+     "ci95": [
+      0.4815,
+      0.5178
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.3484,
+     "ci95": [
+      0.3273,
+      0.3698
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1676,
+     "ci95": [
+      0.1499,
+      0.1853
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.7475,
+     "ci95": [
+      0.7186,
+      0.7746
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 1.4344,
+     "ci95": [
+      1.3372,
+      1.5386
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 2.981,
+     "ci95": [
+      2.6823,
+      3.3298
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0162,
+     "ci95": [
+      -0.0234,
+      0.0535
+     ],
+     "null": 0.0,
+     "spans_null": true
+    },
+    "founding_ratio_topic": {
+     "point": 1.1043,
+     "ci95": [
+      0.875,
+      1.4136
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "founding_premium_all": {
+     "point": -0.0043,
+     "ci95": [
+      -0.0477,
+      0.0377
+     ],
+     "null": 0.0,
+     "spans_null": true
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 3.2151,
+     "ci95": [
+      2.649,
+      3.9779
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 2.9115,
+     "ci95": [
+      2.5508,
+      3.3769
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "gemma": {
+    "n": {
+     "agent": 8132,
+     "lemmy_all": 4446,
+     "topic": 3060,
+     "meta": 1386,
+     "founding_topic": 1305,
+     "settled_topic": 772,
+     "founding_all": 1893,
+     "settled_all": 1248
+    },
+    "share_agent": {
+     "point": 0.2668,
+     "ci95": [
+      0.2495,
+      0.2846
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.2935,
+     "ci95": [
+      0.2737,
+      0.3136
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1239,
+     "ci95": [
+      0.1083,
+      0.1397
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6681,
+     "ci95": [
+      0.6375,
+      0.6969
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 0.9091,
+     "ci95": [
+      0.8285,
+      1.0
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "ratio_agent_over_topic": {
+     "point": 2.1545,
+     "ci95": [
+      1.8829,
+      2.49
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.04,
+     "ci95": [
+      0.0037,
+      0.0734
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.4119,
+     "ci95": [
+      1.044,
+      1.9596
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.0375,
+     "ci95": [
+      -0.0028,
+      0.0773
+     ],
+     "null": 0.0,
+     "spans_null": true
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 2.7467,
+     "ci95": [
+      2.1439,
+      3.7368
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 1.9454,
+     "ci95": [
+      1.6405,
+      2.3568
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy_all": {
+     "ci95": [
+      0.8285,
+      1.5386
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "ratio_agent_over_topic": {
+     "ci95": [
+      1.8829,
+      3.3298
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "ci95": [
+      1.6405,
+      3.3769
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "ci95": [
+      -0.0234,
+      0.0734
+     ],
+     "null": 0.0,
+     "spans_null": true
+    },
+    "founding_ratio_topic": {
+     "ci95": [
+      0.875,
+      1.9596
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "founding_premium_all": {
+     "ci95": [
+      -0.0477,
+      0.0773
+     ],
+     "null": 0.0,
+     "spans_null": true
+    }
+   }
+  }
+ },
+ "window_matched": {
+  "agent_span_days": 9.22,
+  "clock_06_01_instance_creation": {
+   "qwen": {
+    "n_lemmy": 1705,
+    "share_lemmy": {
+     "point": 0.5126,
+     "ci95": [
+      0.4675,
+      0.5588
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.9865,
+     "ci95": [
+      0.8998,
+      1.0877
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   },
+   "gemma": {
+    "n_lemmy": 1705,
+    "share_lemmy": {
+     "point": 0.4891,
+     "ci95": [
+      0.4381,
+      0.5363
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.5627,
+     "ci95": [
+      0.5048,
+      0.6338
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy": {
+     "ci95": [
+      0.5048,
+      1.0877
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   }
+  },
+  "clock_06_09_arrival": {
+   "qwen": {
+    "n_lemmy": 16690,
+    "share_lemmy": {
+     "point": 0.4095,
+     "ci95": [
+      0.387,
+      0.4389
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 1.2349,
+     "ci95": [
+      1.1379,
+      1.3239
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "gemma": {
+    "n_lemmy": 16690,
+    "share_lemmy": {
+     "point": 0.3651,
+     "ci95": [
+      0.3442,
+      0.3915
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.754,
+     "ci95": [
+      0.6869,
+      0.8237
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy": {
+     "ci95": [
+      0.6869,
+      1.3239
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   }
+  }
+ },
+ "cross_family": {
+  "lemmy": {
+   "kappa": 0.6636,
+   "raw_agreement": 0.8428,
+   "n": 34242
+  },
+  "agent": {
+   "kappa": 0.4278,
+   "raw_agreement": 0.7124,
+   "n": 9170
+  }
+ },
+ "context_starvation_kappa": {
+  "20-50": {
+   "root": {
+    "kappa": 0.7493,
+    "n": 272
+   },
+   "reply": {
+    "kappa": 0.4955,
+    "n": 5363
+   }
+  },
+  "50-100": {
+   "root": {
+    "kappa": 0.6827,
+    "n": 1149
+   },
+   "reply": {
+    "kappa": 0.6127,
+    "n": 6949
+   }
+  },
+  "100-200": {
+   "root": {
+    "kappa": 0.6498,
+    "n": 1292
+   },
+   "reply": {
+    "kappa": 0.6851,
+    "n": 8200
+   }
+  },
+  "200-400": {
+   "root": {
+    "kappa": 0.7326,
+    "n": 700
+   },
+   "reply": {
+    "kappa": 0.7405,
+    "n": 5871
+   }
+  },
+  "400-800": {
+   "root": {
+    "kappa": 0.7341,
+    "n": 536
+   },
+   "reply": {
+    "kappa": 0.7521,
+    "n": 2614
+   }
+  },
+  "800-+": {
+   "root": {
+    "kappa": 0.7477,
+    "n": 368
+   },
+   "reply": {
+    "kappa": 0.7352,
+    "n": 928
+   }
+  }
+ },
+ "gold": {
+  "n_items": 100,
+  "consensus_n": 72,
+  "qwen_accuracy": {
+   "point": 0.9722,
+   "ci95": [
+    0.9306,
+    1.0
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "gemma_accuracy": {
+   "point": 0.9167,
+   "ci95": [
+    0.8472,
+    0.9722
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "accuracy_difference": {
+   "point": 0.0556,
+   "ci95": [
+    0.0,
+    0.125
+   ],
+   "null": 0.0,
+   "spans_null": true
+  },
+  "kappa_dan_qwen": {
+   "point": 0.7133,
+   "ci95": [
+    0.5614,
+    0.8461
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "kappa_dan_gemma": {
+   "point": 0.5316,
+   "ci95": [
+    0.3515,
+    0.6983
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "kappa_dan_fable": {
+   "point": 0.5109,
+   "ci95": [
+    0.34,
+    0.6772
+   ],
+   "null": 0.0,
+   "spans_null": false
+  }
+ },
+ "retention_48h": {
+  "note": "item-level author bootstrap (one row per author). lisp/forth are CAPTURE-BOUNDED: UTZOO is a partial feed and retention.py flags them incomplete. agent 'churn' is operator scheduling, not engagement (see retention.py docstring).",
+  "agent": {
+   "point": 0.5085,
+   "ci95": [
+    0.4619,
+    0.553
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 472
+  },
+  "lemmy": {
+   "point": 0.2561,
+   "ci95": [
+    0.2479,
+    0.2643
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 10593
+  },
+  "lisp": {
+   "point": 0.0348,
+   "ci95": [
+    0.0279,
+    0.0417
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 2760
+  },
+  "forth": {
+   "point": 0.0411,
+   "ci95": [
+    0.0308,
+    0.0523
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 1167
+  },
+  "agent_minus_lemmy": {
+   "point": 0.2524,
+   "ci95": [
+    0.2082,
+    0.2989
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "agent_minus_lisp": {
+   "point": 0.4737,
+   "ci95": [
+    0.4277,
+    0.5193
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "agent_minus_forth": {
+   "point": 0.4673,
+   "ci95": [
+    0.4224,
+    0.5149
+   ],
+   "null": 0.0,
+   "spans_null": false
+  }
+ },
+ "perplexity": {
+  "note": "corpus novelty = sum(cond_bits)/sum(self_bits). The 3072-token conditioning window SATURATES at item ~62, so corpus depth cannot affect it; the full-corpus/prefix difference is composition, not a depth artifact.",
+  "agent": {
+   "point": 0.8595,
+   "ci95": [
+    0.8494,
+    0.8683
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "lemmy_founding_matched": {
+   "point": 0.8435,
+   "ci95": [
+    0.8243,
+    0.8575
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "lemmy_all": {
+   "point": 0.8723,
+   "ci95": [
+    0.8461,
+    0.8877
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "difference_agent_minus_lemmy_matched": {
+   "point": 0.0159,
+   "ci95": [
+    -0.0018,
+    0.0354
+   ],
+   "null": 0.0,
+   "spans_null": true
+  }
+ }
+}

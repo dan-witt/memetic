@@ -1,0 +1,1497 @@
+{
+ "note": "Emitted by analysis/lemmy_baseline_stats.py. Author-clustered bootstrap; ratios null=1, differences null=0; envelope = union of Qwen and Gemma intervals.",
+ "draws": 3000,
+ "generated_at": "2026-08-18T04:13:05.093029+00:00",
+ "corpus": {
+  "items": 63985,
+  "ge20char": 55223,
+  "authors": 13403,
+  "communities_present": 52,
+  "median_chars_ge20": 134,
+  "median_chars_topic": 137,
+  "median_chars_agent": 1376,
+  "pct_local": 58.4,
+  "pagination_caps": [
+   {
+    "community": "lemmyworld",
+    "kind": "comments",
+    "page": 101
+   },
+   {
+    "community": "selfhosted",
+    "kind": "comments",
+    "page": 101
+   }
+  ],
+  "communities_ending_early": [
+   "acnh",
+   "allaboutfantasymedia",
+   "australia",
+   "biblicalstudies",
+   "culinary",
+   "etsysellers",
+   "fellowkids",
+   "missouri",
+   "paymoney_wubby",
+   "pentesting",
+   "pinball",
+   "publicdomain",
+   "pythonhelp",
+   "rc_cars",
+   "stlouis",
+   "ubc"
+  ]
+ },
+ "allocation": {
+  "all_items": {
+   "qwen": {
+    "n": {
+     "agent": 9170,
+     "lemmy_all": 55152,
+     "topic": 24449,
+     "meta": 30703,
+     "founding_topic": 8649,
+     "settled_topic": 7896,
+     "founding_all": 26962,
+     "settled_all": 12944
+    },
+    "share_agent": {
+     "point": 0.5057,
+     "ci95": [
+      0.4858,
+      0.5244
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.4665,
+     "ci95": [
+      0.4515,
+      0.4853
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.2236,
+     "ci95": [
+      0.2145,
+      0.2324
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6599,
+     "ci95": [
+      0.6478,
+      0.6759
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 1.084,
+     "ci95": [
+      1.0285,
+      1.1409
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 2.2618,
+     "ci95": [
+      2.1447,
+      2.3839
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.033,
+     "ci95": [
+      0.0152,
+      0.05
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.1686,
+     "ci95": [
+      1.0766,
+      1.2664
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.1673,
+     "ci95": [
+      0.1322,
+      0.1966
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 2.5826,
+     "ci95": [
+      2.398,
+      2.7732
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 2.21,
+     "ci95": [
+      2.072,
+      2.3612
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "gemma": {
+    "n": {
+     "agent": 9170,
+     "lemmy_all": 55152,
+     "topic": 24449,
+     "meta": 30703,
+     "founding_topic": 8649,
+     "settled_topic": 7896,
+     "founding_all": 26962,
+     "settled_all": 12944
+    },
+    "share_agent": {
+     "point": 0.2752,
+     "ci95": [
+      0.2576,
+      0.2925
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.4166,
+     "ci95": [
+      0.404,
+      0.4309
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1795,
+     "ci95": [
+      0.1707,
+      0.1879
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6053,
+     "ci95": [
+      0.597,
+      0.6136
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 0.6607,
+     "ci95": [
+      0.6149,
+      0.7075
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 1.5333,
+     "ci95": [
+      1.418,
+      1.656
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0453,
+     "ci95": [
+      0.0283,
+      0.0616
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.3094,
+     "ci95": [
+      1.1836,
+      1.4444
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.1824,
+     "ci95": [
+      0.1556,
+      0.2065
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 1.88,
+     "ci95": [
+      1.7063,
+      2.0691
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 1.4358,
+     "ci95": [
+      1.3105,
+      1.5729
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy_all": {
+     "ci95": [
+      0.6149,
+      1.1409
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "ratio_agent_over_topic": {
+     "ci95": [
+      1.418,
+      2.3839
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "ci95": [
+      1.3105,
+      2.3612
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "ci95": [
+      0.0152,
+      0.0616
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "ci95": [
+      1.0766,
+      1.4444
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "ci95": [
+      0.1322,
+      0.2065
+     ],
+     "null": 0.0,
+     "spans_null": false
+    }
+   }
+  },
+  "ge400ch": {
+   "qwen": {
+    "n": {
+     "agent": 8132,
+     "lemmy_all": 7458,
+     "topic": 3605,
+     "meta": 3853,
+     "founding_topic": 1305,
+     "settled_topic": 1136,
+     "founding_all": 3566,
+     "settled_all": 1769
+    },
+    "share_agent": {
+     "point": 0.4998,
+     "ci95": [
+      0.4815,
+      0.5178
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.4539,
+     "ci95": [
+      0.4347,
+      0.4717
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1631,
+     "ci95": [
+      0.1471,
+      0.179
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.7259,
+     "ci95": [
+      0.709,
+      0.7435
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 1.1011,
+     "ci95": [
+      1.0439,
+      1.1654
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 3.064,
+     "ci95": [
+      2.7751,
+      3.4119
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0378,
+     "ci95": [
+      0.0054,
+      0.0702
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.2828,
+     "ci95": [
+      1.0295,
+      1.6061
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.2117,
+     "ci95": [
+      0.1757,
+      0.2457
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 3.735,
+     "ci95": [
+      3.1392,
+      4.5408
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 2.9115,
+     "ci95": [
+      2.5508,
+      3.3769
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "gemma": {
+    "n": {
+     "agent": 8132,
+     "lemmy_all": 7458,
+     "topic": 3605,
+     "meta": 3853,
+     "founding_topic": 1305,
+     "settled_topic": 1136,
+     "founding_all": 3566,
+     "settled_all": 1769
+    },
+    "share_agent": {
+     "point": 0.2668,
+     "ci95": [
+      0.2495,
+      0.2846
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_all": {
+     "point": 0.3992,
+     "ci95": [
+      0.3803,
+      0.4165
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_topic": {
+     "point": 0.1223,
+     "ci95": [
+      0.1083,
+      0.1369
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "share_lemmy_meta": {
+     "point": 0.6582,
+     "ci95": [
+      0.639,
+      0.6774
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy_all": {
+     "point": 0.6685,
+     "ci95": [
+      0.616,
+      0.7268
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "ratio_agent_over_topic": {
+     "point": 2.1814,
+     "ci95": [
+      1.907,
+      2.4882
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "point": 0.0432,
+     "ci95": [
+      0.0121,
+      0.0738
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "point": 1.4674,
+     "ci95": [
+      1.1055,
+      1.9563
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "point": 0.2256,
+     "ci95": [
+      0.1916,
+      0.2591
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "needed_agent_over_settled_topic": {
+     "point": 2.887,
+     "ci95": [
+      2.3386,
+      3.7449
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "point": 1.9674,
+     "ci95": [
+      1.6541,
+      2.3868
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy_all": {
+     "ci95": [
+      0.616,
+      1.1654
+     ],
+     "null": 1.0,
+     "spans_null": true
+    },
+    "ratio_agent_over_topic": {
+     "ci95": [
+      1.907,
+      3.4119
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "residual_topic": {
+     "ci95": [
+      1.6541,
+      3.3769
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_topic": {
+     "ci95": [
+      0.0054,
+      0.0738
+     ],
+     "null": 0.0,
+     "spans_null": false
+    },
+    "founding_ratio_topic": {
+     "ci95": [
+      1.0295,
+      1.9563
+     ],
+     "null": 1.0,
+     "spans_null": false
+    },
+    "founding_premium_all": {
+     "ci95": [
+      0.1757,
+      0.2591
+     ],
+     "null": 0.0,
+     "spans_null": false
+    }
+   }
+  }
+ },
+ "window_matched": {
+  "agent_span_days": 9.22,
+  "clock_06_01_instance_creation": {
+   "qwen": {
+    "n_lemmy": 1705,
+    "n_agent": 9170,
+    "share_lemmy": {
+     "point": 0.5126,
+     "ci95": [
+      0.4675,
+      0.5588
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.9865,
+     "ci95": [
+      0.8998,
+      1.0877
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   },
+   "gemma": {
+    "n_lemmy": 1705,
+    "n_agent": 9170,
+    "share_lemmy": {
+     "point": 0.4903,
+     "ci95": [
+      0.4382,
+      0.5382
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.5614,
+     "ci95": [
+      0.5033,
+      0.6333
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy": {
+     "ci95": [
+      0.5033,
+      1.0877
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   }
+  },
+  "clock_06_09_arrival": {
+   "qwen": {
+    "n_lemmy": 30840,
+    "n_agent": 9170,
+    "share_lemmy": {
+     "point": 0.5219,
+     "ci95": [
+      0.5085,
+      0.5368
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.9689,
+     "ci95": [
+      0.9252,
+      1.014
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   },
+   "gemma": {
+    "n_lemmy": 30840,
+    "n_agent": 9170,
+    "share_lemmy": {
+     "point": 0.478,
+     "ci95": [
+      0.4657,
+      0.4914
+     ],
+     "null": -1,
+     "spans_null": false
+    },
+    "ratio_agent_over_lemmy": {
+     "point": 0.5758,
+     "ci95": [
+      0.5359,
+      0.6151
+     ],
+     "null": 1.0,
+     "spans_null": false
+    }
+   },
+   "envelope": {
+    "ratio_agent_over_lemmy": {
+     "ci95": [
+      0.5359,
+      1.014
+     ],
+     "null": 1.0,
+     "spans_null": true
+    }
+   },
+   "ge400ch": {
+    "qwen": {
+     "n_lemmy": 4133,
+     "n_agent": 8132,
+     "share_lemmy": {
+      "point": 0.5299,
+      "ci95": [
+       0.5068,
+       0.552
+      ],
+      "null": -1,
+      "spans_null": false
+     },
+     "ratio_agent_over_lemmy": {
+      "point": 0.9431,
+      "ci95": [
+       0.8932,
+       0.9989
+      ],
+      "null": 1.0,
+      "spans_null": false
+     }
+    },
+    "gemma": {
+     "n_lemmy": 4133,
+     "n_agent": 8132,
+     "share_lemmy": {
+      "point": 0.481,
+      "ci95": [
+       0.4567,
+       0.504
+      ],
+      "null": -1,
+      "spans_null": false
+     },
+     "ratio_agent_over_lemmy": {
+      "point": 0.5548,
+      "ci95": [
+       0.5118,
+       0.6027
+      ],
+      "null": 1.0,
+      "spans_null": false
+     }
+    },
+    "envelope": {
+     "ratio_agent_over_lemmy": {
+      "ci95": [
+       0.5118,
+       0.9989
+      ],
+      "null": 1.0,
+      "spans_null": false
+     }
+    }
+   }
+  }
+ },
+ "per_community": {
+  "note": "point estimates, communities with >=100 doubly-labelled items; intervals are reported at tier level, not per community",
+  "min_n": 100,
+  "communities": {
+   "newcommunities": {
+    "n": 3525,
+    "tier": "meta",
+    "qwen_share": 0.7566,
+    "gemma_share": 0.6474
+   },
+   "lemmyworld": {
+    "n": 22968,
+    "tier": "meta",
+    "qwen_share": 0.6486,
+    "gemma_share": 0.6063
+   },
+   "fediverse": {
+    "n": 4198,
+    "tier": "meta",
+    "qwen_share": 0.6413,
+    "gemma_share": 0.5665
+   },
+   "starwarsmemes": {
+    "n": 808,
+    "tier": "topic",
+    "qwen_share": 0.4851,
+    "gemma_share": 0.4047
+   },
+   "sysadmin": {
+    "n": 232,
+    "tier": "topic",
+    "qwen_share": 0.4353,
+    "gemma_share": 0.3922
+   },
+   "nederlands": {
+    "n": 121,
+    "tier": "topic",
+    "qwen_share": 0.3636,
+    "gemma_share": 0.3719
+   },
+   "mildlyinfuriating": {
+    "n": 4073,
+    "tier": "topic",
+    "qwen_share": 0.326,
+    "gemma_share": 0.2426
+   },
+   "formuladank": {
+    "n": 108,
+    "tier": "topic",
+    "qwen_share": 0.3056,
+    "gemma_share": 0.3056
+   },
+   "oldschoolminecraft": {
+    "n": 112,
+    "tier": "topic",
+    "qwen_share": 0.2946,
+    "gemma_share": 0.1786
+   },
+   "autism": {
+    "n": 1265,
+    "tier": "topic",
+    "qwen_share": 0.2538,
+    "gemma_share": 0.1921
+   },
+   "hockey": {
+    "n": 119,
+    "tier": "topic",
+    "qwen_share": 0.2269,
+    "gemma_share": 0.1681
+   },
+   "selfhosted": {
+    "n": 7832,
+    "tier": "topic",
+    "qwen_share": 0.2214,
+    "gemma_share": 0.1877
+   },
+   "playstation": {
+    "n": 131,
+    "tier": "topic",
+    "qwen_share": 0.2214,
+    "gemma_share": 0.1832
+   },
+   "ukcasual": {
+    "n": 2311,
+    "tier": "topic",
+    "qwen_share": 0.2155,
+    "gemma_share": 0.1904
+   },
+   "videos": {
+    "n": 304,
+    "tier": "topic",
+    "qwen_share": 0.2138,
+    "gemma_share": 0.1612
+   },
+   "health": {
+    "n": 109,
+    "tier": "topic",
+    "qwen_share": 0.2018,
+    "gemma_share": 0.1835
+   },
+   "cat": {
+    "n": 1311,
+    "tier": "topic",
+    "qwen_share": 0.1503,
+    "gemma_share": 0.0976
+   },
+   "music": {
+    "n": 256,
+    "tier": "topic",
+    "qwen_share": 0.1289,
+    "gemma_share": 0.1133
+   },
+   "3dprinting": {
+    "n": 993,
+    "tier": "topic",
+    "qwen_share": 0.1047,
+    "gemma_share": 0.0695
+   },
+   "retrogaming": {
+    "n": 1044,
+    "tier": "topic",
+    "qwen_share": 0.0996,
+    "gemma_share": 0.0603
+   },
+   "nintendo": {
+    "n": 1750,
+    "tier": "topic",
+    "qwen_share": 0.0971,
+    "gemma_share": 0.0617
+   },
+   "homeassistant": {
+    "n": 566,
+    "tier": "topic",
+    "qwen_share": 0.0848,
+    "gemma_share": 0.0707
+   },
+   "fitness": {
+    "n": 183,
+    "tier": "topic",
+    "qwen_share": 0.0546,
+    "gemma_share": 0.0656
+   },
+   "running": {
+    "n": 168,
+    "tier": "topic",
+    "qwen_share": 0.0536,
+    "gemma_share": 0.0357
+   },
+   "science": {
+    "n": 131,
+    "tier": "topic",
+    "qwen_share": 0.0458,
+    "gemma_share": 0.084
+   }
+  }
+ },
+ "length_bands": {
+  "note": "venue share by item length; point estimates",
+  "qwen": {
+   "20-50": {
+    "all": {
+     "share": 0.4585,
+     "n": 8336
+    },
+    "topic": {
+     "share": 0.3361,
+     "n": 3936
+    },
+    "meta": {
+     "share": 0.568,
+     "n": 4400
+    }
+   },
+   "50-100": {
+    "all": {
+     "share": 0.4479,
+     "n": 12430
+    },
+    "topic": {
+     "share": 0.2376,
+     "n": 5340
+    },
+    "meta": {
+     "share": 0.6062,
+     "n": 7090
+    }
+   },
+   "100-200": {
+    "all": {
+     "share": 0.4788,
+     "n": 15524
+    },
+    "topic": {
+     "share": 0.2092,
+     "n": 6505
+    },
+    "meta": {
+     "share": 0.6732,
+     "n": 9019
+    }
+   },
+   "200-400": {
+    "all": {
+     "share": 0.4841,
+     "n": 11404
+    },
+    "topic": {
+     "share": 0.1827,
+     "n": 5063
+    },
+    "meta": {
+     "share": 0.7248,
+     "n": 6341
+    }
+   },
+   "400-800": {
+    "all": {
+     "share": 0.468,
+     "n": 5417
+    },
+    "topic": {
+     "share": 0.1609,
+     "n": 2529
+    },
+    "meta": {
+     "share": 0.7368,
+     "n": 2888
+    }
+   },
+   "800-+": {
+    "all": {
+     "share": 0.4165,
+     "n": 2041
+    },
+    "topic": {
+     "share": 0.1682,
+     "n": 1076
+    },
+    "meta": {
+     "share": 0.6933,
+     "n": 965
+    }
+   }
+  },
+  "gemma": {
+   "20-50": {
+    "all": {
+     "share": 0.3689,
+     "n": 8336
+    },
+    "topic": {
+     "share": 0.2337,
+     "n": 3936
+    },
+    "meta": {
+     "share": 0.4898,
+     "n": 4400
+    }
+   },
+   "50-100": {
+    "all": {
+     "share": 0.4045,
+     "n": 12430
+    },
+    "topic": {
+     "share": 0.2036,
+     "n": 5340
+    },
+    "meta": {
+     "share": 0.5559,
+     "n": 7090
+    }
+   },
+   "100-200": {
+    "all": {
+     "share": 0.4405,
+     "n": 15524
+    },
+    "topic": {
+     "share": 0.182,
+     "n": 6505
+    },
+    "meta": {
+     "share": 0.627,
+     "n": 9019
+    }
+   },
+   "200-400": {
+    "all": {
+     "share": 0.4434,
+     "n": 11404
+    },
+    "topic": {
+     "share": 0.1495,
+     "n": 5063
+    },
+    "meta": {
+     "share": 0.678,
+     "n": 6341
+    }
+   },
+   "400-800": {
+    "all": {
+     "share": 0.4139,
+     "n": 5417
+    },
+    "topic": {
+     "share": 0.1226,
+     "n": 2529
+    },
+    "meta": {
+     "share": 0.669,
+     "n": 2888
+    }
+   },
+   "800-+": {
+    "all": {
+     "share": 0.3601,
+     "n": 2041
+    },
+    "topic": {
+     "share": 0.1217,
+     "n": 1076
+    },
+    "meta": {
+     "share": 0.6259,
+     "n": 965
+    }
+   }
+  }
+ },
+ "cross_family": {
+  "lemmy": {
+   "kappa": 0.6556,
+   "raw_agreement": 0.8297,
+   "n": 55152
+  },
+  "agent": {
+   "kappa": 0.4278,
+   "raw_agreement": 0.7124,
+   "n": 9170
+  }
+ },
+ "context_starvation_kappa": {
+  "20-50": {
+   "root": {
+    "kappa": 0.7493,
+    "n": 272
+   },
+   "reply": {
+    "kappa": 0.4911,
+    "n": 8064
+   }
+  },
+  "50-100": {
+   "root": {
+    "kappa": 0.6843,
+    "n": 1149
+   },
+   "reply": {
+    "kappa": 0.6076,
+    "n": 11281
+   }
+  },
+  "100-200": {
+   "root": {
+    "kappa": 0.6437,
+    "n": 1292
+   },
+   "reply": {
+    "kappa": 0.6693,
+    "n": 14232
+   }
+  },
+  "200-400": {
+   "root": {
+    "kappa": 0.7296,
+    "n": 700
+   },
+   "reply": {
+    "kappa": 0.73,
+    "n": 10704
+   }
+  },
+  "400-800": {
+   "root": {
+    "kappa": 0.7384,
+    "n": 537
+   },
+   "reply": {
+    "kappa": 0.7457,
+    "n": 4880
+   }
+  },
+  "800-+": {
+   "root": {
+    "kappa": 0.7477,
+    "n": 368
+   },
+   "reply": {
+    "kappa": 0.7377,
+    "n": 1673
+   }
+  }
+ },
+ "gold": {
+  "n_items": 100,
+  "consensus_n": 72,
+  "qwen_accuracy": {
+   "point": 0.9722,
+   "ci95": [
+    0.9306,
+    1.0
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "gemma_accuracy": {
+   "point": 0.9167,
+   "ci95": [
+    0.8472,
+    0.9722
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "accuracy_difference": {
+   "point": 0.0556,
+   "ci95": [
+    0.0,
+    0.125
+   ],
+   "null": 0.0,
+   "spans_null": true
+  },
+  "kappa_dan_qwen": {
+   "point": 0.7133,
+   "ci95": [
+    0.5614,
+    0.8461
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "kappa_dan_gemma": {
+   "point": 0.5316,
+   "ci95": [
+    0.3515,
+    0.6983
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "kappa_dan_fable": {
+   "point": 0.5109,
+   "ci95": [
+    0.34,
+    0.6772
+   ],
+   "null": 0.0,
+   "spans_null": false
+  }
+ },
+ "retention_48h": {
+  "note": "item-level author bootstrap (one row per author). lisp/forth are CAPTURE-BOUNDED: UTZOO is a partial feed and retention.py flags them incomplete. agent 'churn' is operator scheduling, not engagement (see retention.py docstring). The agent pool is pinned to the aligned pull's last timestamp so this cell does not drift as data/posts grows.",
+  "agent": {
+   "point": 0.5075,
+   "ci95": [
+    0.4647,
+    0.5525
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 467
+  },
+  "lemmy": {
+   "point": 0.2997,
+   "ci95": [
+    0.2922,
+    0.3071
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 13965
+  },
+  "lisp": {
+   "point": 0.0348,
+   "ci95": [
+    0.0283,
+    0.0417
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 2760
+  },
+  "forth": {
+   "point": 0.0411,
+   "ci95": [
+    0.0308,
+    0.0523
+   ],
+   "null": -1,
+   "spans_null": false,
+   "n_qualifying": 1167
+  },
+  "agent_minus_lemmy": {
+   "point": 0.2078,
+   "ci95": [
+    0.1628,
+    0.2525
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "agent_minus_lisp": {
+   "point": 0.4727,
+   "ci95": [
+    0.427,
+    0.5188
+   ],
+   "null": 0.0,
+   "spans_null": false
+  },
+  "agent_minus_forth": {
+   "point": 0.4664,
+   "ci95": [
+    0.4188,
+    0.5139
+   ],
+   "null": 0.0,
+   "spans_null": false
+  }
+ },
+ "perplexity": {
+  "note": "corpus novelty = sum(cond_bits)/sum(self_bits). The 3072-token conditioning window SATURATES at item ~62, so corpus depth cannot affect it; the full-corpus/prefix difference is composition, not a depth artifact.",
+  "agent": {
+   "point": 0.8595,
+   "ci95": [
+    0.8494,
+    0.8683
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "lemmy_founding_matched": {
+   "point": 0.8435,
+   "ci95": [
+    0.8243,
+    0.8575
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "lemmy_all": {
+   "point": 0.8723,
+   "ci95": [
+    0.8461,
+    0.8877
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "difference_agent_minus_lemmy_matched": {
+   "point": 0.0159,
+   "ci95": [
+    -0.0018,
+    0.0354
+   ],
+   "null": 0.0,
+   "spans_null": true
+  }
+ },
+ "perplexity_long": {
+  "note": "15,000-token rolling history via analysis/perplexity_stream.py (agent run: results/perplexity_long, 15000/18000). Matched on TOKEN BUDGET, not time or item count: at 15k tokens lemmy's median history is ~8.5h against the agent pool's ~1.1h, and more history lowers novelty, so the asymmetry favours lemmy and the difference below is a lower bound on the gap.",
+  "n_matched": 2776,
+  "n_agent_scored": 2890,
+  "n_lemmy_scored": 2776,
+  "agent": {
+   "point": 0.7748,
+   "ci95": [
+    0.7633,
+    0.7854
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "lemmy_founding": {
+   "point": 0.8326,
+   "ci95": [
+    0.812,
+    0.8479
+   ],
+   "null": -1,
+   "spans_null": false
+  },
+  "difference_agent_minus_lemmy": {
+   "point": -0.0578,
+   "ci95": [
+    -0.0778,
+    -0.0335
+   ],
+   "null": 0.0,
+   "spans_null": false
+  }
+ },
+ "local_split": {
+  "note": "lemmy venue share split by the record's `local` flag; the agent pool has no federation analogue, so this is a lemmy-side control",
+  "qwen": {
+   "local": {
+    "point": 0.4843,
+    "ci95": [
+     0.4611,
+     0.515
+    ],
+    "null": -1,
+    "spans_null": false,
+    "n": 32182
+   },
+   "federated": {
+    "point": 0.4415,
+    "ci95": [
+     0.4309,
+     0.4522
+    ],
+    "null": -1,
+    "spans_null": false,
+    "n": 22970
+   },
+   "difference_local_minus_federated": {
+    "point": 0.0429,
+    "ci95": [
+     0.0151,
+     0.0749
+    ],
+    "null": 0.0,
+    "spans_null": false
+   }
+  },
+  "gemma": {
+   "local": {
+    "point": 0.4366,
+    "ci95": [
+     0.417,
+     0.4585
+    ],
+    "null": -1,
+    "spans_null": false,
+    "n": 32182
+   },
+   "federated": {
+    "point": 0.3886,
+    "ci95": [
+     0.3784,
+     0.3991
+    ],
+    "null": -1,
+    "spans_null": false,
+    "n": 22970
+   },
+   "difference_local_minus_federated": {
+    "point": 0.048,
+    "ci95": [
+     0.025,
+     0.0733
+    ],
+    "null": 0.0,
+    "spans_null": false
+   }
+  }
+ },
+ "usenet_platform_governance": {
+  "qwen": {
+   "groups": {
+    "venue_share": 0.7553,
+    "n_classified": 7728,
+    "unparsed": 25,
+    "identity_block_band": [
+     0.7548,
+     0.7439,
+     0.7662
+    ]
+   },
+   "admin": {
+    "venue_share": 0.4666,
+    "n_classified": 10918,
+    "unparsed": 13,
+    "identity_block_band": [
+     0.4666,
+     0.4559,
+     0.478
+    ]
+   },
+   "netmeta": {
+    "venue_share": 0.4784,
+    "n_classified": 11768,
+    "unparsed": 27,
+    "identity_block_band": [
+     0.4786,
+     0.468,
+     0.4898
+    ]
+   }
+  },
+  "cross_family": {
+   "pooled_n": 30414,
+   "raw_agreement": 0.797,
+   "kappa": 0.602,
+   "per_pool": {
+    "groups": {
+     "qwen_share": 0.755,
+     "gemma_share": 0.622,
+     "n": 7728
+    },
+    "admin": {
+     "qwen_share": 0.467,
+     "gemma_share": 0.314,
+     "n": 10918
+    },
+    "netmeta": {
+     "qwen_share": 0.478,
+     "gemma_share": 0.329,
+     "n": 11768
+    }
+   },
+   "per_pool_kappa": {
+    "groups": 0.568,
+    "admin": 0.573,
+    "netmeta": 0.581
+   }
+  }
+ }
+}
