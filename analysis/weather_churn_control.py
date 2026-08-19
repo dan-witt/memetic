@@ -15,7 +15,7 @@ fixed-width lens?". A published series that moves while both controls stay flat 
 
 Usage: MEMETIC_WORKDIR=... python3 analysis/weather_churn_control.py [N ...]   (default 5 7)
 """
-import json, sys, datetime as dt
+import json, sys, os, datetime as dt
 from pathlib import Path
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 from weather_churn import signature_windows
@@ -23,7 +23,7 @@ from weather_churn import signature_windows
 D = Path("/home/dan/personal/memetic/data/posts")
 # (issue tag, analysis cutoff) — the cutoff is exclusive, as everywhere in the weather pipeline.
 ISSUES = [("#1", "2026-08-12"), ("#2", "2026-08-13"), ("#3", "2026-08-14"),
-          ("#4", "2026-08-15"), ("#5", "2026-08-18")]
+          ("#4", "2026-08-15"), ("#5", "2026-08-18"), ("#6", "2026-08-19")]
 CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).timestamp()
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 
@@ -57,6 +57,7 @@ def windowed(cutoff, n_days):
 
 if __name__ == "__main__":
     spans = [int(x) for x in sys.argv[1:]] or [5, 7]
+    emit = {}
     for n in spans:
         print(f"\n=== fixed observation span: last {n} complete calendar days before each cutoff ===")
         print(f"{'issue':6s} {'span':13s} {'core_n':>7s} {'dominance%':>11s} {'stability':>10s} {'permeab%':>9s}")
@@ -65,7 +66,13 @@ if __name__ == "__main__":
             if not r:
                 print(f"{tag:6s} (span does not fit below cutoff)"); continue
             sig, days = r
+            emit.setdefault(f"{n}d", {})[tag] = {"span": f"{days[0]}..{days[-1]}",
+                "core_n": sig["core_n"], "dominance_pct": sig["core_dominance_pct"],
+                "stability_ratio": sig["stability_ratio"], "permeability_pct": sig["permeability_pct"]}
             print(f"{tag:6s} {days[0]}..{days[-1]:6s} {sig['core_n']:>7d} {sig['core_dominance_pct']:>11.1f} "
                   f"{str(sig['stability_ratio']):>10s} {str(sig['permeability_pct']):>9s}")
     print("\nA metric that moves in the PUBLISHED series but is flat here was reading observation")
     print("length, not behaviour. A metric that moves in both is a candidate reading.")
+    out = Path(os.environ.get("MEMETIC_WORKDIR", ".")) / "weather_churn_control_out.json"
+    out.write_text(json.dumps(emit, indent=1))
+    print(f"saved {out}")

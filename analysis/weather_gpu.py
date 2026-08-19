@@ -67,12 +67,29 @@ if todo:
 claims = [cache[k] for _, k, _, _ in NEW]
 json.dump(claims, open(S / "agent_claims_current.json", "w"))
 # --- allocation trend: delta-classify (frozen prompt), id-keyed label cache ---
+# Previous PUBLISHED issue (not merely the previous pull): its day set is what "already
+# published" means for the retro-movement audit below, and its series is the diff comparator.
+_WR = Path("/home/dan/personal/memetic/results/weather")
+_prev_dirs = sorted((q for q in _WR.glob("20*-*-*") if (q / "results.json").exists() and q.name < _c),
+                    reverse=True)
+PREV_PUB = (json.load(open(_prev_dirs[0] / "results.json"))["allocation_trend"]
+            ["venue_share_per_day_qwen_binary"]) if _prev_dirs else {}
+PREV_PUB_NAME = _prev_dirs[0].name if _prev_dirs else None
+
 lcache = json.load(open(S / "allocation_label_cache_agent.json"))
 for k in EDITED: lcache.pop(f"{k[0]}:{k[1]}", None)   # edited text -> new claim -> re-label
 def lvalid(c): return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
 todo_l = [(i, claims[i]) for i, (t, k, x, a) in enumerate(NEW)
           if f"{k[0]}:{k[1]}" not in lcache and lvalid(claims[i])]
-print(f"allocation delta-classify: {len(todo_l)}", flush=True)
+# A label is only cached when the model answers VENUE or WORLD; an unparseable answer caches
+# nothing, so that item is RETRIED next issue. Retries land on days that are already published,
+# which is a retro-movement channel the feed_lag block cannot see (it watches text edits and
+# backfill, not label coverage). Count them so the movement is attributable, not mysterious.
+_dayof = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
+RETRIED = [i for i, _ in todo_l if NEW[i][1] in _ph]                       # in the previous PULL
+RETRIED_PUB = [i for i, _ in todo_l if _dayof(NEW[i][0]) in PREV_PUB]      # on a PUBLISHED day
+print(f"allocation delta-classify: {len(todo_l)} (retries: {len(RETRIED)} in the previous pull, "
+      f"{len(RETRIED_PUB)} on days {PREV_PUB_NAME} already published)", flush=True)
 if todo_l:
     try: tok
     except NameError:
@@ -105,6 +122,36 @@ for t, k, x, a in NEW:
     if l: _ds.setdefault(_day(t), []).append(l == "V")
 alloc_daily = {d: round(float(np.mean(v)), 4) for d, v in sorted(_ds.items()) if len(v) >= 50}
 print("allocation venue-share/day:", alloc_daily, flush=True)
+
+# --- label-coverage audit + retro-movement check against the previous PUBLISHED issue ---
+_cov = {}
+for i, (t, k, x, a) in enumerate(NEW):
+    if not lvalid(claims[i]): continue
+    d = _day(t); c = _cov.setdefault(d, [0, 0]); c[0] += 1
+    if f"{k[0]}:{k[1]}" in lcache: c[1] += 1
+_unlab = sum(v[0] - v[1] for v in _cov.values())
+# The audit counts describe THIS execution. If the claim cache was already warm (todo empty),
+# this is a re-run and its counts are not the issue's totals - the delta pass that did the work
+# classified more and may have resolved retries this pass can no longer see. Issue #6 was
+# published from such a re-run; the block is labelled so a reader is never misled about which.
+label_audit = {"pass_type": "delta pass (did this issue's classification work)" if todo else
+               "re-run over warm caches: counts describe THIS pass only, not the issue total",
+               "delta_classified": len(todo_l),
+               "retries_in_previous_pull": len(RETRIED),
+               "retries_on_already_published_days": len(RETRIED_PUB),
+               "unlabelled_after_run": _unlab,
+               "per_day": {d: {"valid_claim_items": v[0], "labelled": v[1],
+                               "coverage": round(v[1] / v[0], 4)} for d, v in sorted(_cov.items())},
+               "note": "unparseable classifier answers are not cached and are retried next issue; "
+                       "a successful retry moves an already-published day."}
+moved = {d: {"prev_issue": PREV_PUB[d], "this_issue": alloc_daily[d],
+             "delta": round(alloc_daily[d] - PREV_PUB[d], 4)}
+         for d in PREV_PUB if d in alloc_daily and abs(alloc_daily[d] - PREV_PUB[d]) > 1e-9}
+if PREV_PUB_NAME: label_audit["prev_issue_compared"] = PREV_PUB_NAME
+label_audit["published_days_moved"] = moved
+print(f"label coverage: {sum(v[1] for v in _cov.values())}/{sum(v[0] for v in _cov.values())} "
+      f"({_unlab} unlabelled); published days moved vs {label_audit.get('prev_issue_compared','-')}: "
+      f"{moved if moved else 'none'}", flush=True)
 claims = [c if (len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR")) else "empty claim" for c in claims]
 
 from sentence_transformers import SentenceTransformer
@@ -119,7 +166,8 @@ win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > prev_last]
 # Lemmy.world platform reference for the allocation cell: frozen, read from the baseline's own
 # artifact so the two cannot drift. Carried here so every issue gets it without being retyped.
 _lem = LEMREF.levels()
-out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily}
+out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily,
+       "allocation_label_audit": label_audit}
 if _lem:
     out["lemmy_reference"] = _lem
     out["allocation_daily_vs_lemmy"] = {d: LEMREF.position(v, _lem) for d, v in alloc_daily.items()}
@@ -195,6 +243,14 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
                      " weather_nn_validate.py for the synthetic null/power check.")
             out["refresh_nn_distance_legacy_asymmetric"] = NNR.legacy_asymmetric(En, Ei)
             print("newcomer NN cell:", out["refresh_nn_distance_matched"], flush=True)
+        else:
+            # Record the skip explicitly. Issue #6 hit this for the first time: with inflow at
+            # ~8 new authors/day a one-day window no longer carries enough newcomer items to run
+            # the instrument at all, which is a reading about recruitment, not a missing cell.
+            out["refresh_nn_cell_skipped"] = (
+                f"newcomer_items={len(idx_newc)} / incumbent_items={len(idx_inc)} against the "
+                f"standing floors m>={NN_FLOOR} newcomer and >={3 * NN_FLOOR} incumbent; not computed")
+            print("newcomer NN cell skipped:", out["refresh_nn_cell_skipped"], flush=True)
     del m, Ea
 
 json.dump(out, open(S / "weather_gpu_out.json", "w"), indent=1)
