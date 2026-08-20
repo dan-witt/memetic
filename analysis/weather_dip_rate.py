@@ -21,7 +21,8 @@ from pathlib import Path
 
 W = Path("/home/dan/personal/memetic/results/weather")
 ISSUES = [("#1", "2026-08-11"), ("#2", "2026-08-12"), ("#3", "2026-08-13"),
-          ("#4", "2026-08-14"), ("#5", "2026-08-17"), ("#6", "2026-08-18")]
+          ("#4", "2026-08-14"), ("#5", "2026-08-17"), ("#6", "2026-08-18"),
+          ("#7", "2026-08-19")]
 
 
 def series(date):
@@ -38,7 +39,18 @@ def rates(issues=ISSUES):
         if not ts: continue
         v, t = ts["vendi_over_W"], ts["t_utc"]
         forth = ts["anchor_levels"]["forth"]
-        drift = 0 if prev is None else sum(1 for i in range(min(len(v), len(prev))) if v[i] != prev[i])
+        # A drift COUNT is not actionable on its own -- "the past moved" needs to say which
+        # windows, by how much, and whether any crossed the anchor, because those three facts
+        # decide whether the per-issue decomposition survives. Issue #7 drifted in exactly the 3
+        # windows containing one post-publication edit (post:1197, 2384 -> 246 chars), none of
+        # which crossed forth, so the published dip COUNTS were untouched.
+        drift_idx = ([] if prev is None else
+                     [i for i in range(min(len(v), len(prev))) if v[i] != prev[i]])
+        drift = len(drift_idx)
+        drift_detail = [{"i": i, "t_utc": t[i], "prev": prev[i], "now": v[i],
+                         "delta": round(v[i] - prev[i], 5),
+                         "crossed_forth": (prev[i] < forth) != (v[i] < forth)}
+                        for i in drift_idx]
         new = v[len(prev):] if prev is not None else v
         row = {"issue": tag, "date": date, "windows": len(v), "new_windows": len(new),
                "forth": forth,
@@ -47,7 +59,9 @@ def rates(issues=ISSUES):
                "new_below_forth_pct": (round(100 * sum(1 for x in new if x < forth) / len(new), 1)
                                        if new else None),
                "last_window": v[-1], "new_window_mean": round(sum(new) / len(new), 4) if new else None,
-               "prefix_drift_vs_prev": drift, "last_t_utc": t[-1]}
+               "prefix_drift_vs_prev": drift, "prefix_drift_detail": drift_detail,
+               "prefix_drift_crossed_forth": sum(1 for x in drift_detail if x["crossed_forth"]),
+               "last_t_utc": t[-1]}
         out.append(row); prev = v
     return out
 
@@ -64,6 +78,15 @@ if __name__ == "__main__":
     bad = [r for r in rows if r["prefix_drift_vs_prev"]]
     print("\nshared-prefix drift: " + ("NONE — the past is stable, per-issue rates are comparable"
                                        if not bad else f"VIOLATED in {[r['issue'] for r in bad]}"))
+    for r in bad:
+        print(f"  {r['issue']}: {r['prefix_drift_vs_prev']} window(s) moved, "
+              f"{r['prefix_drift_crossed_forth']} of them across the forth anchor "
+              f"({'dip counts UNCHANGED' if not r['prefix_drift_crossed_forth'] else 'DIP COUNTS AFFECTED'})")
+        for x in r["prefix_drift_detail"]:
+            print(f"     window {x['i']} ({x['t_utc']}): {x['prev']} -> {x['now']} "
+                  f"({x['delta']:+.5f}){'  CROSSED' if x['crossed_forth'] else ''}")
+        print("     a contiguous run of ~3 windows is the signature of ONE edited item (W=120, "
+              "stride 40); check feed_lag.content_mutations.edited_keys for the cause.")
     print("The pooled column averages over all history and lags the current level; the NEW column")
     print("is the rate over the windows that issue actually added.")
     dest = Path(sys.argv[1]) if len(sys.argv) > 1 else None

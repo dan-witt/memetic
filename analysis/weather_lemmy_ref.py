@@ -49,5 +49,38 @@ def position(share_qwen, ref=None):
             "above_platform": bool(share_qwen > ref["platform_qwen"])}
 
 
+def coverage_bound(path=BASELINE, corpus_items=55223):
+    """Worst-case effect of the comparator's own unparsed-answer bias on platform_qwen.
+
+    Issue #7 found the square's allocation classifier fails ONE-SIDEDLY: every unparseable answer
+    is the verbatim string "SUBJECT MATTER", i.e. a WORLD answer the strict parse throws away, so
+    dropping those items biases the square's venue share UPWARD (analysis/weather_label_failures.py).
+    The comparator was classified with the identical prompt and model, so it carries the same bias
+    and a correction applied to one side only would be a rigged comparison.
+
+    This bounds the comparator's side WITHOUT re-measuring the frozen corpus: n_classified is
+    published, the founding-month item count is published, and the difference is an upper bound on
+    how many items the parse dropped. Counting every one of them WORLD gives the lowest platform
+    figure the correction could produce. It is a BOUND, not the correction: some of that difference
+    is invalid claims rather than unparsed answers, so the true move is smaller.
+    """
+    if not Path(path).exists():
+        return None
+    d = json.load(open(path))
+    a = d["allocation"]["all_items"]["qwen"]
+    n = a["n"]["lemmy_all"]
+    share = a["share_lemmy_all"]["point"]
+    v = round(share * n)
+    uncovered_max = max(0, corpus_items - n)
+    return {"platform_qwen_published": share, "n_classified": n, "venue_items": v,
+            "uncovered_upper_bound": uncovered_max,
+            "uncovered_pct_upper_bound": round(100 * uncovered_max / corpus_items, 3),
+            "platform_qwen_worst_case": round(v / (n + uncovered_max), 4),
+            "max_downward_move": round(v / (n + uncovered_max) - share, 4),
+            "note": "upper bound on the comparator's own coverage bias; the square's same-parse "
+                    "correction is an order of magnitude larger, so correcting BOTH sides widens "
+                    "the square's shortfall against the platform rather than closing it."}
+
+
 if __name__ == "__main__":
-    print(json.dumps(levels(), indent=1))
+    print(json.dumps({"levels": levels(), "coverage_bound": coverage_bound()}, indent=1))

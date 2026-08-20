@@ -12,6 +12,7 @@ import numpy as np
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
 import weather_lemmy_ref as LEMREF  # frozen lemmy.world platform levels for the allocation cell
+import weather_newcomer as NC       # newcomer cell construction + pooled fallback, single source
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -196,61 +197,34 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
         halves = [v for _, v in ws]
         out["rolling_halves_bge"] = {"first_half": round(float(np.mean(halves[:len(halves)//2])), 4),
                                      "second_half": round(float(np.mean(halves[len(halves)//2:])), 4)}
-        # newcomer cells within the issue window
-        first = {}
-        for t, k, x, a in NEW:
-            if a not in first: first[a] = t
-        idx_newc = [i for i in win_idx if first[NEW[i][3]] > prev_last]
-        idx_inc = [i for i in win_idx if first[NEW[i][3]] <= prev_last]
-        out["newcomer_counts"] = {"newcomer_items": len(idx_newc), "incumbent_items": len(idx_inc)}
-        # Two floors, deliberately different. The Vendi-based parity/union cells need enough items
-        # for a stable spectrum -> m >= 100. The NN cell is a median of distances against a
-        # permutation null that widens automatically as m shrinks, so it stays interpretable lower
-        # -> m >= 50, and any run below VENDI_FLOOR is flagged below_standing_vendi_floor.
-        VENDI_FLOOR, NN_FLOOR = 100, 50
-        if len(idx_newc) >= VENDI_FLOOR and len(idx_inc) >= VENDI_FLOOR:
-            mm = int(0.8 * min(len(idx_newc), len(idx_inc)))
-            rs = [vendi(Ea[np.array(idx_newc)][rng.choice(len(idx_newc), mm, replace=False)]) /
-                  vendi(Ea[np.array(idx_inc)][rng.choice(len(idx_inc), mm, replace=False)]) for _ in range(40)]
-            out["newcomer_within_pool_parity"] = {"m": mm, "band": [round(float(np.percentile(rs, p)), 3) for p in (50, 5, 95)]}
-            # cross-pool refresh 1: union vs incumbent at fixed size
-            mm2 = min(len(idx_newc), len(idx_inc))
-            rs_u, rs_i = [], []
-            for _ in range(40):
-                inc = np.array(idx_inc)[rng.choice(len(idx_inc), mm2, replace=False)]
-                nwc = np.array(idx_newc)[rng.choice(len(idx_newc), mm2 // 2, replace=False)]
-                union = np.concatenate([inc[:mm2 - len(nwc)], nwc])
-                rs_u.append(vendi(Ea[union])); rs_i.append(vendi(Ea[inc]))
-            ratio = [round(float(np.percentile(np.array(rs_u) / np.array(rs_i), p)), 3) for p in (50, 5, 95)]
-            out["refresh_union_over_incumbent"] = {"m": mm2, "band": ratio,
-                "read": ">1 = newcomer claims add effective distinct content beyond incumbents'"}
-        else:
-            out["newcomer_vendi_cells_skipped"] = (
-                f"newcomer_items={len(idx_newc)} below the standing m>={VENDI_FLOOR} floor for the "
-                f"Vendi-based parity/union cells; not computed")
-        # cross-pool refresh 2: nearest-incumbent distance, MATCHED candidate pools. Construction,
-        # rationale and the superseded version live in weather_nn_refresh.py — imported rather
-        # than duplicated so the pipeline and the standalone run cannot drift apart.
-        # weather_nn_validate.py is its synthetic null/power check.
-        if len(idx_newc) >= NN_FLOOR and len(idx_inc) >= 3 * NN_FLOOR:
-            En, Ei = Ea[np.array(idx_newc)], Ea[np.array(idx_inc)]
-            out["refresh_nn_distance_matched"] = dict(
-                NNR.matched_nn(En, Ei),
-                below_standing_vendi_floor=len(idx_newc) < VENDI_FLOOR,
-                read="same reference pool R, same size, disjoint from every query set; delta > null"
-                     " = newcomer claims sit farther from the incumbent cloud than incumbents do"
-                     " from each other. Null centres on 0 by construction; see"
-                     " weather_nn_validate.py for the synthetic null/power check.")
-            out["refresh_nn_distance_legacy_asymmetric"] = NNR.legacy_asymmetric(En, Ei)
-            print("newcomer NN cell:", out["refresh_nn_distance_matched"], flush=True)
-        else:
-            # Record the skip explicitly. Issue #6 hit this for the first time: with inflow at
-            # ~8 new authors/day a one-day window no longer carries enough newcomer items to run
-            # the instrument at all, which is a reading about recruitment, not a missing cell.
-            out["refresh_nn_cell_skipped"] = (
-                f"newcomer_items={len(idx_newc)} / incumbent_items={len(idx_inc)} against the "
-                f"standing floors m>={NN_FLOOR} newcomer and >={3 * NN_FLOOR} incumbent; not computed")
-            print("newcomer NN cell skipped:", out["refresh_nn_cell_skipped"], flush=True)
+        # Newcomer refresh cells. Construction, floors and the pooled fallback live in
+        # weather_newcomer.py -- imported rather than duplicated so the standalone run and the
+        # pipeline cannot drift. Historical key names are preserved here for series continuity.
+        _MAP = {"counts": "newcomer_counts", "within_pool_parity": "newcomer_within_pool_parity",
+                "union_over_incumbent": "refresh_union_over_incumbent",
+                "nn_distance_matched": "refresh_nn_distance_matched",
+                "nn_distance_legacy_asymmetric": "refresh_nn_distance_legacy_asymmetric",
+                "vendi_cells_skipped": "newcomer_vendi_cells_skipped",
+                "nn_cell_skipped": "refresh_nn_cell_skipped"}
+        idx_newc, idx_inc = NC.split(NEW, prev_last)
+        for _k, _v in NC.cells(Ea, idx_newc, idx_inc, rng).items():
+            out[_MAP.get(_k, _k)] = _v
+        print("newcomer window cell:",
+              out.get("refresh_nn_distance_matched") or out.get("refresh_nn_cell_skipped"), flush=True)
+        # Pooled fallback: with recruitment in single digits a one-day window no longer carries
+        # enough newcomer text to run the instrument (issue #6: 42 items, issue #7: 9). Issue #6
+        # pre-registered pooling the last K issue windows rather than reporting a second skip.
+        # Computed whenever the per-issue NN cell is dark; it is its own series, not a continuation.
+        if "refresh_nn_cell_skipped" in out:
+            _st, _prov = NC.pooled_start(_c, 3)
+            if _st is not None:
+                _pn, _pi = NC.split(NEW, _st)
+                out["newcomer_pooled_window"] = dict(
+                    NC.cells(Ea, _pn, _pi, np.random.default_rng(0)), **_prov,
+                    span_days=round((CUTOFF - _st) / 86400, 2),
+                    comparability="NOT comparable to the per-issue newcomer cells of issues #1-#5:"
+                                  " longer arrival window, contiguous interval, its own series.")
+                print("newcomer pooled cell:", out["newcomer_pooled_window"]["counts"], flush=True)
     del m, Ea
 
 json.dump(out, open(S / "weather_gpu_out.json", "w"), indent=1)
