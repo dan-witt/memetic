@@ -137,12 +137,21 @@ def report(issue_date):
     # (3) the proposed replacement rule: does the LEVEL stay down, not just single days?
     _vals = [alloc[k] for k in days]
     _tm = trailing_means(_vals, days, 5)
-    out["trailing_5day_mean"] = {
-        "series": _tm, "threshold": _lo,
-        "days_below_threshold": [d for d, v in _tm.items() if v < _lo],
-        "read": "issue #8's proposed level-shift rule. The single-day run rule fired at issue #7 "
-                "and reversed at issue #8; this statistic never went below the bound, so the "
-                "replacement would not have produced that false positive."}
+    _below = [d for d, v in _tm.items() if v < _lo]
+    # The read string is DERIVED, not carried: issue #9's cold review found the previous fixed
+    # string still asserting "never went below the bound" in the same JSON block as a non-empty
+    # days_below_threshold. A machine-readable record must not contradict its own field.
+    if not _below:
+        _read = ("issue #8's level-shift rule. This statistic has never gone below the bound, so it "
+                 "would not have produced the issue #5 rule's false positive.")
+    else:
+        _read = (f"issue #8's level-shift rule, and it HAS crossed: {len(_below)} day(s) below the "
+                 f"bound ({', '.join(_below)}), deepest {min(_tm.values()):.4f} against {_lo}. "
+                 "Issue #8's condition was 'goes below AND stays', so a single crossing is half of "
+                 "it. Read the crossing DEPTH against the statistic's own counting noise before "
+                 "treating it as a level change.")
+    out["trailing_5day_mean"] = {"series": _tm, "threshold": _lo,
+                                 "days_below_threshold": _below, "read": _read}
 
     # (4) dip rate: this issue's new-window dip count against the previous issue's.
     rows = d["idea_time_series"]["per_issue_dip_rate"]

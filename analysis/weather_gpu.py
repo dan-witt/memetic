@@ -6,21 +6,27 @@ anchors (full pool AND issue-window-only cells, 3 embedders); allocation venue s
 newcomer cells (within-pool parity + cross-pool refresh: union-vs-incumbent Vendi and
 matched-pool nearest-incumbent claim distance). Outputs weather_gpu_out.json +
 agent_claims_current.json."""
-import json, gc, sys, hashlib, datetime as dt
+import json, gc, os, sys, hashlib, datetime as dt
 from pathlib import Path
+# Set before torch touches CUDA. Issue #9 OOM'd here: the card carries ~3.4 GB of desktop memory,
+# leaving ~20 GB, and a claimify batch of 16 at max_length=1500 through a 7B model peaked at
+# 19.88 GB with 1.66 GB of it reserved-but-unallocated fragmentation. Expandable segments give
+# that fragmentation back.
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 import numpy as np
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
 import weather_lemmy_ref as LEMREF  # frozen lemmy.world platform levels for the allocation cell
 import weather_newcomer as NC       # newcomer cell construction + pooled fallback, single source
 import weather_alloc_parse as AP    # strict/corrected allocation parse, single source of truth
+import weather_issue_boundary as IB  # issue/window boundaries, single source of truth
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-import os
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
 _c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper bound (exclusive)
 CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
+CLAIM_BATCH = int(os.environ.get("WEATHER_CLAIM_BATCH", "8"))   # see the OOM note above
 
 def load_items(d, cutoff=CUTOFF):
     items = []
@@ -57,12 +63,16 @@ if todo:
     msgs = [[{"role": "system", "content": CS}, {"role": "user", "content": CU.format(t=x[:3000])}] for _, x in todo]
     pr = [tok.apply_chat_template(m, tokenize=False, add_generation_prompt=True) for m in msgs]
     outs = []
-    for i in range(0, len(pr), 16):
-        enc = tok(pr[i:i+16], return_tensors="pt", padding=True, truncation=True, max_length=1500).to("cuda")
+    # Batch 8, not 16: activations here are batch x 1500 tokens through a 7B model and this is
+    # the step that OOM'd at issue #9 on an 836-item delta. Claims are generated once per item and
+    # cached forever, so batch size affects only the items generated in this pass (padding can
+    # perturb a borderline decode at the margin); it is not a cross-issue comparability change.
+    for i in range(0, len(pr), CLAIM_BATCH):
+        enc = tok(pr[i:i+CLAIM_BATCH], return_tensors="pt", padding=True, truncation=True, max_length=1500).to("cuda")
         with torch.no_grad():
             o = gen.generate(**enc, max_new_tokens=48, do_sample=False, pad_token_id=tok.pad_token_id)
         outs += [tok.decode(g, skip_special_tokens=True).strip() for g in o[:, enc.input_ids.shape[1]:]]
-        if (i // 16) % 25 == 0: print(f"  {min(i+16, len(pr))}/{len(pr)}", flush=True)
+        if (i // CLAIM_BATCH) % 25 == 0: print(f"  {min(i+CLAIM_BATCH, len(pr))}/{len(pr)}", flush=True)
     for (i, _), c in zip(todo, outs): cache[NEW[i][1]] = c
     json.dump({f"{k[0]}:{k[1]}": c for k, c in cache.items()}, open(S / "claim_cache_agent.json", "w"))
 
@@ -74,7 +84,7 @@ json.dump(claims, open(S / "agent_claims_current.json", "w"))
 # NOT "every issue dir below the cutoff": an issue dated D has cutoff D+1 and so sorts below its
 # own cutoff, which makes a post-publication re-run audit the issue against ITSELF. Single source
 # of truth in weather_newcomer, which has the same hazard in pooled_start.
-_prev_dirs = NC.published_issues_before(_c)
+_prev_dirs = IB.published_issues_before(_c)
 PREV_PUB = (json.load(open(_prev_dirs[0] / "results.json"))["allocation_trend"]
             ["venue_share_per_day_qwen_binary"]) if _prev_dirs else {}
 PREV_PUB_NAME = _prev_dirs[0].name if _prev_dirs else None
@@ -184,11 +194,13 @@ def vendi(E):
 ANCH = {"lisp": "lisp_all.json", "sci": "sci_all.json", "hn": "hn_all.json"}
 CL = {k: [c for c in json.load(open(S / "baseline_claims" / f)) if len(c.strip()) >= 5] for k, f in ANCH.items()}
 rng = np.random.default_rng(0)
-win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > prev_last]
+WIN_START, WIN_PROV = IB.issue_window_start(_c, prev_last)
+win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t >= WIN_START]
 # Lemmy.world platform reference for the allocation cell: frozen, read from the baseline's own
 # artifact so the two cannot drift. Carried here so every issue gets it without being retyped.
 _lem = LEMREF.levels()
-out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily,
+out = {"n_items": len(claims), "issue_window_items": len(win_idx),
+       "issue_window_basis": WIN_PROV, "allocation_daily_venue_share": alloc_daily,
        "allocation_daily_venue_share_corrected": alloc_daily_corr,
        "allocation_label_audit": label_audit}
 if _lem:
@@ -242,7 +254,7 @@ for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2
                 "nn_distance_legacy_asymmetric": "refresh_nn_distance_legacy_asymmetric",
                 "vendi_cells_skipped": "newcomer_vendi_cells_skipped",
                 "nn_cell_skipped": "refresh_nn_cell_skipped"}
-        idx_newc, idx_inc = NC.split(NEW, prev_last)
+        idx_newc, idx_inc = NC.split(NEW, WIN_START)
         for _k, _v in NC.cells(Ea, idx_newc, idx_inc, rng).items():
             out[_MAP.get(_k, _k)] = _v
         print("newcomer window cell:",

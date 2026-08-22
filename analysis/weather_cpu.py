@@ -17,6 +17,7 @@ S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memeti
 _c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper bound (exclusive)
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import zstd_curve as Z
+import weather_issue_boundary as IB   # issue/window boundaries, single source of truth
 
 CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 
@@ -35,6 +36,10 @@ def load_items(d, cutoff=CUTOFF):
 PREV = load_items(S / "prev_corpus/data/posts")          # issue-1 corpus state (git HEAD)
 NEW = load_items("/home/dan/personal/memetic/data/posts")
 prev_last = max(t for t, _, _, _ in PREV)
+# The issue window starts at the previous issue's CUTOFF, not the previous pull's last item; see
+# analysis/weather_issue_boundary.py. prev_last still defines the BACKFILL comparison below, which
+# genuinely is about what the previous pull physically held.
+WIN_START, WIN_PROV = IB.issue_window_start(_c, prev_last)
 print(f"prev-issue items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
       f"this-issue items {len(NEW)} (cutoff {_c} 00:00 UTC)", flush=True)
 
@@ -80,10 +85,12 @@ feed_lag["content_mutations"] = {
     "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them."}
 
 out = {"cutoff_utc": _c + "T00:00:00Z", "issue_window_start_utc":
-       dt.datetime.utcfromtimestamp(prev_last).strftime("%Y-%m-%d %H:%M"),
+       dt.datetime.utcfromtimestamp(WIN_START).strftime("%Y-%m-%d %H:%M"),
+       "issue_window_basis": WIN_PROV,
        "corpus": {"items": len(NEW), "posts": sum(1 for _, k, _, _ in NEW if k[0] == "post"),
                   "authors": len({a for _, _, _, a in NEW}), "days": days,
-                  "issue_window_items": sum(1 for t, _, _, _ in NEW if t > prev_last)}}
+                  "issue_window_items": sum(1 for t, _, _, _ in NEW if t >= WIN_START),
+                  "issue_window_items_old_prev_pull_basis": sum(1 for t, _, _, _ in NEW if t > prev_last)}}
 
 first_seen, per_day_new, per_day_items, newcomer_items = {}, Counter(), Counter(), Counter()
 per_day_active = defaultdict(set)

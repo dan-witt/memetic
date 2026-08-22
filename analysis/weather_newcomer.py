@@ -35,6 +35,7 @@ import numpy as np
 
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
+import weather_issue_boundary as IB   # issue/window boundaries, single source of truth
 
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
 W = Path("/home/dan/personal/memetic/results/weather")
@@ -47,18 +48,23 @@ def vendi(E):
 
 
 def split(NEW, start_ts):
-    """-> (newcomer item indices, incumbent item indices) for items after start_ts.
+    """-> (newcomer item indices, incumbent item indices) for items at or after start_ts.
 
     NEW is the cutoff-filtered item stream [(t, key, text, author)]; first-appearance is taken
     over the WHOLE stream, so an author who posted before start_ts is an incumbent even if their
     only in-window item is their second ever.
+
+    Boundary is INCLUSIVE (>=) to match weather_gpu.py's win_idx, because from issue #9 the window
+    starts at the previous issue's cutoff -- an exact midnight timestamp, which a strict > would
+    drop. Cutoffs are exclusive upper bounds and window starts are inclusive lower bounds, so an
+    item is in exactly one issue's window.
     """
     first = {}
     for t, k, x, a in NEW:
         if a not in first: first[a] = t
-    idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > start_ts]
-    return ([i for i in idx if first[NEW[i][3]] > start_ts],
-            [i for i in idx if first[NEW[i][3]] <= start_ts])
+    idx = [i for i, (t, k, x, a) in enumerate(NEW) if t >= start_ts]
+    return ([i for i in idx if first[NEW[i][3]] >= start_ts],
+            [i for i in idx if first[NEW[i][3]] < start_ts])
 
 
 def cells(Ea, idx_newc, idx_inc, rng=None):
@@ -103,24 +109,7 @@ def cells(Ea, idx_newc, idx_inc, rng=None):
     return out
 
 
-def published_issues_before(cutoff_str):
-    """-> published issue dirs strictly BEFORE the issue being produced, newest first.
-
-    The obvious filter -- every issue dir whose name sorts below the cutoff -- is wrong the moment
-    the current issue's own directory exists, because an issue dated D has cutoff D+1 and therefore
-    sorts below its own cutoff. That makes the pipeline non-idempotent: run it before writing
-    results.json and it looks at the previous issue, run it again afterwards and it looks at
-    ITSELF. Observed at issue #8, where a re-run moved the pooled newcomer window from 145/1,835 to
-    17/1,207 and made the retro-movement audit compare the issue against its own published series.
-
-    Excluding the issue's own date fixes both, and makes a post-publication re-run reproduce what
-    was published.
-    """
-    own = (dt.datetime(*map(int, cutoff_str.split("-")), tzinfo=dt.timezone.utc)
-           - dt.timedelta(days=1)).strftime("%Y-%m-%d")
-    return sorted((q for q in W.glob("20*-*-*")
-                   if (q / "results.json").exists() and q.name < cutoff_str and q.name != own),
-                  reverse=True)
+published_issues_before = IB.published_issues_before   # moved to weather_issue_boundary
 
 
 def pooled_start(cutoff_str, K=3):
@@ -167,7 +156,7 @@ def pooled_overlap(NEW, start, cutoff, prev_issue_dir):
     mine = [t for t, k, x, a in NEW if start <= t < cutoff]
     both = [t for t in mine if pstart <= t < pcut]
     return {"prev_issue": d.get("issue"), "prev_pooled_start_utc": ws,
-            "prev_pooled_end_utc": f"{pc} 00:00", "this_pooled_items": len(mine),
+            "prev_pooled_end_utc": pc, "this_pooled_items": len(mine),
             "shared_items": len(both),
             "shared_fraction_of_this": round(len(both) / len(mine), 3) if mine else None,
             "read": "consecutive pooled points are strongly dependent; not a two-point trend."}
@@ -194,9 +183,10 @@ if __name__ == "__main__":
 
     # (1) the per-issue window cell, recomputed here as a REPRODUCTION CHECK on weather_gpu.py.
     # Same split, same floors, same seed -> the two must agree before the pooled cell is trusted.
-    ni, ii = split(NEW, prev_last)
+    WIN_START, _ = IB.issue_window_start(_c, prev_last)
+    ni, ii = split(NEW, WIN_START)
     EMIT["per_issue_window"] = dict(cells(Ea, ni, ii, np.random.default_rng(0)),
-                                    window_start_utc=dt.datetime.fromtimestamp(prev_last, dt.timezone.utc)
+                                    window_start_utc=dt.datetime.fromtimestamp(WIN_START, dt.timezone.utc)
                                     .strftime("%Y-%m-%d %H:%M"))
     print(f"per-issue window (from {EMIT['per_issue_window']['window_start_utc']}): "
           f"{len(ni)} newcomer / {len(ii)} incumbent items")

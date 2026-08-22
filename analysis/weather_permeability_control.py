@@ -117,7 +117,8 @@ def cohort_trend(ev, N, draws=20000, seed=20260819, min_n=MIN_N):
 ISSUES = [("#1", "2026-08-12", 30.5, "2026-08-11T19:56:47Z"), ("#2", "2026-08-13", 33.6, None),
           ("#3", "2026-08-14", 35.5, None), ("#4", "2026-08-15", 39.4, None),
           ("#5", "2026-08-18", 42.9, None), ("#6", "2026-08-19", 43.9, None),
-          ("#7", "2026-08-20", 46.9, None), ("#8", "2026-08-21", 47.2, None)]
+          ("#7", "2026-08-20", 46.9, None), ("#8", "2026-08-21", 47.2, None),
+          ("#9", "2026-08-22", 48.2, None)]
 D = "/home/dan/personal/memetic/data/posts"
 EMIT = {"fixed_horizon": {}, "membership_held_fixed": {}, "cohort_trend": {}}
 print(f"{'issue':6s} {'cutoff':12s} {'published':>10s} {'reproduced':>11s}  {'N=3':>6s} {'N=4':>6s} {'N=5':>6s}")
