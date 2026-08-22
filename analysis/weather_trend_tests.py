@@ -13,6 +13,14 @@ deliberately conservative about what they license.
                 significance under the generous assumption fails under the real one too, which is
                 the only direction this test is used in.
 
+  run_below   - "three consecutive days below the comparator's lower bound fired a pre-registered
+                rule; was the CLUSTERING itself surprising?" Exact permutation over day order,
+                holding the observed multiset of daily values fixed. It asks one narrow question:
+                given that k of n days fell below the threshold, how often would they land in a
+                run this long if the order were random? It does NOT test whether the level moved
+                -- exchangeability is the wrong null for a series with drift, since a drifting
+                series puts its lowest values adjacent for free. Cited only alongside that caveat.
+
   fisher_2x2  - two-sided Fisher exact for a change in a count-out-of-n rate between two issues
                 (used for the sub-forth dip rate). The rolling windows OVERLAP - 120 items
                 advancing by 40 - so the nominal n of 19 windows carries roughly 6-7 independent
@@ -47,6 +55,59 @@ def fisher_2x2(a, b, c, d):
     return sum(p for x in range(lo, hi + 1) if (p := prob(x)) <= obs + 1e-15)
 
 
+def longest_run(mask):
+    """-> length of the longest run of True in `mask`."""
+    best = cur = 0
+    for m in mask:
+        cur = cur + 1 if m else 0
+        best = max(best, cur)
+    return best
+
+
+def run_below(values, thresh):
+    """Exact permutation test on the CLUSTERING of sub-threshold days. See the caveat above.
+
+    Enumerates every way k below-threshold days could be arranged among n days (all orders
+    equally likely) and returns the share whose longest run is at least the observed one. Exact
+    when C(n, k) is enumerable, which it is at these series lengths.
+    """
+    from itertools import combinations
+    n = len(values)
+    below = [i for i, v in enumerate(values) if v < thresh]
+    k = len(below)
+    obs = longest_run([v < thresh for v in values])
+    if k == 0 or k == n:
+        return {"n_days": n, "k_below": k, "threshold": thresh, "longest_run": obs, "p_exact": None,
+                "read": "degenerate: every day on one side of the threshold"}
+    total = hit = 0
+    for c in combinations(range(n), k):
+        m = [False] * n
+        for i in c: m[i] = True
+        total += 1
+        if longest_run(m) >= obs: hit += 1
+    return {"n_days": n, "k_below": k, "threshold": thresh, "longest_run": obs,
+            "arrangements": total, "at_least_as_clustered": hit,
+            "p_exact": round(hit / total, 4),
+            "read": "tests CLUSTERING under random day order, not a level shift. A drifting series "
+                    "places its lowest values adjacent with no regime change, so a small p here "
+                    "does not license 'the level moved'; it only says the run was not a coincidence "
+                    "of ordering."}
+
+
+def trailing_means(values, days, k=5):
+    """-> the trailing k-day mean of the series at every day it is defined.
+
+    Issue #8's replacement for issue #5's "k consecutive days below the bound" rule. A run of
+    single days below a threshold is satisfiable by an excursion that reverses -- which is what
+    issues #7 and #8 observed -- so it tests clustering, not level. A trailing mean has to stay
+    down to fire, which is what "the level moved" actually means.
+    """
+    out = {}
+    for i in range(k - 1, len(values)):
+        out[days[i]] = round(sum(values[i - k + 1:i + 1]) / k, 4)
+    return out
+
+
 def report(issue_date):
     d = json.load(open(W / issue_date / "results.json"))
     out = {"issue": d["issue"]}
@@ -64,7 +125,26 @@ def report(issue_date):
                 "failing to reach significance here fails a fortiori. Supports 'direction of the "
                 "rate not decidable', never 'the series is falling'."}
 
-    # (2) dip rate: this issue's new-window dip count against the previous issue's.
+    # (2) the three-day below-platform run: was the clustering itself surprising?
+    # Threshold = the frozen comparator's own CI95 lower bound, read from the baseline artifact
+    # (not retyped here) so the test and the reading cannot drift apart.
+    _lo = json.load(open(Path("/home/dan/personal/memetic/results/lemmy_baseline/results.json"))
+                    )["allocation"]["all_items"]["qwen"]["share_lemmy_all"]["ci95"][0]
+    out["below_platform_run"] = dict(run_below([alloc[k] for k in days], _lo),
+                                     series="strict", days=days,
+                                     threshold_source="lemmy_baseline share_lemmy_all ci95 lower")
+
+    # (3) the proposed replacement rule: does the LEVEL stay down, not just single days?
+    _vals = [alloc[k] for k in days]
+    _tm = trailing_means(_vals, days, 5)
+    out["trailing_5day_mean"] = {
+        "series": _tm, "threshold": _lo,
+        "days_below_threshold": [d for d, v in _tm.items() if v < _lo],
+        "read": "issue #8's proposed level-shift rule. The single-day run rule fired at issue #7 "
+                "and reversed at issue #8; this statistic never went below the bound, so the "
+                "replacement would not have produced that false positive."}
+
+    # (4) dip rate: this issue's new-window dip count against the previous issue's.
     rows = d["idea_time_series"]["per_issue_dip_rate"]
     if len(rows) >= 2:
         cur, prv = rows[-1], rows[-2]

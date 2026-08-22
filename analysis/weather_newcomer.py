@@ -103,6 +103,26 @@ def cells(Ea, idx_newc, idx_inc, rng=None):
     return out
 
 
+def published_issues_before(cutoff_str):
+    """-> published issue dirs strictly BEFORE the issue being produced, newest first.
+
+    The obvious filter -- every issue dir whose name sorts below the cutoff -- is wrong the moment
+    the current issue's own directory exists, because an issue dated D has cutoff D+1 and therefore
+    sorts below its own cutoff. That makes the pipeline non-idempotent: run it before writing
+    results.json and it looks at the previous issue, run it again afterwards and it looks at
+    ITSELF. Observed at issue #8, where a re-run moved the pooled newcomer window from 145/1,835 to
+    17/1,207 and made the retro-movement audit compare the issue against its own published series.
+
+    Excluding the issue's own date fixes both, and makes a post-publication re-run reproduce what
+    was published.
+    """
+    own = (dt.datetime(*map(int, cutoff_str.split("-")), tzinfo=dt.timezone.utc)
+           - dt.timedelta(days=1)).strftime("%Y-%m-%d")
+    return sorted((q for q in W.glob("20*-*-*")
+                   if (q / "results.json").exists() and q.name < cutoff_str and q.name != own),
+                  reverse=True)
+
+
 def pooled_start(cutoff_str, K=3):
     """-> (start epoch, provenance dict) for a window spanning the last K issue windows.
 
@@ -111,8 +131,7 @@ def pooled_start(cutoff_str, K=3):
     (K-1)-th most recent published issue. Read out of that issue's own results.json rather than
     retyped, so the boundary cannot drift from what was published.
     """
-    dirs = sorted((q for q in W.glob("20*-*-*") if (q / "results.json").exists() and q.name < cutoff_str),
-                  reverse=True)
+    dirs = published_issues_before(cutoff_str)
     if len(dirs) < K - 1: return None, None
     src = dirs[K - 2]
     d = json.load(open(src / "results.json"))
@@ -122,6 +141,36 @@ def pooled_start(cutoff_str, K=3):
     return t.timestamp(), {"K": K, "start_utc": ws, "start_from_issue": d.get("issue"),
                            "start_source": str(src / "results.json"),
                            "pooled_issues": [q.name for q in dirs[:K - 1]] + ["(this issue)"]}
+
+
+def pooled_overlap(NEW, start, cutoff, prev_issue_dir):
+    """How much of THIS pooled window is the PREVIOUS issue's pooled window over again.
+
+    Issue #7 opened the pooled series and pre-registered the discipline (its watch item #4):
+    consecutive pooled points share most of their items by construction, so they are strongly
+    dependent and must never be read as a two-point trend. Quantifying it is what makes that
+    caveat checkable instead of rhetorical.
+
+    Overlap is measured on ITEMS, not on elapsed time: the windows have different lengths and
+    daily volume is not constant, so a time fraction would misstate how much data is shared.
+    Note the newcomer/incumbent SPLIT is not shared even where items are — an author is a
+    newcomer relative to each window's own start, so a later pooled start reclassifies earlier
+    arrivals as incumbents.
+    """
+    if not (prev_issue_dir / "results.json").exists(): return None
+    d = json.load(open(prev_issue_dir / "results.json"))
+    pw = d.get("newcomer_cells_pooled_window") or {}
+    ws, pc = pw.get("start_utc"), d.get("cutoff")
+    if not (ws and pc): return None
+    pstart = dt.datetime.strptime(ws, "%Y-%m-%d %H:%M").replace(tzinfo=dt.timezone.utc).timestamp()
+    pcut = dt.datetime.strptime(pc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc).timestamp()
+    mine = [t for t, k, x, a in NEW if start <= t < cutoff]
+    both = [t for t in mine if pstart <= t < pcut]
+    return {"prev_issue": d.get("issue"), "prev_pooled_start_utc": ws,
+            "prev_pooled_end_utc": f"{pc} 00:00", "this_pooled_items": len(mine),
+            "shared_items": len(both),
+            "shared_fraction_of_this": round(len(both) / len(mine), 3) if mine else None,
+            "read": "consecutive pooled points are strongly dependent; not a two-point trend."}
 
 
 if __name__ == "__main__":
@@ -174,6 +223,13 @@ if __name__ == "__main__":
         for k in ("within_pool_parity", "union_over_incumbent", "nn_distance_matched",
                   "vendi_cells_skipped", "nn_cell_skipped"):
             if k in EMIT["pooled_window"]: print(f"   {k}: {EMIT['pooled_window'][k]}")
+        _prevdirs = published_issues_before(_c)
+        ov = pooled_overlap(NEW, st, CUTOFF, _prevdirs[0]) if _prevdirs else None
+        if ov:
+            EMIT["pooled_window"]["overlap_with_prev_issue"] = ov
+            print(f"   overlap_with_prev_issue: {ov['shared_items']}/{ov['this_pooled_items']} "
+                  f"items = {100 * ov['shared_fraction_of_this']:.1f}% shared with "
+                  f"{ov['prev_issue']}'s pooled window")
 
     out = S / "weather_newcomer_pooled_out.json"
     out.write_text(json.dumps(EMIT, indent=1))

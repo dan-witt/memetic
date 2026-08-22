@@ -18,7 +18,13 @@ SURFACE = "#fcfcfb"; INK = "#0b0b0b"; MUTED = "#898781"; GRID = "#e1e0d9"; BASE 
 C_MAIN = "#2a78d6"; C_ANCHOR = "#898781"; C_BAR = "#c3c2b7"
 
 _alloc = (d.get("allocation_trend") or {}).get("venue_share_per_day_qwen_binary")
+# Issue #8 adopted a corrected parse and publishes both series; when both are present the panel
+# draws both, because the whole point of the correction is that it moves BOTH sides of the
+# comparison and the reader should see the shortfall as it stands under either currency.
+_alloc_c = (d.get("allocation_trend") or {}).get("venue_share_per_day_corrected_parse")
 _lem = ((d.get("allocation_trend") or {}).get("lemmy_reference") or {}).get("platform_qwen")
+_lem_c = ((d.get("allocation_trend") or {}).get("lemmy_comparator_corrected") or {}
+          ).get("platform_qwen_corrected")
 _axes = 4 if _alloc else 3
 fig, axs = plt.subplots(1, _axes, figsize=(12.5 if _axes == 3 else 16.0, 4.0), dpi=200,
                         gridspec_kw={"width_ratios": [1.6, 1, 1] + ([1.25] if _axes == 4 else [])})
@@ -65,11 +71,19 @@ ax3.set_title("C · Register (surface style)", loc="left", color=INK, fontsize=1
 
 if ax4 is not None:
     ad = list(_alloc)
-    ax4.plot(range(len(ad)), [_alloc[k] for k in ad], color=C_MAIN, lw=1.8, marker="o", ms=4)
+    ax4.plot(range(len(ad)), [_alloc[k] for k in ad], color=C_MAIN, lw=1.8, marker="o", ms=4,
+             label="strict parse (series currency)" if _alloc_c else None)
+    if _alloc_c:
+        ax4.plot(range(len(ad)), [_alloc_c.get(k) for k in ad], color=C_MAIN, lw=1.2, alpha=.55,
+                 ls=(0, (4, 2)), marker="o", ms=2.5, label="corrected parse")
     if _lem:
         ax4.axhline(_lem, color="#c2410c", lw=1.2, ls="--")
         ax4.text(len(ad) - 1, _lem + 0.004, "lemmy.world platform", ha="right", va="bottom",
                  color="#c2410c", fontsize=8)
+    if _lem_c and _lem and abs(_lem_c - _lem) > 1e-9:
+        ax4.axhline(_lem_c, color="#c2410c", lw=0.9, ls=(0, (2, 2)), alpha=.55)
+    if _alloc_c:
+        ax4.legend(loc="upper right", fontsize=7, frameon=False, labelcolor=MUTED)
     band = (d.get("allocation_trend") or {}).get("band_through_issue_4")
     if band:
         ax4.axhspan(band[0], band[1], color=BASE, alpha=.25, lw=0)

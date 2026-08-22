@@ -30,6 +30,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR
+import weather_alloc_parse as AP   # strict/relaxed/corrected parse + observed WORLD phrasings
 
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
 _c = os.environ["WEATHER_CUTOFF"]
@@ -42,22 +43,7 @@ ACU = ("Claim: {c}\n\nIs this claim about the forum or community ITSELF (its rul
        "moderation, funds, members, norms, or meta-discussion about the group or its quality) — or "
        "about its SUBJECT MATTER or the outside world? Answer with exactly one word: VENUE or WORLD.")
 
-def strict(w):
-    """the published parse"""
-    return "V" if w.startswith("VENUE") else "W" if w.startswith("WORLD") else None
-
-def relaxed(w):
-    """candidate fallback: the first of the two words to appear anywhere in the answer.
-
-    Deliberately conservative -- an answer naming BOTH words is still a refusal to choose and
-    stays unlabelled unless one clearly leads. No stemming, no synonyms, no 'about the forum'
-    paraphrase matching: those would be a different classifier, not a parse fix.
-    """
-    iv, iw = w.find("VENUE"), w.find("WORLD")
-    if iv < 0 and iw < 0: return None
-    if iv < 0: return "W"
-    if iw < 0: return "V"
-    return "V" if iv < iw else "W"
+strict, relaxed, corrected = AP.strict, AP.relaxed, AP.corrected
 
 def lvalid(c):
     return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
@@ -123,7 +109,7 @@ print(f"\nlargest absolute day move under the relaxed parse: {worst:.4f}")
 # second branch of the frozen question ("...or about its SUBJECT MATTER or the outside world?").
 # It is a list of OBSERVED strings, deliberately not a pattern: a new failure string must be seen
 # and added here, never matched speculatively.
-WORLD_ANSWERS = {"SUBJECT MATTER", "SUBJECT MATTER.", "THE OUTSIDE WORLD", "OUTSIDE WORLD"}
+WORLD_ANSWERS = AP.WORLD_ANSWERS
 unresolved = [w for w in raw if not relaxed(w)]
 onesided = all(w in WORLD_ANSWERS for w in unresolved) and bool(unresolved)
 print(f"\nall {len(unresolved)} unresolved answers are known WORLD phrasings: {onesided}")

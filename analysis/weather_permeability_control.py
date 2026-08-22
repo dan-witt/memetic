@@ -65,16 +65,27 @@ def fixed_horizon_rows(ev, N):
     return byc
 
 
-def fixed_horizon_permeability(ev, N):
+MIN_N = 10   # cohort-size floor for the DISPLAYED per-cohort cells; see MIN_N_TREND below.
+# Issue #7 found this floor was undisclosed and load-bearing: with inflow at 5-8 authors a day no
+# future cohort reaches 10, so the pre-registered primary horizon could never update again, and
+# re-reporting a frozen statistic as a fresh measurement is what two other cells were retired for.
+# Issue #8's decision (watch item #7): the floor stays at 10 for the displayed per-cohort table,
+# where a percentage over six authors is noise, and drops to 5 for the TREND test, which is
+# author-level and permutation-nulled and so does not need per-cohort estimates to be stable.
+# Sunset: if inflow makes even n>=5 cohorts unavailable, the test retires rather than being
+# re-reported frozen.
+MIN_N_TREND = 5
+
+def fixed_horizon_permeability(ev, N, min_n=MIN_N):
     """>=3 active days within the cohort's first N CALENDAR days (arrival day inclusive).
-    Only cohorts whose full N-day window fits below the cutoff are counted."""
+    Only cohorts whose full N-day window fits below the cutoff, and that clear `min_n`, count."""
     byc = fixed_horizon_rows(ev, N)
-    conv = {w: (round(100 * float(np.mean(v)), 1), len(v)) for w, v in sorted(byc.items()) if len(v) >= 10}
-    overall = round(100 * float(np.mean([np.mean(byc[w]) for w in sorted(byc) if len(byc[w]) >= 10])), 1) if conv else None
+    conv = {w: (round(100 * float(np.mean(v)), 1), len(v)) for w, v in sorted(byc.items()) if len(v) >= min_n}
+    overall = round(100 * float(np.mean([np.mean(byc[w]) for w in sorted(byc) if len(byc[w]) >= min_n])), 1) if conv else None
     return overall, conv
 
 
-def cohort_trend(ev, N, draws=20000, seed=20260819):
+def cohort_trend(ev, N, draws=20000, seed=20260819, min_n=MIN_N):
     """Author-level test of 'do LATER arrival cohorts convert better?' at horizon N.
 
     The per-issue running mean cannot answer this — a cohort's cell is frozen once its window
@@ -85,7 +96,7 @@ def cohort_trend(ev, N, draws=20000, seed=20260819):
     per-cohort n and the overall conversion rate fixed. Two-sided.
     """
     byc = fixed_horizon_rows(ev, N)
-    days = [w for w in sorted(byc) if len(byc[w]) >= 10]
+    days = [w for w in sorted(byc) if len(byc[w]) >= min_n]
     if len(days) < 3: return None
     idx = np.concatenate([np.full(len(byc[w]), i, float) for i, w in enumerate(days)])
     y = np.concatenate([np.array(byc[w], float) for w in days])
@@ -96,7 +107,7 @@ def cohort_trend(ev, N, draws=20000, seed=20260819):
     rng = np.random.default_rng(seed)
     null = np.array([r(rng.permutation(y)) for _ in range(draws)])
     p = float((np.abs(null) >= abs(obs) - 1e-12).mean())
-    return {"n_authors": int(len(y)), "n_cohorts": len(days), "r": round(obs, 4),
+    return {"n_authors": int(len(y)), "n_cohorts": len(days), "min_n": min_n, "r": round(obs, 4),
             "p_perm": round(p, 4), "draws": draws,
             "per_cohort": [(w, round(100 * float(np.mean(byc[w])), 1), len(byc[w])) for w in days]}
 
@@ -106,7 +117,7 @@ def cohort_trend(ev, N, draws=20000, seed=20260819):
 ISSUES = [("#1", "2026-08-12", 30.5, "2026-08-11T19:56:47Z"), ("#2", "2026-08-13", 33.6, None),
           ("#3", "2026-08-14", 35.5, None), ("#4", "2026-08-15", 39.4, None),
           ("#5", "2026-08-18", 42.9, None), ("#6", "2026-08-19", 43.9, None),
-          ("#7", "2026-08-20", 46.9, None)]
+          ("#7", "2026-08-20", 46.9, None), ("#8", "2026-08-21", 47.2, None)]
 D = "/home/dan/personal/memetic/data/posts"
 EMIT = {"fixed_horizon": {}, "membership_held_fixed": {}, "cohort_trend": {}}
 print(f"{'issue':6s} {'cutoff':12s} {'published':>10s} {'reproduced':>11s}  {'N=3':>6s} {'N=4':>6s} {'N=5':>6s}")
@@ -168,13 +179,17 @@ for n in (3, 4, 5):
 # The replacement reported object. Since the running mean moves only by composition, the
 # question "is the community getting more permeable?" has to be asked of the per-cohort sequence.
 print(f"\nper-cohort conversion TREND (author-level, permutation null) at issue {NEWEST[0]}'s cutoff")
-for n in (3, 4, 5):
-    tr = cohort_trend(ev, n)
-    if not tr: continue
-    EMIT["cohort_trend"][f"N{n}"] = tr
-    print(f"   N={n}: r={tr['r']:+.4f}  p={tr['p_perm']:.4f}  "
-          f"({tr['n_authors']} authors over {tr['n_cohorts']} cohorts, {tr['draws']} draws)")
-    print("        " + ", ".join(f"{w} {v}% (n={m})" for w, v, m in tr["per_cohort"]))
+for label, mn in (("n>=10 (issues #6-#7 currency, frozen)", MIN_N),
+                  ("n>=5 (issue #8 primary)", MIN_N_TREND)):
+    print(f"   cohort floor {label}")
+    for n in (3, 4, 5):
+        tr = cohort_trend(ev, n, min_n=mn)
+        if not tr: continue
+        EMIT["cohort_trend"][f"N{n}_minn{mn}"] = tr
+        if mn == MIN_N: EMIT["cohort_trend"][f"N{n}"] = tr   # back-compat key for issues #6-#7
+        print(f"      N={n}: r={tr['r']:+.4f}  p={tr['p_perm']:.4f}  "
+              f"({tr['n_authors']} authors over {tr['n_cohorts']} cohorts, {tr['draws']} draws)")
+        print("           " + ", ".join(f"{w} {v}% (n={m})" for w, v, m in tr["per_cohort"]))
 
 print("\ncohorts entering the PUBLISHED average, by issue (the average's membership changes):")
 for tag, cut, pub, trunc in ISSUES:

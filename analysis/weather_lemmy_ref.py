@@ -82,5 +82,62 @@ def coverage_bound(path=BASELINE, corpus_items=55223):
                     "the square's shortfall against the platform rather than closing it."}
 
 
+def corrected_platform(path=BASELINE, workdir=None):
+    """The comparator's platform figure under issue #8's CORRECTED parse — exact, not a bound.
+
+    `coverage_bound` above is the worst case issue #7 could compute without the comparator's raw
+    answers: every dropped item counted WORLD. Issue #8 recovered those answers
+    (`analysis/weather_lemmy_recover.py`) and can therefore apply the identical corrected parse
+    to both sides of the comparison, which is the only way the square's own correction is honest.
+
+    The frozen corpus is not re-measured: the published V/W labels are read as-is, and only the
+    items the published run left UNLABELLED were put back through the frozen prompt. Items whose
+    claim is invalid are excluded from the denominator on both sides and are not recovered.
+
+    -> dict, or None if the recovery artifact is absent (then use coverage_bound instead).
+    """
+    import os
+    S = Path(workdir or os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
+    art, lab_f = S / "allocation_unparsed_raw_lemmy.json", S / "allocation_labels_lemmy.json"
+    if not (art.exists() and lab_f.exists()):
+        return None
+    import weather_alloc_parse as AP
+    lab = json.load(open(lab_f))["lemmy"]
+    rec = json.load(open(art))
+    n_pub = sum(1 for x in lab if x in ("V", "W"))
+    v_pub = sum(1 for x in lab if x == "V")
+    add = [AP.corrected(w) for w in rec["raw"]]
+    v_add, n_add = sum(1 for l in add if l == "V"), sum(1 for l in add if l in ("V", "W"))
+    published = json.load(open(path))["allocation"]["all_items"]["qwen"]["share_lemmy_all"]["point"]
+    return {
+        "platform_qwen_published_strict": published,
+        "platform_qwen_strict_recomputed": round(v_pub / n_pub, 4),
+        "n_strict": n_pub, "venue_strict": v_pub,
+        "recovered_answers": len(rec["raw"]),
+        "recovered_labelled": n_add, "recovered_venue": v_add,
+        "recovered_still_unparseable": len(rec["raw"]) - n_add,
+        "one_sided": bool(n_add and v_add == 0),
+        "platform_qwen_corrected": round((v_pub + v_add) / (n_pub + n_add), 4),
+        "move": round((v_pub + v_add) / (n_pub + n_add) - v_pub / n_pub, 4),
+        # The one recovered answer that is not a WORLD phrasing ("COMMUNITY") is semantically a
+        # VENUE answer but is left unparsed on purpose -- reading it that way is a judgement about
+        # meaning, not a parse. Size the choice rather than asserting it is negligible.
+        "unparsed_as_venue_move": round(
+            (v_pub + v_add + (len(rec["raw"]) - n_add)) / (n_pub + len(rec["raw"]))
+            - (v_pub + v_add) / (n_pub + n_add), 7),
+        # The frozen baseline publishes n = 55,152 classified; the label cache it was computed from
+        # carries one more V/W label than that. The difference is one item and is not explained by
+        # invalid claims (every labelled item has a valid claim). Both denominators give 0.4665 to
+        # four decimals and both corrections give 0.4660, so no published digit turns on it -- but
+        # a figure sold as EXACT has to show the discrepancy rather than absorb it.
+        "n_published_by_baseline": json.load(open(path))["allocation"]["all_items"]["qwen"]["n"]["lemmy_all"],
+        "n_minus_baseline_n": n_pub - json.load(open(path))["allocation"]["all_items"]["qwen"]["n"]["lemmy_all"],
+        "invalid_claim_items_excluded": rec["n_invalid_claim"],
+        "note": "exact corrected-parse figure for the comparator, replacing issue #7's worst-case "
+                "bound. The published labels are untouched; only the dropped items were re-parsed.",
+    }
+
+
 if __name__ == "__main__":
-    print(json.dumps({"levels": levels(), "coverage_bound": coverage_bound()}, indent=1))
+    print(json.dumps({"levels": levels(), "coverage_bound": coverage_bound(),
+                      "corrected_platform": corrected_platform()}, indent=1))

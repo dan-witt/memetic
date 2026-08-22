@@ -13,6 +13,7 @@ sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_nn_refresh as NNR   # matched-pool NN construction, single source of truth
 import weather_lemmy_ref as LEMREF  # frozen lemmy.world platform levels for the allocation cell
 import weather_newcomer as NC       # newcomer cell construction + pooled fallback, single source
+import weather_alloc_parse as AP    # strict/corrected allocation parse, single source of truth
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -70,15 +71,20 @@ json.dump(claims, open(S / "agent_claims_current.json", "w"))
 # --- allocation trend: delta-classify (frozen prompt), id-keyed label cache ---
 # Previous PUBLISHED issue (not merely the previous pull): its day set is what "already
 # published" means for the retro-movement audit below, and its series is the diff comparator.
-_WR = Path("/home/dan/personal/memetic/results/weather")
-_prev_dirs = sorted((q for q in _WR.glob("20*-*-*") if (q / "results.json").exists() and q.name < _c),
-                    reverse=True)
+# NOT "every issue dir below the cutoff": an issue dated D has cutoff D+1 and so sorts below its
+# own cutoff, which makes a post-publication re-run audit the issue against ITSELF. Single source
+# of truth in weather_newcomer, which has the same hazard in pooled_start.
+_prev_dirs = NC.published_issues_before(_c)
 PREV_PUB = (json.load(open(_prev_dirs[0] / "results.json"))["allocation_trend"]
             ["venue_share_per_day_qwen_binary"]) if _prev_dirs else {}
 PREV_PUB_NAME = _prev_dirs[0].name if _prev_dirs else None
 
 lcache = json.load(open(S / "allocation_label_cache_agent.json"))
-for k in EDITED: lcache.pop(f"{k[0]}:{k[1]}", None)   # edited text -> new claim -> re-label
+_rawf = S / "allocation_unparsed_raw_agent.json"
+RAWUNP = json.load(open(_rawf)) if _rawf.exists() else {}
+for k in EDITED:
+    lcache.pop(f"{k[0]}:{k[1]}", None)   # edited text -> new claim -> re-label
+    RAWUNP.pop(f"{k[0]}:{k[1]}", None)   # ...and its stale raw answer with it
 def lvalid(c): return len(c.strip()) >= 5 and not c.startswith("[NORMALIZER-ERROR") and c != "empty claim"
 todo_l = [(i, claims[i]) for i, (t, k, x, a) in enumerate(NEW)
           if f"{k[0]}:{k[1]}" not in lcache and lvalid(claims[i])]
@@ -103,26 +109,41 @@ if todo_l:
            "about its SUBJECT MATTER or the outside world? Answer with exactly one word: VENUE or WORLD.")
     amsgs = [[{"role": "system", "content": ACS}, {"role": "user", "content": ACU.format(c=c[:400])}] for _, c in todo_l]
     apr = [tok.apply_chat_template(m, tokenize=False, add_generation_prompt=True) for m in amsgs]
-    alab = []
+    alab, araw = [], []
     for i in range(0, len(apr), 32):
         enc = tok(apr[i:i+32], return_tensors="pt", padding=True, truncation=True, max_length=400).to("cuda")
         with torch.no_grad():
             o = gen.generate(**enc, max_new_tokens=6, do_sample=False, pad_token_id=tok.pad_token_id)
         for g in o[:, enc.input_ids.shape[1]:]:
             w = tok.decode(g, skip_special_tokens=True).strip().upper()
-            alab.append("V" if w.startswith("VENUE") else "W" if w.startswith("WORLD") else None)
+            araw.append(w); alab.append(AP.strict(w))
     for (i, _), l in zip(todo_l, alab):
-        if l: lcache[f"{NEW[i][1][0]}:{NEW[i][1][1]}"] = l
+        if l:
+            lcache[f"{NEW[i][1][0]}:{NEW[i][1][1]}"] = l
+            RAWUNP.pop(f"{NEW[i][1][0]}:{NEW[i][1][1]}", None)   # resolved: drop the stale raw
     json.dump(lcache, open(S / "allocation_label_cache_agent.json", "w"))
+    # Issues #1-#7 threw the raw answer away, so every issue had to re-classify the uncovered
+    # items just to see what they said. Keep it: the corrected series then falls out of cache,
+    # and a NEW failure string becomes visible without a separate pass.
+    for (i, _), w, l in zip(todo_l, araw, alab):
+        if not l: RAWUNP[f"{NEW[i][1][0]}:{NEW[i][1][1]}"] = w
+    json.dump(RAWUNP, open(S / "allocation_unparsed_raw_agent.json", "w"))
     del gen, tok; gc.collect(); torch.cuda.empty_cache()
 import datetime as _dt
 _day = lambda t: _dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
-_ds = {}
+_ds, _dsc = {}, {}
 for t, k, x, a in NEW:
-    l = lcache.get(f"{k[0]}:{k[1]}")
+    kk = f"{k[0]}:{k[1]}"
+    l = lcache.get(kk)
     if l: _ds.setdefault(_day(t), []).append(l == "V")
-alloc_daily = {d: round(float(np.mean(v)), 4) for d, v in sorted(_ds.items()) if len(v) >= 50}
-print("allocation venue-share/day:", alloc_daily, flush=True)
+    # corrected parse (issue #8): the strict label if there is one, else the observed raw answer
+    # re-parsed. Adds only items that already went through the classifier with a valid claim.
+    lc = l or (AP.corrected(RAWUNP[kk]) if kk in RAWUNP else None)
+    if lc: _dsc.setdefault(_day(t), []).append(lc == "V")
+_share = lambda d: {k: round(float(np.mean(v)), 4) for k, v in sorted(d.items()) if len(v) >= 50}
+alloc_daily, alloc_daily_corr = _share(_ds), _share(_dsc)
+print("allocation venue-share/day (strict, published currency):", alloc_daily, flush=True)
+print("allocation venue-share/day (corrected parse):", alloc_daily_corr, flush=True)
 
 # --- label-coverage audit + retro-movement check against the previous PUBLISHED issue ---
 _cov = {}
@@ -168,6 +189,7 @@ win_idx = [i for i, (t, k, x, a) in enumerate(NEW) if t > prev_last]
 # artifact so the two cannot drift. Carried here so every issue gets it without being retyped.
 _lem = LEMREF.levels()
 out = {"n_items": len(claims), "issue_window_items": len(win_idx), "allocation_daily_venue_share": alloc_daily,
+       "allocation_daily_venue_share_corrected": alloc_daily_corr,
        "allocation_label_audit": label_audit}
 if _lem:
     out["lemmy_reference"] = _lem
@@ -175,6 +197,20 @@ if _lem:
     print("lemmy platform ref:", _lem["platform_qwen"],
           "| days above it:", sum(1 for v in alloc_daily.values() if v > _lem["platform_qwen"]),
           "/", len(alloc_daily), flush=True)
+    # Both sides of the comparison under the SAME parse, or the comparison is rigged. The
+    # comparator's corrected figure is exact once its dropped answers are recovered; until then
+    # only issue #7's worst-case bound is available.
+    _lemc = LEMREF.corrected_platform()
+    out["lemmy_coverage_bound"] = LEMREF.coverage_bound()
+    if _lemc:
+        out["lemmy_corrected"] = _lemc
+        out["allocation_daily_vs_lemmy_corrected"] = {
+            d: LEMREF.position(v, dict(_lem, platform_qwen=_lemc["platform_qwen_corrected"]))
+            for d, v in alloc_daily_corr.items()}
+        print("lemmy platform ref (corrected):", _lemc["platform_qwen_corrected"],
+              "| days above it:",
+              sum(1 for v in alloc_daily_corr.values() if v > _lemc["platform_qwen_corrected"]),
+              "/", len(alloc_daily_corr), flush=True)
 W, ST = 120, 40
 for MODEL in ["BAAI/bge-large-en-v1.5", "sentence-transformers/all-mpnet-base-v2", "thenlper/gte-large"]:
     tag = MODEL.split("/")[-1]
