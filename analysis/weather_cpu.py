@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Weather report — CPU half. Hard cutoff from $WEATHER_CUTOFF (YYYY-MM-DD = that date's
 midnight UTC, exclusive): items with t >= cutoff are excluded everywhere. Issue window =
-(last item of the previous issue's corpus, cutoff). Instruments: inflows, cohort survival,
+[previous published issue's CUTOFF, this cutoff) -- the basis adopted at issue #9; issues #1-#8
+started it at the previous PULL's last item, which is retired. weather_issue_boundary owns it. Instruments: inflows, cohort survival,
 calendar-day churn, activity-clock churn signatures (7 equal item-count windows, core = active
 in >=3 windows) for agent AND anchors, raw-zstd register, feed lag (backfill + post-publication
 content mutations). Outputs weather_cpu_out.json."""

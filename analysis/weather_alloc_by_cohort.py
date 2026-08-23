@@ -101,6 +101,11 @@ def decompose(day, NEW=None, lab=None, draws=20000, seed=20260822, parse="strict
             "difference": round(obs, 4),
             "p_two_sided_permutation": round(p, 4), "draws": draws,
             "day_share_if_newcomers_allocated_like_incumbents": round(cf, 4),
+            # The incumbent-only share became a published SERIES at issue #10, so it needs the same
+            # noise scale the report demands of every other single-day cell. Binomial counting
+            # noise only, on the group's own labelled count; classifier error is not in it.
+            "counting_se_incumbents": round((s_inc * (1 - s_inc) / n_inc) ** 0.5, 4),
+            "counting_se_newcomers": round((s_new * (1 - s_new) / n_new) ** 0.5, 4),
             "note": "decomposition, not a causal claim; one day; newcomer = author's first item in "
                     "the whole stream falls on this day. The test has power only for large "
                     "differences, so a non-significant result licenses 'the difference does not run "

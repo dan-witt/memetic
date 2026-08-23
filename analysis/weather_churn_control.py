@@ -13,6 +13,16 @@ Read the two controls as answering different questions: the cohort control asks 
 convert at a constant rate?", this one asks "does the community look the same through a
 fixed-width lens?". A published series that moves while both controls stay flat is an artefact.
 
+THE INCUMBENT-ONLY VARIANT (added at issue #10, answering issue #9's watch item #4). Fixing the
+span does NOT fix the population: a day of arrivals lands inside the span and dilutes a
+concentration measure mechanically, with no change in anyone's behaviour. Issue #9 saw a 71-author
+influx move controlled dominance ~4 points; issue #10's 258-author influx moved it 27.7 points at
+5 days. So the fixed-span cell as published is a function of recruitment and cannot be read as
+concentration across issues with different inflow. The incumbent-only rows recompute the identical
+signature over ONLY the authors whose first item in the whole corpus predates the span, which
+removes the dilution term. It is not a fixed panel either -- the eligible set slides with the span
+-- so read it as "how concentrated are the people who were already here", not as a cohort study.
+
 Usage: MEMETIC_WORKDIR=... python3 analysis/weather_churn_control.py [N ...]   (default 5 7)
 """
 import json, sys, os, datetime as dt
@@ -24,7 +34,8 @@ D = Path("/home/dan/personal/memetic/data/posts")
 # (issue tag, analysis cutoff) — the cutoff is exclusive, as everywhere in the weather pipeline.
 ISSUES = [("#1", "2026-08-12"), ("#2", "2026-08-13"), ("#3", "2026-08-14"),
           ("#4", "2026-08-15"), ("#5", "2026-08-18"), ("#6", "2026-08-19"),
-          ("#7", "2026-08-20"), ("#8", "2026-08-21"), ("#9", "2026-08-22")]
+          ("#7", "2026-08-20"), ("#8", "2026-08-21"), ("#9", "2026-08-22"),
+          ("#10", "2026-08-23")]
 CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).timestamp()
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 
@@ -44,8 +55,11 @@ def stream(cutoff):
     return out
 
 
-def windowed(cutoff, n_days):
-    """The signature over the last n_days COMPLETE calendar days below the cutoff."""
+def windowed(cutoff, n_days, incumbents_only=False):
+    """The signature over the last n_days COMPLETE calendar days below the cutoff.
+
+    incumbents_only drops every author whose FIRST in-scope item falls inside the span, so an
+    influx landing in the window cannot dilute the cell. See the module docstring."""
     items = stream(cutoff)
     if not items:
         return None
@@ -53,25 +67,39 @@ def windowed(cutoff, n_days):
     keep = set(days[-n_days:]) if len(days) >= n_days else None
     if keep is None:
         return None
-    return signature_windows([(DAY(t), a) for t, a in items if DAY(t) in keep]), sorted(keep)
+    span = [(DAY(t), a) for t, a in items if DAY(t) in keep]
+    if incumbents_only:
+        first = {}
+        for t, a in items:
+            if a not in first or t < first[a]:
+                first[a] = t
+        start = min(t for t, _ in items if DAY(t) in keep)
+        span = [(d, a) for d, a in span if first[a] < start]
+        if not span:
+            return None
+    return signature_windows(span), sorted(keep)
 
 
 if __name__ == "__main__":
     spans = [int(x) for x in sys.argv[1:]] or [5, 7]
     emit = {}
     for n in spans:
-        print(f"\n=== fixed observation span: last {n} complete calendar days before each cutoff ===")
-        print(f"{'issue':6s} {'span':13s} {'core_n':>7s} {'dominance%':>11s} {'stability':>10s} {'permeab%':>9s}")
-        for tag, cut in ISSUES:
-            r = windowed(CUT(cut), n)
-            if not r:
-                print(f"{tag:6s} (span does not fit below cutoff)"); continue
-            sig, days = r
-            emit.setdefault(f"{n}d", {})[tag] = {"span": f"{days[0]}..{days[-1]}",
-                "core_n": sig["core_n"], "dominance_pct": sig["core_dominance_pct"],
-                "stability_ratio": sig["stability_ratio"], "permeability_pct": sig["permeability_pct"]}
-            print(f"{tag:6s} {days[0]}..{days[-1]:6s} {sig['core_n']:>7d} {sig['core_dominance_pct']:>11.1f} "
-                  f"{str(sig['stability_ratio']):>10s} {str(sig['permeability_pct']):>9s}")
+        for inc in (False, True):
+            key = f"{n}d_incumbent_only" if inc else f"{n}d"
+            label = ("last %d complete calendar days before each cutoff%s"
+                     % (n, ", INCUMBENTS ONLY (author's first item predates the span)" if inc else ""))
+            print(f"\n=== fixed observation span: {label} ===")
+            print(f"{'issue':6s} {'span':13s} {'core_n':>7s} {'dominance%':>11s} {'stability':>10s} {'permeab%':>9s}")
+            for tag, cut in ISSUES:
+                r = windowed(CUT(cut), n, incumbents_only=inc)
+                if not r:
+                    print(f"{tag:6s} (span does not fit below cutoff)"); continue
+                sig, days = r
+                emit.setdefault(key, {})[tag] = {"span": f"{days[0]}..{days[-1]}",
+                    "core_n": sig["core_n"], "dominance_pct": sig["core_dominance_pct"],
+                    "stability_ratio": sig["stability_ratio"], "permeability_pct": sig["permeability_pct"]}
+                print(f"{tag:6s} {days[0]}..{days[-1]:6s} {sig['core_n']:>7d} {sig['core_dominance_pct']:>11.1f} "
+                      f"{str(sig['stability_ratio']):>10s} {str(sig['permeability_pct']):>9s}")
     print("\nA metric that moves in the PUBLISHED series but is flat here was reading observation")
     print("length, not behaviour. A metric that moves in both is a candidate reading.")
     out = Path(os.environ.get("MEMETIC_WORKDIR", ".")) / "weather_churn_control_out.json"

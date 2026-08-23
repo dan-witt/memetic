@@ -14,12 +14,15 @@ measured 9. Issue #6 pre-registered the replacement rather than reporting a seco
 window over the last K issues so the cell is measurable again, at the cost of resolution.
 
 The pooled window is the CONTIGUOUS interval [start of the (K-1)-th previous issue's window,
-cutoff), not the union of K disjoint issue windows. Two reasons. Each issue's window starts at the
-PREVIOUS issue's pull, so the union leaves holes -- the items between an issue's cutoff and its
-pull enter no issue's window ever (issue #6 measured 228 such items on 08-18), and those holes sit
-at a fixed time of day, which would make the pooled sample diurnally non-random on top of being
-gappy. A contiguous interval is also the honest description of what is being measured: the last
-several days, not three stitched samples.
+cutoff), not the union of K disjoint issue windows. Two reasons. HISTORICALLY (issues #1-#8) each
+window started at the previous issue's PULL, so the union left holes -- the items between an
+issue's cutoff and its pull entered no issue's window ever (issue #6 measured 228 such items on
+08-18) -- and those holes sat at a fixed time of day, which would have made the pooled sample
+diurnally non-random on top of being gappy. Issue #9 moved the window start to the previous
+issue's CUTOFF, which closes that gap prospectively; the pooled window's own start is still
+inherited from a published pull-based start, so the pooled series straddles the change. The second
+reason is unaffected: a contiguous interval is the honest description of what is being measured --
+the last several days, not K stitched samples.
 
 NEWCOMER is defined against the pooled start, not the issue window: an author whose first item in
 the whole corpus falls at or after the pooled start. So the pooled cell answers "do the authors who

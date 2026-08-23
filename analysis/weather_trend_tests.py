@@ -134,6 +134,26 @@ def report(issue_date):
                                      series="strict", days=days,
                                      threshold_source="lemmy_baseline share_lemmy_all ci95 lower")
 
+    # (2b) the newest day against the platform POINT estimate, with the day's own counting noise.
+    # Reports have compared a single day to 0.4665 to four decimals; on an 800-item day the day's
+    # binomial standard error alone is ~0.018, so the comparison needs its scale published beside
+    # it. Binomial only -- classifier error is not in it.
+    _pt = ((d.get("allocation_trend") or {}).get("lemmy_reference") or {}).get("platform_qwen")
+    _nd = days[-1]
+    _n_last = (((d.get("allocation_trend") or {}).get("label_audit") or {})
+               .get("per_day", {}).get(_nd, {}).get("labelled"))
+    if _pt and _n_last:
+        _p = alloc[_nd]
+        _se_day = (_p * (1 - _p) / _n_last) ** 0.5
+        out["newest_day_vs_platform"] = {
+            "day": _nd, "venue_share": _p, "labelled_items": _n_last,
+            "platform_qwen": _pt, "gap": round(_p - _pt, 4),
+            "counting_se_of_day": round(_se_day, 4),
+            "gap_in_counting_se": round((_p - _pt) / _se_day, 2),
+            "read": "binomial counting noise for ONE day against a frozen point estimate. A gap "
+                    "inside ~1 SE is not a reading in either direction; the comparator also "
+                    "carries its own CI ([0.4515, 0.4853]) which is wider still."}
+
     # (3) the proposed replacement rule: does the LEVEL stay down, not just single days?
     _vals = [alloc[k] for k in days]
     _tm = trailing_means(_vals, days, 5)
@@ -145,13 +165,45 @@ def report(issue_date):
         _read = ("issue #8's level-shift rule. This statistic has never gone below the bound, so it "
                  "would not have produced the issue #5 rule's false positive.")
     else:
+        _last = list(_tm)[-1]
+        _run = 0
+        for _d in reversed(list(_tm)):
+            if _d in _below: _run += 1
+            else: break
+        # "goes below AND stays" is a RUN condition, so the clause is derived from the run that is
+        # still open at the newest day, not from the total count of below-bound days anywhere.
+        _cond = ("so a single crossing is half of it" if _run <= 1 else
+                 f"and the current run below the bound is {_run} consecutive days, which satisfies "
+                 "the condition by its letter")
+        _depth = _lo - _tm[_last]
         _read = (f"issue #8's level-shift rule, and it HAS crossed: {len(_below)} day(s) below the "
                  f"bound ({', '.join(_below)}), deepest {min(_tm.values()):.4f} against {_lo}. "
-                 "Issue #8's condition was 'goes below AND stays', so a single crossing is half of "
-                 "it. Read the crossing DEPTH against the statistic's own counting noise before "
-                 "treating it as a level change.")
+                 f"Issue #8's condition was 'goes below AND stays', {_cond}. The NEWEST day's depth "
+                 f"is {_depth:.4f} ({_last}), which is the number to read against the statistic's "
+                 "own counting noise before treating any of this as a level change.")
+    # The crossing DEPTH is only interpretable against the statistic's own counting noise, which
+    # earlier issues asserted in prose ("roughly 0.008"). Derive it: the trailing mean is an equally
+    # weighted mean of 5 daily shares, so var = (1/25) * sum p_i(1-p_i)/n_i over the window's days,
+    # with n_i the LABELLED item count that produced each day's share. Binomial-only -- it ignores
+    # classifier error and any within-day dependence, so it is a floor on the noise, not a
+    # confidence interval for the level.
+    _n = {k: v["labelled"] for k, v in
+          ((d.get("allocation_trend") or {}).get("label_audit") or {}).get("per_day", {}).items()}
+    _se = None
+    if _below and all(k in _n and _n[k] for k in days[-5:]):
+        _w = days[-5:]
+        _se = round(sum(alloc[k] * (1 - alloc[k]) / _n[k] for k in _w) ** 0.5 / 5, 5)
     out["trailing_5day_mean"] = {"series": _tm, "threshold": _lo,
-                                 "days_below_threshold": _below, "read": _read}
+                                 "days_below_threshold": _below, "read": _read,
+                                 "newest_day_depth_below_bound": round(_lo - _tm[list(_tm)[-1]], 4)
+                                 if _below else None,
+                                 "counting_se_of_newest_mean": _se,
+                                 "depth_in_counting_se": round((_lo - _tm[list(_tm)[-1]]) / _se, 2)
+                                 if (_below and _se) else None,
+                                 "counting_se_note": "binomial counting noise only, over the five "
+                                 "days' labelled counts; a FLOOR on the statistic's noise, not a CI "
+                                 "for the level -- classifier error and within-day dependence are "
+                                 "not in it."}
 
     # (4) dip rate: this issue's new-window dip count against the previous issue's.
     rows = d["idea_time_series"]["per_issue_dip_rate"]

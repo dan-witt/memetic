@@ -13,9 +13,11 @@ nothing heavy so either environment can use it.
    145/1,835 to 17/1,207 and made the retro-movement audit compare the issue against itself).
 
 2. WHERE THE ISSUE WINDOW STARTS.  Issues #1-#8 used the previous pull's LAST ITEM. That silently
-   assumed the previous pull ran shortly after its own cutoff -- true at ~3 h for issues #3-#7,
-   and it left a small permanent hole (issue #8 disclosed 191 items of 08-20 that entered every
-   full-pool cell and no issue's window cells, ever).
+   assumed the previous pull ran shortly after its own cutoff, which was never a stable property:
+   the derived margins for issues #3-#7 are 0.2, 5.2, 4.5, 2.9 and 3.0 h (see
+   weather_cutoff_margin.history() -- do not quote a remembered average, this docstring carried
+   "~3 h" until issue #10). It also left a small permanent hole (issue #8 disclosed 191 items of
+   08-20 that entered every full-pool cell and no issue's window cells, ever).
 
    Issue #8 ran a day late and pulled 23.7 h after its cutoff, which swept up nearly all of the
    NEXT issue's day. Under the old rule issue #9's window would have been **27 items** spanning 18
