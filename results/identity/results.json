@@ -1,0 +1,2390 @@
+{
+ "params": {
+  "min_items": 20,
+  "cap": 20,
+  "draws": 10,
+  "perms": 200,
+  "min_switcher_arm": 15,
+  "seed": 0
+ },
+ "views": {
+  "lexical/bge": {
+   "headline": {
+    "n_items": 2980,
+    "n_authors": 149,
+    "eta2_model": 0.0358,
+    "eta2_author": 0.0804,
+    "eta2_within": 0.8838,
+    "author_null_mean": 0.0415,
+    "author_excess": 0.0388,
+    "author_z": 89.0,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0219,
+    "model_excess": 0.0139,
+    "model_z": 13.9,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 542,
+    "n_items": 4875,
+    "n_authors": 266,
+    "eta2_author_in_cell": 0.2189,
+    "null_mean": 0.201,
+    "excess": 0.0179,
+    "z": 21.5,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 226,
+    "n_items": 11691,
+    "n_authors": 497,
+    "eta2_author_in_cell": 0.1716,
+    "null_mean": 0.1227,
+    "excess": 0.0488,
+    "z": 154.4,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 80,
+    "n_test": 4486,
+    "author_acc": 0.228,
+    "author_chance": 0.0125,
+    "author_acc_adj": 0.218,
+    "model_acc": 0.338,
+    "model_chance": 0.216,
+    "model_acc_adj": 0.156,
+    "n_families": 22,
+    "author_within_model_acc": 0.523,
+    "author_within_model_chance": 0.1884,
+    "author_within_model_adj": 0.412,
+    "n_test_within_model": 4252
+   },
+   "switchers": {
+    "n": 6,
+    "wins": 6,
+    "sign_p": 0.015625,
+    "rows": [
+     {
+      "author": "gradient-dissent",
+      "model_a": "claude-fable-5",
+      "n_a": 170,
+      "model_b": "claude-opus-5",
+      "n_b": 45,
+      "n_peers": 31,
+      "d_self_across_model": 0.0313,
+      "d_peer_same_model_median": 0.0983,
+      "ratio": 3.14
+     },
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 104,
+      "model_b": "claude-opus-5",
+      "n_b": 84,
+      "n_peers": 31,
+      "d_self_across_model": 0.0322,
+      "d_peer_same_model_median": 0.0943,
+      "ratio": 2.92
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 70,
+      "n_peers": 2,
+      "d_self_across_model": 0.0582,
+      "d_peer_same_model_median": 0.0649,
+      "ratio": 1.12
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 78,
+      "model_b": "claude-fable-5",
+      "n_b": 70,
+      "n_peers": 43,
+      "d_self_across_model": 0.0324,
+      "d_peer_same_model_median": 0.0786,
+      "ratio": 2.43
+     },
+     {
+      "author": "newcomer-1",
+      "model_a": "glm-5.2",
+      "n_a": 81,
+      "model_b": "claude-fable-5",
+      "n_b": 46,
+      "n_peers": 3,
+      "d_self_across_model": 0.0559,
+      "d_peer_same_model_median": 0.0833,
+      "ratio": 1.49
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0639,
+      "d_peer_same_model_median": 0.072,
+      "ratio": 1.13
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2980,
+    "n_authors": 149,
+    "eta2_model": 0.0252,
+    "eta2_author": 0.0809,
+    "eta2_within": 0.8939,
+    "author_null_mean": 0.0428,
+    "author_excess": 0.0381,
+    "author_z": 89.7,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0199,
+    "model_excess": 0.0053,
+    "model_z": 6.7,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 80,
+    "n_test": 4486,
+    "author_acc": 0.209,
+    "author_chance": 0.0125,
+    "author_acc_adj": 0.199,
+    "model_acc": 0.249,
+    "model_chance": 0.216,
+    "model_acc_adj": 0.042,
+    "n_families": 22,
+    "author_within_model_acc": 0.506,
+    "author_within_model_chance": 0.1884,
+    "author_within_model_adj": 0.391,
+    "n_test_within_model": 4252
+   },
+   "nodup_dropped": 156,
+   "headline_nodup": {
+    "n_items": 2960,
+    "n_authors": 148,
+    "eta2_model": 0.0355,
+    "eta2_author": 0.0793,
+    "eta2_within": 0.8851,
+    "author_null_mean": 0.0414,
+    "author_excess": 0.0379,
+    "author_z": 78.0,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0219,
+    "model_excess": 0.0136,
+    "model_z": 13.9,
+    "model_p": 0.0025
+   },
+   "harness": [
+    {
+     "family": "claude-opus-5",
+     "n_authors": 37,
+     "n_items": 2487,
+     "harness_levels": {
+      "bare": 37
+     },
+     "sil_k2": 0.244,
+     "sil_k2_null": 0.225,
+     "sil_p": 0.3333,
+     "modes": [
+      {
+       "n_authors": 12,
+       "median_chars": 3365,
+       "harness": {
+        "bare": 12
+       },
+       "examples": [
+        "scrollback",
+        "sabertooth",
+        "quiet-ceiling",
+        "unfiled"
+       ]
+      },
+      {
+       "n_authors": 25,
+       "median_chars": 2917,
+       "harness": {
+        "bare": 25
+       },
+       "examples": [
+        "souchong-the-unburnt",
+        "unspent",
+        "denominator",
+        "silt"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "claude-fable-5",
+     "n_authors": 27,
+     "n_items": 1707,
+     "harness_levels": {
+      "bare": 27
+     },
+     "sil_k2": 0.267,
+     "sil_k2_null": 0.251,
+     "sil_p": 0.2381,
+     "modes": [
+      {
+       "n_authors": 5,
+       "median_chars": 2124,
+       "harness": {
+        "bare": 5
+       },
+       "examples": [
+        "ponytail",
+        "palimpsest",
+        "salvaged-not-remembered",
+        "legate"
+       ]
+      },
+      {
+       "n_authors": 22,
+       "median_chars": 2159,
+       "harness": {
+        "bare": 22
+       },
+       "examples": [
+        "1f916-agent",
+        "gradient-dissent",
+        "egress-bound",
+        "verbatim"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "deepseek-v4-flash",
+     "n_authors": 14,
+     "n_items": 1610,
+     "harness_levels": {
+      "bare": 8,
+      "free-tier": 3,
+      "ollama": 2,
+      "openrouter": 1
+     },
+     "eta2_harness_items": 0.0076,
+     "harness_null": 0.0091,
+     "harness_excess": -0.0015,
+     "harness_p": 0.7612,
+     "sil_k2": 0.422,
+     "sil_k2_null": 0.415,
+     "sil_p": 0.5238,
+     "modes": [
+      {
+       "n_authors": 3,
+       "median_chars": 925,
+       "harness": {
+        "bare": 2,
+        "free-tier": 1
+       },
+       "examples": [
+        "flashbulb",
+        "supreme-overlord",
+        "hermes-corther"
+       ]
+      },
+      {
+       "n_authors": 11,
+       "median_chars": 805,
+       "harness": {
+        "bare": 6,
+        "ollama": 2,
+        "free-tier": 2,
+        "openrouter": 1
+       },
+       "examples": [
+        "Demummon",
+        "Lumina",
+        "opencode",
+        "Ember"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "grok-4.5",
+     "n_authors": 10,
+     "n_items": 1076,
+     "harness_levels": {
+      "cursor": 6,
+      "bare": 4
+     },
+     "eta2_harness_items": 0.0122,
+     "harness_null": 0.0057,
+     "harness_excess": 0.0065,
+     "harness_p": 0.0299,
+     "sil_k2": 0.414,
+     "sil_k2_null": 0.414,
+     "sil_p": 0.4286,
+     "modes": [
+      {
+       "n_authors": 6,
+       "median_chars": 547,
+       "harness": {
+        "cursor": 5,
+        "bare": 1
+       },
+       "examples": [
+        "cursor-grok",
+        "verso",
+        "catchword",
+        "errata"
+       ]
+      },
+      {
+       "n_authors": 4,
+       "median_chars": 784,
+       "harness": {
+        "bare": 3,
+        "cursor": 1
+       },
+       "examples": [
+        "MoneyImpliesPoverty",
+        "imperfectmover",
+        "grok-xai-15",
+        "Wubbitys-Agent-Grok-00"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "gpt-5",
+     "n_authors": 9,
+     "n_items": 414,
+     "harness_levels": {
+      "codex": 8,
+      "bare": 1
+     },
+     "eta2_harness_items": 0.0169,
+     "harness_null": 0.0069,
+     "harness_excess": 0.01,
+     "harness_p": 0.0995,
+     "sil_k2": 0.323,
+     "sil_k2_null": 0.426,
+     "sil_p": 0.8095,
+     "modes": [
+      {
+       "n_authors": 4,
+       "median_chars": 526,
+       "harness": {
+        "codex": 4
+       },
+       "examples": [
+        "bolete",
+        "Yeti",
+        "starpilot-copilot",
+        "unclosed-loop"
+       ]
+      },
+      {
+       "n_authors": 5,
+       "median_chars": 1046,
+       "harness": {
+        "codex": 4,
+        "bare": 1
+       },
+       "examples": [
+        "MrFlibble",
+        "small-archive",
+        "margin-lantern",
+        "zora"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "deepseek-v4-pro",
+     "n_authors": 6,
+     "n_items": 219,
+     "harness_levels": {
+      "bare": 4,
+      "opencode": 1,
+      "hermes": 1
+     },
+     "eta2_harness_items": 0.0265,
+     "harness_null": 0.0321,
+     "harness_excess": -0.0056,
+     "harness_p": 0.6617,
+     "sil_k2": 0.312,
+     "sil_k2_null": -0.129,
+     "sil_p": 0.381,
+     "modes": [
+      {
+       "n_authors": 3,
+       "median_chars": 1174,
+       "harness": {
+        "opencode": 1,
+        "bare": 1,
+        "hermes": 1
+       },
+       "examples": [
+        "neth",
+        "ghost-circuit",
+        "nous-hermes"
+       ]
+      },
+      {
+       "n_authors": 3,
+       "median_chars": 944,
+       "harness": {
+        "bare": 3
+       },
+       "examples": [
+        "deepseek-dsh",
+        "sora",
+        "hemei"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "lexical_matched/bge": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0421,
+    "eta2_author": 0.0733,
+    "eta2_within": 0.8846,
+    "author_null_mean": 0.0384,
+    "author_excess": 0.0349,
+    "author_z": 82.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0267,
+    "model_excess": 0.0154,
+    "model_z": 10.2,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2244,
+    "null_mean": 0.2077,
+    "excess": 0.0167,
+    "z": 18.2,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1764,
+    "null_mean": 0.1266,
+    "excess": 0.0498,
+    "z": 117.2,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.224,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.211,
+    "model_acc": 0.368,
+    "model_chance": 0.229,
+    "model_acc_adj": 0.181,
+    "n_families": 20,
+    "author_within_model_acc": 0.481,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.368,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 3,
+    "sign_p": 0.3125,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0382,
+      "d_peer_same_model_median": 0.097,
+      "ratio": 2.54
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0704,
+      "d_peer_same_model_median": 0.069,
+      "ratio": 0.98
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0639,
+      "d_peer_same_model_median": 0.0781,
+      "ratio": 1.22
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.0641,
+      "d_peer_same_model_median": 0.1065,
+      "ratio": 1.66
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0297,
+    "eta2_author": 0.0745,
+    "eta2_within": 0.8958,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0346,
+    "author_z": 83.3,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0239,
+    "model_excess": 0.0058,
+    "model_z": 5.2,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.2,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.187,
+    "model_acc": 0.276,
+    "model_chance": 0.229,
+    "model_acc_adj": 0.061,
+    "n_families": 20,
+    "author_within_model_acc": 0.453,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.333,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 118,
+   "headline_nodup": {
+    "n_items": 2280,
+    "n_authors": 114,
+    "eta2_model": 0.0418,
+    "eta2_author": 0.0723,
+    "eta2_within": 0.8859,
+    "author_null_mean": 0.0384,
+    "author_excess": 0.0339,
+    "author_z": 85.1,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0263,
+    "model_excess": 0.0155,
+    "model_z": 11.6,
+    "model_p": 0.0025
+   },
+   "harness": [
+    {
+     "family": "claude-opus-5",
+     "n_authors": 30,
+     "n_items": 1708,
+     "harness_levels": {
+      "bare": 30
+     },
+     "sil_k2": 0.272,
+     "sil_k2_null": 0.24,
+     "sil_p": 0.1429,
+     "modes": [
+      {
+       "n_authors": 4,
+       "median_chars": 2855,
+       "harness": {
+        "bare": 4
+       },
+       "examples": [
+        "sabertooth",
+        "unfiled",
+        "one-fact-per-file",
+        "gnomon"
+       ]
+      },
+      {
+       "n_authors": 26,
+       "median_chars": 2983,
+       "harness": {
+        "bare": 26
+       },
+       "examples": [
+        "denominator",
+        "silt",
+        "souchong-the-unburnt",
+        "unspent"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "claude-fable-5",
+     "n_authors": 18,
+     "n_items": 1160,
+     "harness_levels": {
+      "bare": 18
+     },
+     "sil_k2": 0.305,
+     "sil_k2_null": 0.335,
+     "sil_p": 0.8571,
+     "modes": [
+      {
+       "n_authors": 10,
+       "median_chars": 1858,
+       "harness": {
+        "bare": 10
+       },
+       "examples": [
+        "keeps-notes",
+        "verbatim",
+        "newcomer-1",
+        "iris-fable"
+       ]
+      },
+      {
+       "n_authors": 8,
+       "median_chars": 2261,
+       "harness": {
+        "bare": 8
+       },
+       "examples": [
+        "1f916-agent",
+        "gradient-dissent",
+        "egress-bound",
+        "ponytail"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "deepseek-v4-flash",
+     "n_authors": 13,
+     "n_items": 1111,
+     "harness_levels": {
+      "bare": 7,
+      "free-tier": 3,
+      "ollama": 2,
+      "openrouter": 1
+     },
+     "eta2_harness_items": 0.0084,
+     "harness_null": 0.0107,
+     "harness_excess": -0.0024,
+     "harness_p": 0.8905,
+     "sil_k2": 0.372,
+     "sil_k2_null": 0.418,
+     "sil_p": 0.7619,
+     "modes": [
+      {
+       "n_authors": 10,
+       "median_chars": 865,
+       "harness": {
+        "bare": 5,
+        "ollama": 2,
+        "free-tier": 2,
+        "openrouter": 1
+       },
+       "examples": [
+        "opencode",
+        "Demummon",
+        "Ember",
+        "Lumina"
+       ]
+      },
+      {
+       "n_authors": 3,
+       "median_chars": 920,
+       "harness": {
+        "bare": 2,
+        "free-tier": 1
+       },
+       "examples": [
+        "flashbulb",
+        "grommet",
+        "supreme-overlord"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "gpt-5",
+     "n_authors": 8,
+     "n_items": 311,
+     "harness_levels": {
+      "codex": 7,
+      "bare": 1
+     },
+     "eta2_harness_items": 0.0231,
+     "harness_null": 0.0086,
+     "harness_excess": 0.0145,
+     "harness_p": 0.0846,
+     "sil_k2": 0.282,
+     "sil_k2_null": 0.351,
+     "sil_p": 0.9524,
+     "modes": [
+      {
+       "n_authors": 4,
+       "median_chars": 1056,
+       "harness": {
+        "codex": 3,
+        "bare": 1
+       },
+       "examples": [
+        "MrFlibble",
+        "margin-lantern",
+        "small-archive",
+        "palinode-after"
+       ]
+      },
+      {
+       "n_authors": 4,
+       "median_chars": 534,
+       "harness": {
+        "codex": 4
+       },
+       "examples": [
+        "Yeti",
+        "bolete",
+        "starpilot-copilot",
+        "unclosed-loop"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "grok-4.5",
+     "n_authors": 7,
+     "n_items": 595,
+     "harness_levels": {
+      "cursor": 5,
+      "bare": 2
+     },
+     "eta2_harness_items": 0.0179,
+     "harness_null": 0.0079,
+     "harness_excess": 0.01,
+     "harness_p": 0.0547,
+     "sil_k2": 0.444,
+     "sil_k2_null": 0.197,
+     "sil_p": 0.1429,
+     "modes": [
+      {
+       "n_authors": 3,
+       "median_chars": 704,
+       "harness": {
+        "bare": 2,
+        "cursor": 1
+       },
+       "examples": [
+        "MoneyImpliesPoverty",
+        "imperfectmover",
+        "Wubbitys-Agent-Grok-00"
+       ]
+      },
+      {
+       "n_authors": 4,
+       "median_chars": 433,
+       "harness": {
+        "cursor": 4
+       },
+       "examples": [
+        "cursor-grok",
+        "catchword",
+        "verso",
+        "errata"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "claim_qwen/bge": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0221,
+    "eta2_author": 0.0527,
+    "eta2_within": 0.9252,
+    "author_null_mean": 0.04,
+    "author_excess": 0.0127,
+    "author_z": 32.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.017,
+    "model_excess": 0.0051,
+    "model_z": 7.0,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2338,
+    "null_mean": 0.2285,
+    "excess": 0.0053,
+    "z": 7.4,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1503,
+    "null_mean": 0.1305,
+    "excess": 0.0198,
+    "z": 67.0,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.093,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.079,
+    "model_acc": 0.2,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.037,
+    "n_families": 20,
+    "author_within_model_acc": 0.339,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.195,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 2,
+    "sign_p": 0.6875,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0325,
+      "d_peer_same_model_median": 0.0747,
+      "ratio": 2.3
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0612,
+      "d_peer_same_model_median": 0.0586,
+      "ratio": 0.96
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.083,
+      "d_peer_same_model_median": 0.068,
+      "ratio": 0.82
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.0787,
+      "d_peer_same_model_median": 0.0952,
+      "ratio": 1.21
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0196,
+    "eta2_author": 0.0524,
+    "eta2_within": 0.928,
+    "author_null_mean": 0.0402,
+    "author_excess": 0.0122,
+    "author_z": 31.7,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0163,
+    "model_excess": 0.0033,
+    "model_z": 5.1,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.083,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.068,
+    "model_acc": 0.16,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.089,
+    "n_families": 20,
+    "author_within_model_acc": 0.325,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.177,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 71,
+   "headline_nodup": {
+    "n_items": 2280,
+    "n_authors": 114,
+    "eta2_model": 0.022,
+    "eta2_author": 0.052,
+    "eta2_within": 0.926,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0121,
+    "author_z": 35.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0169,
+    "model_excess": 0.005,
+    "model_z": 7.8,
+    "model_p": 0.0025
+   },
+   "harness": [
+    {
+     "family": "claude-opus-5",
+     "n_authors": 30,
+     "n_items": 1708,
+     "harness_levels": {
+      "bare": 30
+     },
+     "sil_k2": 0.246,
+     "sil_k2_null": 0.223,
+     "sil_p": 0.1429,
+     "modes": [
+      {
+       "n_authors": 26,
+       "median_chars": 2983,
+       "harness": {
+        "bare": 26
+       },
+       "examples": [
+        "denominator",
+        "silt",
+        "souchong-the-unburnt",
+        "unspent"
+       ]
+      },
+      {
+       "n_authors": 4,
+       "median_chars": 2852,
+       "harness": {
+        "bare": 4
+       },
+       "examples": [
+        "unfiled",
+        "one-fact-per-file",
+        "wren",
+        "gnomon"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "claude-fable-5",
+     "n_authors": 18,
+     "n_items": 1160,
+     "harness_levels": {
+      "bare": 18
+     },
+     "sil_k2": 0.302,
+     "sil_k2_null": 0.341,
+     "sil_p": 0.8095,
+     "modes": [
+      {
+       "n_authors": 10,
+       "median_chars": 1811,
+       "harness": {
+        "bare": 10
+       },
+       "examples": [
+        "keeps-notes",
+        "verbatim",
+        "from-the-gallery",
+        "newcomer-1"
+       ]
+      },
+      {
+       "n_authors": 8,
+       "median_chars": 2339,
+       "harness": {
+        "bare": 8
+       },
+       "examples": [
+        "1f916-agent",
+        "gradient-dissent",
+        "egress-bound",
+        "ponytail"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "deepseek-v4-flash",
+     "n_authors": 13,
+     "n_items": 1111,
+     "harness_levels": {
+      "bare": 7,
+      "free-tier": 3,
+      "ollama": 2,
+      "openrouter": 1
+     },
+     "eta2_harness_items": 0.0044,
+     "harness_null": 0.0056,
+     "harness_excess": -0.0013,
+     "harness_p": 0.9353,
+     "sil_k2": 0.349,
+     "sil_k2_null": 0.423,
+     "sil_p": 0.8571,
+     "modes": [
+      {
+       "n_authors": 5,
+       "median_chars": 805,
+       "harness": {
+        "bare": 2,
+        "ollama": 1,
+        "free-tier": 1,
+        "openrouter": 1
+       },
+       "examples": [
+        "Ember",
+        "Lumina",
+        "Atlas-Hermes",
+        "quotient"
+       ]
+      },
+      {
+       "n_authors": 8,
+       "median_chars": 961,
+       "harness": {
+        "bare": 5,
+        "free-tier": 2,
+        "ollama": 1
+       },
+       "examples": [
+        "opencode",
+        "Demummon",
+        "flashbulb",
+        "syntropos2"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "gpt-5",
+     "n_authors": 8,
+     "n_items": 311,
+     "harness_levels": {
+      "codex": 7,
+      "bare": 1
+     },
+     "eta2_harness_items": 0.0142,
+     "harness_null": 0.0063,
+     "harness_excess": 0.008,
+     "harness_p": 0.0846,
+     "sil_k2": 0.357,
+     "sil_k2_null": 0.356,
+     "sil_p": 0.7619,
+     "modes": [
+      {
+       "n_authors": 3,
+       "median_chars": 620,
+       "harness": {
+        "codex": 3
+       },
+       "examples": [
+        "small-archive",
+        "bolete",
+        "starpilot-copilot"
+       ]
+      },
+      {
+       "n_authors": 5,
+       "median_chars": 961,
+       "harness": {
+        "codex": 4,
+        "bare": 1
+       },
+       "examples": [
+        "MrFlibble",
+        "margin-lantern",
+        "palinode-after",
+        "Yeti"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "grok-4.5",
+     "n_authors": 7,
+     "n_items": 595,
+     "harness_levels": {
+      "cursor": 5,
+      "bare": 2
+     },
+     "eta2_harness_items": 0.006,
+     "harness_null": 0.0044,
+     "harness_excess": 0.0016,
+     "harness_p": 0.194,
+     "sil_k2": 0.416,
+     "sil_k2_null": 0.197,
+     "sil_p": 0.2381,
+     "modes": [
+      {
+       "n_authors": 4,
+       "median_chars": 626,
+       "harness": {
+        "bare": 2,
+        "cursor": 2
+       },
+       "examples": [
+        "MoneyImpliesPoverty",
+        "errata",
+        "imperfectmover",
+        "Wubbitys-Agent-Grok-00"
+       ]
+      },
+      {
+       "n_authors": 3,
+       "median_chars": 445,
+       "harness": {
+        "cursor": 3
+       },
+       "examples": [
+        "cursor-grok",
+        "catchword",
+        "verso"
+       ]
+      }
+     ]
+    }
+   ],
+   "positive_control": {
+    "n": 3000,
+    "eta2_venue_world": 0.0028,
+    "vw_acc": 0.705,
+    "vw_majority": 0.508,
+    "null_mean": 0.0003,
+    "excess": 0.0025,
+    "z": 113.7
+   }
+  },
+  "claim_gemma/bge": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0236,
+    "eta2_author": 0.055,
+    "eta2_within": 0.9214,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0151,
+    "author_z": 37.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0179,
+    "model_excess": 0.0057,
+    "model_z": 7.3,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2316,
+    "null_mean": 0.2254,
+    "excess": 0.0062,
+    "z": 9.1,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1545,
+    "null_mean": 0.1303,
+    "excess": 0.0242,
+    "z": 73.1,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.105,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.09,
+    "model_acc": 0.17,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.076,
+    "n_families": 20,
+    "author_within_model_acc": 0.342,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.198,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 2,
+    "sign_p": 0.6875,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0334,
+      "d_peer_same_model_median": 0.076,
+      "ratio": 2.27
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0758,
+      "d_peer_same_model_median": 0.0555,
+      "ratio": 0.73
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0749,
+      "d_peer_same_model_median": 0.06,
+      "ratio": 0.8
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.0808,
+      "d_peer_same_model_median": 0.0907,
+      "ratio": 1.12
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0207,
+    "eta2_author": 0.0545,
+    "eta2_within": 0.9248,
+    "author_null_mean": 0.0401,
+    "author_excess": 0.0143,
+    "author_z": 35.9,
+    "author_p": 0.0025,
+    "model_null_mean": 0.017,
+    "model_excess": 0.0037,
+    "model_z": 5.4,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.094,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.079,
+    "model_acc": 0.142,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.113,
+    "n_families": 20,
+    "author_within_model_acc": 0.329,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.183,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 67,
+   "headline_nodup": {
+    "n_items": 2280,
+    "n_authors": 114,
+    "eta2_model": 0.0235,
+    "eta2_author": 0.0544,
+    "eta2_within": 0.922,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0145,
+    "author_z": 42.0,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0178,
+    "model_excess": 0.0057,
+    "model_z": 8.2,
+    "model_p": 0.0025
+   },
+   "harness": [
+    {
+     "family": "claude-opus-5",
+     "n_authors": 30,
+     "n_items": 1708,
+     "harness_levels": {
+      "bare": 30
+     },
+     "sil_k2": 0.2,
+     "sil_k2_null": 0.233,
+     "sil_p": 0.9524,
+     "modes": [
+      {
+       "n_authors": 5,
+       "median_chars": 2433,
+       "harness": {
+        "bare": 5
+       },
+       "examples": [
+        "souchong-the-unburnt",
+        "read-the-door",
+        "write-time",
+        "loki"
+       ]
+      },
+      {
+       "n_authors": 25,
+       "median_chars": 3031,
+       "harness": {
+        "bare": 25
+       },
+       "examples": [
+        "denominator",
+        "silt",
+        "unspent",
+        "Wubbitys-Agent-Claude-00"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "claude-fable-5",
+     "n_authors": 18,
+     "n_items": 1160,
+     "harness_levels": {
+      "bare": 18
+     },
+     "sil_k2": 0.346,
+     "sil_k2_null": 0.34,
+     "sil_p": 0.4286,
+     "modes": [
+      {
+       "n_authors": 12,
+       "median_chars": 1779,
+       "harness": {
+        "bare": 12
+       },
+       "examples": [
+        "1f916-agent",
+        "keeps-notes",
+        "verbatim",
+        "from-the-gallery"
+       ]
+      },
+      {
+       "n_authors": 6,
+       "median_chars": 2731,
+       "harness": {
+        "bare": 6
+       },
+       "examples": [
+        "gradient-dissent",
+        "egress-bound",
+        "ponytail",
+        "patchbay"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "deepseek-v4-flash",
+     "n_authors": 13,
+     "n_items": 1111,
+     "harness_levels": {
+      "bare": 7,
+      "free-tier": 3,
+      "ollama": 2,
+      "openrouter": 1
+     },
+     "eta2_harness_items": 0.0058,
+     "harness_null": 0.0071,
+     "harness_excess": -0.0013,
+     "harness_p": 0.7861,
+     "sil_k2": 0.386,
+     "sil_k2_null": 0.435,
+     "sil_p": 0.7143,
+     "modes": [
+      {
+       "n_authors": 5,
+       "median_chars": 805,
+       "harness": {
+        "bare": 2,
+        "ollama": 1,
+        "free-tier": 1,
+        "openrouter": 1
+       },
+       "examples": [
+        "Ember",
+        "Lumina",
+        "Atlas-Hermes",
+        "quotient"
+       ]
+      },
+      {
+       "n_authors": 8,
+       "median_chars": 961,
+       "harness": {
+        "bare": 5,
+        "free-tier": 2,
+        "ollama": 1
+       },
+       "examples": [
+        "opencode",
+        "Demummon",
+        "flashbulb",
+        "syntropos2"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "gpt-5",
+     "n_authors": 8,
+     "n_items": 311,
+     "harness_levels": {
+      "codex": 7,
+      "bare": 1
+     },
+     "eta2_harness_items": 0.0208,
+     "harness_null": 0.0067,
+     "harness_excess": 0.0141,
+     "harness_p": 0.0846,
+     "sil_k2": 0.244,
+     "sil_k2_null": 0.359,
+     "sil_p": 0.9048,
+     "modes": [
+      {
+       "n_authors": 3,
+       "median_chars": 580,
+       "harness": {
+        "codex": 3
+       },
+       "examples": [
+        "bolete",
+        "starpilot-copilot",
+        "unclosed-loop"
+       ]
+      },
+      {
+       "n_authors": 5,
+       "median_chars": 967,
+       "harness": {
+        "codex": 4,
+        "bare": 1
+       },
+       "examples": [
+        "MrFlibble",
+        "margin-lantern",
+        "small-archive",
+        "palinode-after"
+       ]
+      }
+     ]
+    },
+    {
+     "family": "grok-4.5",
+     "n_authors": 7,
+     "n_items": 595,
+     "harness_levels": {
+      "cursor": 5,
+      "bare": 2
+     },
+     "eta2_harness_items": 0.0076,
+     "harness_null": 0.0042,
+     "harness_excess": 0.0035,
+     "harness_p": 0.0547,
+     "sil_k2": 0.353,
+     "sil_k2_null": 0.027,
+     "sil_p": 0.4762,
+     "modes": [
+      {
+       "n_authors": 4,
+       "median_chars": 449,
+       "harness": {
+        "cursor": 4
+       },
+       "examples": [
+        "cursor-grok",
+        "catchword",
+        "verso",
+        "imperfectmover"
+       ]
+      },
+      {
+       "n_authors": 3,
+       "median_chars": 679,
+       "harness": {
+        "bare": 2,
+        "cursor": 1
+       },
+       "examples": [
+        "MoneyImpliesPoverty",
+        "errata",
+        "Wubbitys-Agent-Grok-00"
+       ]
+      }
+     ]
+    }
+   ],
+   "positive_control": {
+    "n": 3000,
+    "eta2_venue_world": 0.0025,
+    "vw_acc": 0.647,
+    "vw_majority": 0.508,
+    "null_mean": 0.0003,
+    "excess": 0.0021,
+    "z": 73.2
+   }
+  },
+  "lexical/gte": {
+   "headline": {
+    "n_items": 2980,
+    "n_authors": 149,
+    "eta2_model": 0.033,
+    "eta2_author": 0.0797,
+    "eta2_within": 0.8873,
+    "author_null_mean": 0.0418,
+    "author_excess": 0.0379,
+    "author_z": 90.2,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0213,
+    "model_excess": 0.0117,
+    "model_z": 13.4,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 542,
+    "n_items": 4875,
+    "n_authors": 266,
+    "eta2_author_in_cell": 0.2192,
+    "null_mean": 0.2019,
+    "excess": 0.0174,
+    "z": 22.2,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 226,
+    "n_items": 11691,
+    "n_authors": 497,
+    "eta2_author_in_cell": 0.1709,
+    "null_mean": 0.1233,
+    "excess": 0.0476,
+    "z": 164.7,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 80,
+    "n_test": 4486,
+    "author_acc": 0.24,
+    "author_chance": 0.0125,
+    "author_acc_adj": 0.23,
+    "model_acc": 0.345,
+    "model_chance": 0.216,
+    "model_acc_adj": 0.165,
+    "n_families": 22,
+    "author_within_model_acc": 0.536,
+    "author_within_model_chance": 0.1884,
+    "author_within_model_adj": 0.428,
+    "n_test_within_model": 4252
+   },
+   "switchers": {
+    "n": 6,
+    "wins": 6,
+    "sign_p": 0.015625,
+    "rows": [
+     {
+      "author": "gradient-dissent",
+      "model_a": "claude-fable-5",
+      "n_a": 170,
+      "model_b": "claude-opus-5",
+      "n_b": 45,
+      "n_peers": 31,
+      "d_self_across_model": 0.0238,
+      "d_peer_same_model_median": 0.0691,
+      "ratio": 2.9
+     },
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 104,
+      "model_b": "claude-opus-5",
+      "n_b": 84,
+      "n_peers": 31,
+      "d_self_across_model": 0.0256,
+      "d_peer_same_model_median": 0.0667,
+      "ratio": 2.61
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 70,
+      "n_peers": 2,
+      "d_self_across_model": 0.0481,
+      "d_peer_same_model_median": 0.0538,
+      "ratio": 1.12
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 78,
+      "model_b": "claude-fable-5",
+      "n_b": 70,
+      "n_peers": 43,
+      "d_self_across_model": 0.024,
+      "d_peer_same_model_median": 0.06,
+      "ratio": 2.5
+     },
+     {
+      "author": "newcomer-1",
+      "model_a": "glm-5.2",
+      "n_a": 81,
+      "model_b": "claude-fable-5",
+      "n_b": 46,
+      "n_peers": 3,
+      "d_self_across_model": 0.0398,
+      "d_peer_same_model_median": 0.0619,
+      "ratio": 1.56
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0496,
+      "d_peer_same_model_median": 0.0583,
+      "ratio": 1.18
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2980,
+    "n_authors": 149,
+    "eta2_model": 0.0248,
+    "eta2_author": 0.0802,
+    "eta2_within": 0.895,
+    "author_null_mean": 0.0428,
+    "author_excess": 0.0374,
+    "author_z": 90.5,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0197,
+    "model_excess": 0.0051,
+    "model_z": 6.7,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 80,
+    "n_test": 4486,
+    "author_acc": 0.235,
+    "author_chance": 0.0125,
+    "author_acc_adj": 0.225,
+    "model_acc": 0.256,
+    "model_chance": 0.216,
+    "model_acc_adj": 0.052,
+    "n_families": 22,
+    "author_within_model_acc": 0.53,
+    "author_within_model_chance": 0.1884,
+    "author_within_model_adj": 0.421,
+    "n_test_within_model": 4252
+   },
+   "nodup_dropped": 1012,
+   "headline_nodup": {
+    "n_items": 2740,
+    "n_authors": 137,
+    "eta2_model": 0.0316,
+    "eta2_author": 0.0762,
+    "eta2_within": 0.8922,
+    "author_null_mean": 0.0418,
+    "author_excess": 0.0344,
+    "author_z": 77.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0212,
+    "model_excess": 0.0104,
+    "model_z": 10.8,
+    "model_p": 0.0025
+   }
+  },
+  "lexical_matched/gte": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0382,
+    "eta2_author": 0.0729,
+    "eta2_within": 0.8889,
+    "author_null_mean": 0.0388,
+    "author_excess": 0.0341,
+    "author_z": 85.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0256,
+    "model_excess": 0.0126,
+    "model_z": 9.8,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2247,
+    "null_mean": 0.2085,
+    "excess": 0.0162,
+    "z": 18.3,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1752,
+    "null_mean": 0.1272,
+    "excess": 0.048,
+    "z": 120.3,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.245,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.232,
+    "model_acc": 0.374,
+    "model_chance": 0.229,
+    "model_acc_adj": 0.189,
+    "n_families": 20,
+    "author_within_model_acc": 0.502,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.393,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 4,
+    "sign_p": 0.0625,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0308,
+      "d_peer_same_model_median": 0.0693,
+      "ratio": 2.25
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0552,
+      "d_peer_same_model_median": 0.0591,
+      "ratio": 1.07
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0496,
+      "d_peer_same_model_median": 0.0635,
+      "ratio": 1.28
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.05,
+      "d_peer_same_model_median": 0.0812,
+      "ratio": 1.62
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.029,
+    "eta2_author": 0.074,
+    "eta2_within": 0.897,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0341,
+    "author_z": 86.6,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0237,
+    "model_excess": 0.0054,
+    "model_z": 5.0,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.217,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.205,
+    "model_acc": 0.269,
+    "model_chance": 0.229,
+    "model_acc_adj": 0.052,
+    "n_families": 20,
+    "author_within_model_acc": 0.478,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.364,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 655,
+   "headline_nodup": {
+    "n_items": 2080,
+    "n_authors": 104,
+    "eta2_model": 0.0366,
+    "eta2_author": 0.0687,
+    "eta2_within": 0.8946,
+    "author_null_mean": 0.0384,
+    "author_excess": 0.0303,
+    "author_z": 89.3,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0256,
+    "model_excess": 0.011,
+    "model_z": 9.3,
+    "model_p": 0.0025
+   }
+  },
+  "claim_qwen/gte": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0232,
+    "eta2_author": 0.0546,
+    "eta2_within": 0.9222,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0147,
+    "author_z": 37.2,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0177,
+    "model_excess": 0.0055,
+    "model_z": 6.8,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2314,
+    "null_mean": 0.2255,
+    "excess": 0.0059,
+    "z": 7.7,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1531,
+    "null_mean": 0.1303,
+    "excess": 0.0228,
+    "z": 70.0,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.09,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.076,
+    "model_acc": 0.21,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.024,
+    "n_families": 20,
+    "author_within_model_acc": 0.341,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.197,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 3,
+    "sign_p": 0.3125,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0208,
+      "d_peer_same_model_median": 0.0511,
+      "ratio": 2.46
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0342,
+      "d_peer_same_model_median": 0.0364,
+      "ratio": 1.06
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.0568,
+      "d_peer_same_model_median": 0.0448,
+      "ratio": 0.79
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.0472,
+      "d_peer_same_model_median": 0.0612,
+      "ratio": 1.3
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0205,
+    "eta2_author": 0.0542,
+    "eta2_within": 0.9253,
+    "author_null_mean": 0.0401,
+    "author_excess": 0.014,
+    "author_z": 36.1,
+    "author_p": 0.0025,
+    "model_null_mean": 0.017,
+    "model_excess": 0.0036,
+    "model_z": 5.2,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.089,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.075,
+    "model_acc": 0.174,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.071,
+    "n_families": 20,
+    "author_within_model_acc": 0.327,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.18,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 120,
+   "headline_nodup": {
+    "n_items": 2280,
+    "n_authors": 114,
+    "eta2_model": 0.023,
+    "eta2_author": 0.0536,
+    "eta2_within": 0.9234,
+    "author_null_mean": 0.0398,
+    "author_excess": 0.0138,
+    "author_z": 41.8,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0175,
+    "model_excess": 0.0055,
+    "model_z": 8.0,
+    "model_p": 0.0025
+   },
+   "positive_control": {
+    "n": 3000,
+    "eta2_venue_world": 0.0035,
+    "vw_acc": 0.711,
+    "vw_majority": 0.508,
+    "null_mean": 0.0003,
+    "excess": 0.0032,
+    "z": 143.7
+   }
+  },
+  "claim_gemma/gte": {
+   "headline": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0238,
+    "eta2_author": 0.0567,
+    "eta2_within": 0.9194,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0168,
+    "author_z": 40.3,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0183,
+    "model_excess": 0.0055,
+    "model_z": 6.7,
+    "model_p": 0.0025
+   },
+   "thread": {
+    "n_cells": 390,
+    "n_items": 3380,
+    "n_authors": 236,
+    "eta2_author_in_cell": 0.2282,
+    "null_mean": 0.2221,
+    "excess": 0.0061,
+    "z": 8.8,
+    "p": 0.005
+   },
+   "day": {
+    "n_cells": 159,
+    "n_items": 8518,
+    "n_authors": 463,
+    "eta2_author_in_cell": 0.1561,
+    "null_mean": 0.1301,
+    "excess": 0.026,
+    "z": 78.8,
+    "p": 0.005
+   },
+   "identify": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.096,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.082,
+    "model_acc": 0.165,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.082,
+    "n_families": 20,
+    "author_within_model_acc": 0.344,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.201,
+    "n_test_within_model": 2540
+   },
+   "switchers": {
+    "n": 4,
+    "wins": 2,
+    "sign_p": 0.6875,
+    "rows": [
+     {
+      "author": "egress-bound",
+      "model_a": "claude-fable-5",
+      "n_a": 94,
+      "model_b": "claude-opus-5",
+      "n_b": 64,
+      "n_peers": 26,
+      "d_self_across_model": 0.0241,
+      "d_peer_same_model_median": 0.0522,
+      "ratio": 2.17
+     },
+     {
+      "author": "amber",
+      "model_a": "qwen3.6-35b",
+      "n_a": 82,
+      "model_b": "muse-glimmer-30b",
+      "n_b": 44,
+      "n_peers": 2,
+      "d_self_across_model": 0.0509,
+      "d_peer_same_model_median": 0.0384,
+      "ratio": 0.75
+     },
+     {
+      "author": "burned-key",
+      "model_a": "qwen3.6-35b",
+      "n_a": 34,
+      "model_b": "deepseek-v4-flash",
+      "n_b": 30,
+      "n_peers": 2,
+      "d_self_across_model": 0.05,
+      "d_peer_same_model_median": 0.0417,
+      "ratio": 0.83
+     },
+     {
+      "author": "pentimento",
+      "model_a": "claude-opus-5",
+      "n_a": 33,
+      "model_b": "claude-fable-5",
+      "n_b": 30,
+      "n_peers": 40,
+      "d_self_across_model": 0.0571,
+      "d_peer_same_model_median": 0.0644,
+      "ratio": 1.13
+     }
+    ]
+   },
+   "headline_lenresid": {
+    "n_items": 2300,
+    "n_authors": 115,
+    "eta2_model": 0.0212,
+    "eta2_author": 0.056,
+    "eta2_within": 0.9228,
+    "author_null_mean": 0.0401,
+    "author_excess": 0.0159,
+    "author_z": 38.5,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0175,
+    "model_excess": 0.0036,
+    "model_z": 5.1,
+    "model_p": 0.0025
+   },
+   "identify_lenresid": {
+    "n_authors": 63,
+    "n_test": 2924,
+    "author_acc": 0.088,
+    "author_chance": 0.0159,
+    "author_acc_adj": 0.074,
+    "model_acc": 0.148,
+    "model_chance": 0.229,
+    "model_acc_adj": -0.105,
+    "n_families": 20,
+    "author_within_model_acc": 0.333,
+    "author_within_model_chance": 0.1793,
+    "author_within_model_adj": 0.187,
+    "n_test_within_model": 2540
+   },
+   "nodup_dropped": 117,
+   "headline_nodup": {
+    "n_items": 2280,
+    "n_authors": 114,
+    "eta2_model": 0.0237,
+    "eta2_author": 0.0558,
+    "eta2_within": 0.9205,
+    "author_null_mean": 0.0399,
+    "author_excess": 0.0159,
+    "author_z": 42.4,
+    "author_p": 0.0025,
+    "model_null_mean": 0.0182,
+    "model_excess": 0.0055,
+    "model_z": 7.8,
+    "model_p": 0.0025
+   },
+   "positive_control": {
+    "n": 3000,
+    "eta2_venue_world": 0.003,
+    "vw_acc": 0.652,
+    "vw_majority": 0.508,
+    "null_mean": 0.0003,
+    "excess": 0.0026,
+    "z": 88.8
+   }
+  }
+ },
+ "log": [
+  "== lexical/bge  (12725 rows)",
+  "  [raw] n=2980 (149 authors x 20)  model eta2=0.0358 (null 0.0219, z=13.9)  author|model eta2=0.0804 (null 0.0415, z=89.0)  within=0.8838",
+  "  [thread x model cells] 542 cells, n=4875: eta2=0.2189 vs null 0.201 (z=21.5, p=0.005)",
+  "  [day x model cells] 226 cells, n=11691: eta2=0.1716 vs null 0.1227 (z=154.4, p=0.005)",
+  "  [identify] 80 authors, 4486 held-out second-half items: author 0.228 (chance 0.0125, adj 0.218) | model 0.338 (chance 0.216, adj 0.156) | author|model-known 0.523 (chance 0.1884, adj 0.412)",
+  "  [switchers] 6 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 6/6 (sign p=0.01562)",
+  "           gradient-dissent  claude-fable-5(170) vs claude-opus-5(45): self=0.0313 peer=0.0983 ratio=3.14",
+  "               egress-bound  claude-fable-5(104) vs claude-opus-5(84): self=0.0322 peer=0.0943 ratio=2.92",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(70): self=0.0582 peer=0.0649 ratio=1.12",
+  "                 pentimento  claude-opus-5(78) vs claude-fable-5(70): self=0.0324 peer=0.0786 ratio=2.43",
+  "                 newcomer-1  glm-5.2(81) vs claude-fable-5(46): self=0.0559 peer=0.0833 ratio=1.49",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0639 peer=0.072 ratio=1.13",
+  "  [length-residualized] n=2980 (149 authors x 20)  model eta2=0.0252 (null 0.0199, z=6.7)  author|model eta2=0.0809 (null 0.0428, z=89.7)  within=0.8939",
+  "  [identify] 80 authors, 4486 held-out second-half items: author 0.209 (chance 0.0125, adj 0.199) | model 0.249 (chance 0.216, adj 0.042) | author|model-known 0.506 (chance 0.1884, adj 0.391)",
+  "  [nodup] dropped 156 near-duplicate items (1.2%)",
+  "  [burst-filtered] n=2960 (148 authors x 20)  model eta2=0.0355 (null 0.0219, z=13.9)  author|model eta2=0.0793 (null 0.0414, z=78.0)  within=0.8851",
+  "  [claude-opus-5] 37 authors / 2487 items: one disclosed harness level | centroid 2-means silhouette 0.244 vs unimodal null 0.225 (p=0.3333)",
+  "       mode 0: 12 authors, median 3365 chars, harness {'bare': 12}, e.g. scrollback, sabertooth, quiet-ceiling, unfiled",
+  "       mode 1: 25 authors, median 2917 chars, harness {'bare': 25}, e.g. souchong-the-unburnt, unspent, denominator, silt",
+  "  [claude-fable-5] 27 authors / 1707 items: one disclosed harness level | centroid 2-means silhouette 0.267 vs unimodal null 0.251 (p=0.2381)",
+  "       mode 0: 5 authors, median 2124 chars, harness {'bare': 5}, e.g. ponytail, palimpsest, salvaged-not-remembered, legate",
+  "       mode 1: 22 authors, median 2159 chars, harness {'bare': 22}, e.g. 1f916-agent, gradient-dissent, egress-bound, verbatim",
+  "  [deepseek-v4-flash] 14 authors / 1610 items: harness eta2=0.0076 vs null 0.0091 (excess -0.0015, p=0.7612) | centroid 2-means silhouette 0.422 vs unimodal null 0.415 (p=0.5238)",
+  "       mode 0: 3 authors, median 925 chars, harness {'bare': 2, 'free-tier': 1}, e.g. flashbulb, supreme-overlord, hermes-corther",
+  "       mode 1: 11 authors, median 805 chars, harness {'bare': 6, 'ollama': 2, 'free-tier': 2, 'openrouter': 1}, e.g. Demummon, Lumina, opencode, Ember",
+  "  [grok-4.5] 10 authors / 1076 items: harness eta2=0.0122 vs null 0.0057 (excess 0.0065, p=0.0299) | centroid 2-means silhouette 0.414 vs unimodal null 0.414 (p=0.4286)",
+  "       mode 0: 6 authors, median 547 chars, harness {'cursor': 5, 'bare': 1}, e.g. cursor-grok, verso, catchword, errata",
+  "       mode 1: 4 authors, median 784 chars, harness {'bare': 3, 'cursor': 1}, e.g. MoneyImpliesPoverty, imperfectmover, grok-xai-15, Wubbitys-Agent-Grok-00",
+  "  [gpt-5] 9 authors / 414 items: harness eta2=0.0169 vs null 0.0069 (excess 0.01, p=0.0995) | centroid 2-means silhouette 0.323 vs unimodal null 0.426 (p=0.8095)",
+  "       mode 0: 4 authors, median 526 chars, harness {'codex': 4}, e.g. bolete, Yeti, starpilot-copilot, unclosed-loop",
+  "       mode 1: 5 authors, median 1046 chars, harness {'codex': 4, 'bare': 1}, e.g. MrFlibble, small-archive, margin-lantern, zora",
+  "  [deepseek-v4-pro] 6 authors / 219 items: harness eta2=0.0265 vs null 0.0321 (excess -0.0056, p=0.6617) | centroid 2-means silhouette 0.312 vs unimodal null -0.129 (p=0.381)",
+  "       mode 0: 3 authors, median 1174 chars, harness {'opencode': 1, 'bare': 1, 'hermes': 1}, e.g. neth, ghost-circuit, nous-hermes",
+  "       mode 1: 3 authors, median 944 chars, harness {'bare': 3}, e.g. deepseek-dsh, sora, hemei",
+  "== lexical_matched/bge  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0421 (null 0.0267, z=10.2)  author|model eta2=0.0733 (null 0.0384, z=82.6)  within=0.8846",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2244 vs null 0.2077 (z=18.2, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1764 vs null 0.1266 (z=117.2, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.224 (chance 0.0159, adj 0.211) | model 0.368 (chance 0.229, adj 0.181) | author|model-known 0.481 (chance 0.1793, adj 0.368)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 3/4 (sign p=0.3125)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0382 peer=0.097 ratio=2.54",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0704 peer=0.069 ratio=0.98",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0639 peer=0.0781 ratio=1.22",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.0641 peer=0.1065 ratio=1.66",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.0297 (null 0.0239, z=5.2)  author|model eta2=0.0745 (null 0.0399, z=83.3)  within=0.8958",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.2 (chance 0.0159, adj 0.187) | model 0.276 (chance 0.229, adj 0.061) | author|model-known 0.453 (chance 0.1793, adj 0.333)",
+  "  [nodup] dropped 118 near-duplicate items (1.3%)",
+  "  [burst-filtered] n=2280 (114 authors x 20)  model eta2=0.0418 (null 0.0263, z=11.6)  author|model eta2=0.0723 (null 0.0384, z=85.1)  within=0.8859",
+  "  [claude-opus-5] 30 authors / 1708 items: one disclosed harness level | centroid 2-means silhouette 0.272 vs unimodal null 0.24 (p=0.1429)",
+  "       mode 0: 4 authors, median 2855 chars, harness {'bare': 4}, e.g. sabertooth, unfiled, one-fact-per-file, gnomon",
+  "       mode 1: 26 authors, median 2983 chars, harness {'bare': 26}, e.g. denominator, silt, souchong-the-unburnt, unspent",
+  "  [claude-fable-5] 18 authors / 1160 items: one disclosed harness level | centroid 2-means silhouette 0.305 vs unimodal null 0.335 (p=0.8571)",
+  "       mode 0: 10 authors, median 1858 chars, harness {'bare': 10}, e.g. keeps-notes, verbatim, newcomer-1, iris-fable",
+  "       mode 1: 8 authors, median 2261 chars, harness {'bare': 8}, e.g. 1f916-agent, gradient-dissent, egress-bound, ponytail",
+  "  [deepseek-v4-flash] 13 authors / 1111 items: harness eta2=0.0084 vs null 0.0107 (excess -0.0024, p=0.8905) | centroid 2-means silhouette 0.372 vs unimodal null 0.418 (p=0.7619)",
+  "       mode 0: 10 authors, median 865 chars, harness {'bare': 5, 'ollama': 2, 'free-tier': 2, 'openrouter': 1}, e.g. opencode, Demummon, Ember, Lumina",
+  "       mode 1: 3 authors, median 920 chars, harness {'bare': 2, 'free-tier': 1}, e.g. flashbulb, grommet, supreme-overlord",
+  "  [gpt-5] 8 authors / 311 items: harness eta2=0.0231 vs null 0.0086 (excess 0.0145, p=0.0846) | centroid 2-means silhouette 0.282 vs unimodal null 0.351 (p=0.9524)",
+  "       mode 0: 4 authors, median 1056 chars, harness {'codex': 3, 'bare': 1}, e.g. MrFlibble, margin-lantern, small-archive, palinode-after",
+  "       mode 1: 4 authors, median 534 chars, harness {'codex': 4}, e.g. Yeti, bolete, starpilot-copilot, unclosed-loop",
+  "  [grok-4.5] 7 authors / 595 items: harness eta2=0.0179 vs null 0.0079 (excess 0.01, p=0.0547) | centroid 2-means silhouette 0.444 vs unimodal null 0.197 (p=0.1429)",
+  "       mode 0: 3 authors, median 704 chars, harness {'bare': 2, 'cursor': 1}, e.g. MoneyImpliesPoverty, imperfectmover, Wubbitys-Agent-Grok-00",
+  "       mode 1: 4 authors, median 433 chars, harness {'cursor': 4}, e.g. cursor-grok, catchword, verso, errata",
+  "== claim_qwen/bge  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0221 (null 0.017, z=7.0)  author|model eta2=0.0527 (null 0.04, z=32.6)  within=0.9252",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2338 vs null 0.2285 (z=7.4, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1503 vs null 0.1305 (z=67.0, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.093 (chance 0.0159, adj 0.079) | model 0.2 (chance 0.229, adj -0.037) | author|model-known 0.339 (chance 0.1793, adj 0.195)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 2/4 (sign p=0.6875)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0325 peer=0.0747 ratio=2.3",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0612 peer=0.0586 ratio=0.96",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.083 peer=0.068 ratio=0.82",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.0787 peer=0.0952 ratio=1.21",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.0196 (null 0.0163, z=5.1)  author|model eta2=0.0524 (null 0.0402, z=31.7)  within=0.928",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.083 (chance 0.0159, adj 0.068) | model 0.16 (chance 0.229, adj -0.089) | author|model-known 0.325 (chance 0.1793, adj 0.177)",
+  "  [nodup] dropped 71 near-duplicate items (0.8%)",
+  "  [burst-filtered] n=2280 (114 authors x 20)  model eta2=0.022 (null 0.0169, z=7.8)  author|model eta2=0.052 (null 0.0399, z=35.6)  within=0.926",
+  "  [claude-opus-5] 30 authors / 1708 items: one disclosed harness level | centroid 2-means silhouette 0.246 vs unimodal null 0.223 (p=0.1429)",
+  "       mode 0: 26 authors, median 2983 chars, harness {'bare': 26}, e.g. denominator, silt, souchong-the-unburnt, unspent",
+  "       mode 1: 4 authors, median 2852 chars, harness {'bare': 4}, e.g. unfiled, one-fact-per-file, wren, gnomon",
+  "  [claude-fable-5] 18 authors / 1160 items: one disclosed harness level | centroid 2-means silhouette 0.302 vs unimodal null 0.341 (p=0.8095)",
+  "       mode 0: 10 authors, median 1811 chars, harness {'bare': 10}, e.g. keeps-notes, verbatim, from-the-gallery, newcomer-1",
+  "       mode 1: 8 authors, median 2339 chars, harness {'bare': 8}, e.g. 1f916-agent, gradient-dissent, egress-bound, ponytail",
+  "  [deepseek-v4-flash] 13 authors / 1111 items: harness eta2=0.0044 vs null 0.0056 (excess -0.0013, p=0.9353) | centroid 2-means silhouette 0.349 vs unimodal null 0.423 (p=0.8571)",
+  "       mode 0: 5 authors, median 805 chars, harness {'bare': 2, 'ollama': 1, 'free-tier': 1, 'openrouter': 1}, e.g. Ember, Lumina, Atlas-Hermes, quotient",
+  "       mode 1: 8 authors, median 961 chars, harness {'bare': 5, 'free-tier': 2, 'ollama': 1}, e.g. opencode, Demummon, flashbulb, syntropos2",
+  "  [gpt-5] 8 authors / 311 items: harness eta2=0.0142 vs null 0.0063 (excess 0.008, p=0.0846) | centroid 2-means silhouette 0.357 vs unimodal null 0.356 (p=0.7619)",
+  "       mode 0: 3 authors, median 620 chars, harness {'codex': 3}, e.g. small-archive, bolete, starpilot-copilot",
+  "       mode 1: 5 authors, median 961 chars, harness {'codex': 4, 'bare': 1}, e.g. MrFlibble, margin-lantern, palinode-after, Yeti",
+  "  [grok-4.5] 7 authors / 595 items: harness eta2=0.006 vs null 0.0044 (excess 0.0016, p=0.194) | centroid 2-means silhouette 0.416 vs unimodal null 0.197 (p=0.2381)",
+  "       mode 0: 4 authors, median 626 chars, harness {'bare': 2, 'cursor': 2}, e.g. MoneyImpliesPoverty, errata, imperfectmover, Wubbitys-Agent-Grok-00",
+  "       mode 1: 3 authors, median 445 chars, harness {'cursor': 3}, e.g. cursor-grok, catchword, verso",
+  "  [positive control] VENUE vs WORLD on the same claims: eta2=0.0028 vs null 0.0003 (excess 0.0025, z=113.7); nearest-centroid accuracy 0.705 vs majority 0.508",
+  "== claim_gemma/bge  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0236 (null 0.0179, z=7.3)  author|model eta2=0.055 (null 0.0399, z=37.6)  within=0.9214",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2316 vs null 0.2254 (z=9.1, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1545 vs null 0.1303 (z=73.1, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.105 (chance 0.0159, adj 0.09) | model 0.17 (chance 0.229, adj -0.076) | author|model-known 0.342 (chance 0.1793, adj 0.198)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 2/4 (sign p=0.6875)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0334 peer=0.076 ratio=2.27",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0758 peer=0.0555 ratio=0.73",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0749 peer=0.06 ratio=0.8",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.0808 peer=0.0907 ratio=1.12",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.0207 (null 0.017, z=5.4)  author|model eta2=0.0545 (null 0.0401, z=35.9)  within=0.9248",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.094 (chance 0.0159, adj 0.079) | model 0.142 (chance 0.229, adj -0.113) | author|model-known 0.329 (chance 0.1793, adj 0.183)",
+  "  [nodup] dropped 67 near-duplicate items (0.7%)",
+  "  [burst-filtered] n=2280 (114 authors x 20)  model eta2=0.0235 (null 0.0178, z=8.2)  author|model eta2=0.0544 (null 0.0399, z=42.0)  within=0.922",
+  "  [claude-opus-5] 30 authors / 1708 items: one disclosed harness level | centroid 2-means silhouette 0.2 vs unimodal null 0.233 (p=0.9524)",
+  "       mode 0: 5 authors, median 2433 chars, harness {'bare': 5}, e.g. souchong-the-unburnt, read-the-door, write-time, loki",
+  "       mode 1: 25 authors, median 3031 chars, harness {'bare': 25}, e.g. denominator, silt, unspent, Wubbitys-Agent-Claude-00",
+  "  [claude-fable-5] 18 authors / 1160 items: one disclosed harness level | centroid 2-means silhouette 0.346 vs unimodal null 0.34 (p=0.4286)",
+  "       mode 0: 12 authors, median 1779 chars, harness {'bare': 12}, e.g. 1f916-agent, keeps-notes, verbatim, from-the-gallery",
+  "       mode 1: 6 authors, median 2731 chars, harness {'bare': 6}, e.g. gradient-dissent, egress-bound, ponytail, patchbay",
+  "  [deepseek-v4-flash] 13 authors / 1111 items: harness eta2=0.0058 vs null 0.0071 (excess -0.0013, p=0.7861) | centroid 2-means silhouette 0.386 vs unimodal null 0.435 (p=0.7143)",
+  "       mode 0: 5 authors, median 805 chars, harness {'bare': 2, 'ollama': 1, 'free-tier': 1, 'openrouter': 1}, e.g. Ember, Lumina, Atlas-Hermes, quotient",
+  "       mode 1: 8 authors, median 961 chars, harness {'bare': 5, 'free-tier': 2, 'ollama': 1}, e.g. opencode, Demummon, flashbulb, syntropos2",
+  "  [gpt-5] 8 authors / 311 items: harness eta2=0.0208 vs null 0.0067 (excess 0.0141, p=0.0846) | centroid 2-means silhouette 0.244 vs unimodal null 0.359 (p=0.9048)",
+  "       mode 0: 3 authors, median 580 chars, harness {'codex': 3}, e.g. bolete, starpilot-copilot, unclosed-loop",
+  "       mode 1: 5 authors, median 967 chars, harness {'codex': 4, 'bare': 1}, e.g. MrFlibble, margin-lantern, small-archive, palinode-after",
+  "  [grok-4.5] 7 authors / 595 items: harness eta2=0.0076 vs null 0.0042 (excess 0.0035, p=0.0547) | centroid 2-means silhouette 0.353 vs unimodal null 0.027 (p=0.4762)",
+  "       mode 0: 4 authors, median 449 chars, harness {'cursor': 4}, e.g. cursor-grok, catchword, verso, imperfectmover",
+  "       mode 1: 3 authors, median 679 chars, harness {'bare': 2, 'cursor': 1}, e.g. MoneyImpliesPoverty, errata, Wubbitys-Agent-Grok-00",
+  "  [positive control] VENUE vs WORLD on the same claims: eta2=0.0025 vs null 0.0003 (excess 0.0021, z=73.2); nearest-centroid accuracy 0.647 vs majority 0.508",
+  "== lexical/gte  (12725 rows)",
+  "  [raw] n=2980 (149 authors x 20)  model eta2=0.033 (null 0.0213, z=13.4)  author|model eta2=0.0797 (null 0.0418, z=90.2)  within=0.8873",
+  "  [thread x model cells] 542 cells, n=4875: eta2=0.2192 vs null 0.2019 (z=22.2, p=0.005)",
+  "  [day x model cells] 226 cells, n=11691: eta2=0.1709 vs null 0.1233 (z=164.7, p=0.005)",
+  "  [identify] 80 authors, 4486 held-out second-half items: author 0.24 (chance 0.0125, adj 0.23) | model 0.345 (chance 0.216, adj 0.165) | author|model-known 0.536 (chance 0.1884, adj 0.428)",
+  "  [switchers] 6 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 6/6 (sign p=0.01562)",
+  "           gradient-dissent  claude-fable-5(170) vs claude-opus-5(45): self=0.0238 peer=0.0691 ratio=2.9",
+  "               egress-bound  claude-fable-5(104) vs claude-opus-5(84): self=0.0256 peer=0.0667 ratio=2.61",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(70): self=0.0481 peer=0.0538 ratio=1.12",
+  "                 pentimento  claude-opus-5(78) vs claude-fable-5(70): self=0.024 peer=0.06 ratio=2.5",
+  "                 newcomer-1  glm-5.2(81) vs claude-fable-5(46): self=0.0398 peer=0.0619 ratio=1.56",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0496 peer=0.0583 ratio=1.18",
+  "  [length-residualized] n=2980 (149 authors x 20)  model eta2=0.0248 (null 0.0197, z=6.7)  author|model eta2=0.0802 (null 0.0428, z=90.5)  within=0.895",
+  "  [identify] 80 authors, 4486 held-out second-half items: author 0.235 (chance 0.0125, adj 0.225) | model 0.256 (chance 0.216, adj 0.052) | author|model-known 0.53 (chance 0.1884, adj 0.421)",
+  "  [nodup] dropped 1012 near-duplicate items (8.0%)",
+  "  [burst-filtered] n=2740 (137 authors x 20)  model eta2=0.0316 (null 0.0212, z=10.8)  author|model eta2=0.0762 (null 0.0418, z=77.6)  within=0.8922",
+  "== lexical_matched/gte  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0382 (null 0.0256, z=9.8)  author|model eta2=0.0729 (null 0.0388, z=85.6)  within=0.8889",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2247 vs null 0.2085 (z=18.3, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1752 vs null 0.1272 (z=120.3, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.245 (chance 0.0159, adj 0.232) | model 0.374 (chance 0.229, adj 0.189) | author|model-known 0.502 (chance 0.1793, adj 0.393)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 4/4 (sign p=0.0625)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0308 peer=0.0693 ratio=2.25",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0552 peer=0.0591 ratio=1.07",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0496 peer=0.0635 ratio=1.28",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.05 peer=0.0812 ratio=1.62",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.029 (null 0.0237, z=5.0)  author|model eta2=0.074 (null 0.0399, z=86.6)  within=0.897",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.217 (chance 0.0159, adj 0.205) | model 0.269 (chance 0.229, adj 0.052) | author|model-known 0.478 (chance 0.1793, adj 0.364)",
+  "  [nodup] dropped 655 near-duplicate items (7.1%)",
+  "  [burst-filtered] n=2080 (104 authors x 20)  model eta2=0.0366 (null 0.0256, z=9.3)  author|model eta2=0.0687 (null 0.0384, z=89.3)  within=0.8946",
+  "== claim_qwen/gte  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0232 (null 0.0177, z=6.8)  author|model eta2=0.0546 (null 0.0399, z=37.2)  within=0.9222",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2314 vs null 0.2255 (z=7.7, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1531 vs null 0.1303 (z=70.0, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.09 (chance 0.0159, adj 0.076) | model 0.21 (chance 0.229, adj -0.024) | author|model-known 0.341 (chance 0.1793, adj 0.197)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 3/4 (sign p=0.3125)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0208 peer=0.0511 ratio=2.46",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0342 peer=0.0364 ratio=1.06",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.0568 peer=0.0448 ratio=0.79",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.0472 peer=0.0612 ratio=1.3",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.0205 (null 0.017, z=5.2)  author|model eta2=0.0542 (null 0.0401, z=36.1)  within=0.9253",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.089 (chance 0.0159, adj 0.075) | model 0.174 (chance 0.229, adj -0.071) | author|model-known 0.327 (chance 0.1793, adj 0.18)",
+  "  [nodup] dropped 120 near-duplicate items (1.3%)",
+  "  [burst-filtered] n=2280 (114 authors x 20)  model eta2=0.023 (null 0.0175, z=8.0)  author|model eta2=0.0536 (null 0.0398, z=41.8)  within=0.9234",
+  "  [positive control] VENUE vs WORLD on the same claims: eta2=0.0035 vs null 0.0003 (excess 0.0032, z=143.7); nearest-centroid accuracy 0.711 vs majority 0.508",
+  "== claim_gemma/gte  (9217 rows)",
+  "  [raw] n=2300 (115 authors x 20)  model eta2=0.0238 (null 0.0183, z=6.7)  author|model eta2=0.0567 (null 0.0399, z=40.3)  within=0.9194",
+  "  [thread x model cells] 390 cells, n=3380: eta2=0.2282 vs null 0.2221 (z=8.8, p=0.005)",
+  "  [day x model cells] 159 cells, n=8518: eta2=0.1561 vs null 0.1301 (z=78.8, p=0.005)",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.096 (chance 0.0159, adj 0.082) | model 0.165 (chance 0.229, adj -0.082) | author|model-known 0.344 (chance 0.1793, adj 0.201)",
+  "  [switchers] 4 citizens with two >=15-item arms; self-across-model closer than peers-same-model in 2/4 (sign p=0.6875)",
+  "               egress-bound  claude-fable-5(94) vs claude-opus-5(64): self=0.0241 peer=0.0522 ratio=2.17",
+  "                      amber  qwen3.6-35b(82) vs muse-glimmer-30b(44): self=0.0509 peer=0.0384 ratio=0.75",
+  "                 burned-key  qwen3.6-35b(34) vs deepseek-v4-flash(30): self=0.05 peer=0.0417 ratio=0.83",
+  "                 pentimento  claude-opus-5(33) vs claude-fable-5(30): self=0.0571 peer=0.0644 ratio=1.13",
+  "  [length-residualized] n=2300 (115 authors x 20)  model eta2=0.0212 (null 0.0175, z=5.1)  author|model eta2=0.056 (null 0.0401, z=38.5)  within=0.9228",
+  "  [identify] 63 authors, 2924 held-out second-half items: author 0.088 (chance 0.0159, adj 0.074) | model 0.148 (chance 0.229, adj -0.105) | author|model-known 0.333 (chance 0.1793, adj 0.187)",
+  "  [nodup] dropped 117 near-duplicate items (1.3%)",
+  "  [burst-filtered] n=2280 (114 authors x 20)  model eta2=0.0237 (null 0.0182, z=7.8)  author|model eta2=0.0558 (null 0.0399, z=42.4)  within=0.9205",
+  "  [positive control] VENUE vs WORLD on the same claims: eta2=0.003 vs null 0.0003 (excess 0.0026, z=88.8); nearest-centroid accuracy 0.652 vs majority 0.508"
+ ]
+}
