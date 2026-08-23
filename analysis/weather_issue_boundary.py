@@ -127,3 +127,49 @@ if __name__ == "__main__":
             print(f"{str(r['issue']):22s} {str(r['window_items']):>7s} "
                   f"{str(r['final_day_items']):>7s} {cov:>7s}  {r['window_start_utc']}"
                   + ("   <- multi-day" if r["note"] else ""))
+
+
+def previous_issue_observed_at(cutoff_str, root=WEATHER):
+    """-> epoch seconds of the PREVIOUS published issue's pull.
+
+    Added at the corpus-store port. The feed-lag instruments used to take their baseline from
+    `git archive HEAD data/posts`, which made them a function of WHEN WE COMMITTED: a mid-day
+    catch-up pull, committed, silently moved the baseline and shrank the window the report claimed
+    to be measuring. The baseline is properly a property of the previous ISSUE, so it is read from
+    that issue's published pull_at and nothing else.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from weather_cutoff_margin import _parse_stamp
+    prev = published_issues_before(cutoff_str, root)   # newest first
+    if not prev:
+        raise SystemExit(f"no published issue before cutoff {cutoff_str}")
+    date = prev[0].name
+    d = json.load(open(Path(root) / date / "results.json"))
+    ts = _parse_stamp(d.get("pull_at"))
+    if ts is None:
+        raise SystemExit(f"issue {date} published no parseable pull_at; pass "
+                         "WEATHER_PREV_OBSERVED_AT explicitly")
+    return ts
+
+
+def issue_observed_at_for_cutoff(cutoff_str, root=WEATHER):
+    """-> epoch of the pull behind the issue whose OWN cutoff is cutoff_str, or None.
+
+    The per-issue controls (churn, permeability) recompute historical rows against whatever the
+    corpus holds today, filtered to that issue's cutoff. That is not what those issues saw: items
+    backfilled since land in old rows. It has not mattered much because backfill is small, but it
+    is the same defect as a pass shipping with no cutoff at all. With this, each historical row can
+    be recomputed against the observations that existed when the issue ran.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from weather_cutoff_margin import _parse_stamp
+    for q in Path(root).glob("20*-*-*"):
+        rj = q / "results.json"
+        if not rj.exists():
+            continue
+        d = json.load(open(rj))
+        if (d.get("cutoff") or "")[:10] == cutoff_str:
+            return _parse_stamp(d.get("pull_at"))
+    return None

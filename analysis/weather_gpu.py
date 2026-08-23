@@ -28,27 +28,33 @@ _c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper boun
 CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 CLAIM_BATCH = int(os.environ.get("WEATHER_CLAIM_BATCH", "8"))   # see the OOM note above
 
-def load_items(d, cutoff=CUTOFF):
-    items = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t/1000 if t > 1e12 else t
-        items.append((t, ("post", p["id"]), ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip(), p.get("author") or "?"))
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc/1000 if tc > 1e12 else tc
-            items.append((tc, ("comment", c["id"]), (c.get("body") or "").strip(), c.get("author") or "?"))
-    items.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
-    return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
+import corpus_store as CS
 
-NEW = load_items("/home/dan/personal/memetic/data/posts")
-PREV = load_items(S / "prev_corpus/data/posts")
-prev_last = max(t for t, _, _, _ in PREV)
-# items EDITED after publication: same id, different text. The id-keyed caches cannot see this,
-# so evict them here and let the delta pass re-claimify / re-label them (issue-3 watch item #4).
-_h = lambda s: hashlib.sha256(s.encode("utf-8")).hexdigest()
-_ph = {k: _h(x) for _, k, x, _ in PREV}
-EDITED = [k for _, k, x, _ in NEW if k in _ph and _h(x) != _ph[k]]
+# Corpus from the observation store; see weather_cpu.py for why prev_corpus is gone.
+CON = CS.build_index()
+OBSERVED_AT = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHER_OBSERVED_AT") \
+    else None
+PREV_AT = float(os.environ["WEATHER_PREV_OBSERVED_AT"]) if os.environ.get("WEATHER_PREV_OBSERVED_AT") \
+    else IB.previous_issue_observed_at(_c)
+
+NEW = CS.weather_items(CON, cutoff=CUTOFF, observed_at=OBSERVED_AT)
+prev_last = CON.execute("SELECT MAX(created_at) FROM observations WHERE first_seen_at <= ? "
+                        "AND n_chars >= ?", (PREV_AT, CS.MIN_CHARS)).fetchone()[0]
+
+# Items EDITED after publication: same id, different text. The id-keyed caches (claims, allocation
+# labels) cannot see this, so evict them and let the delta pass re-claimify / re-label them
+# (issue-3 watch item #4). This used to require holding the previous corpus in memory and hashing
+# every item in it; the store records an edit as a row, so it is a window query.
+EDITED = [tuple(e["item_key"].split(":", 1)) for e in
+          CS.edits(CON, since=PREV_AT, until=OBSERVED_AT or 9e18)]
+EDITED = [(k0, int(k1)) for k0, k1 in EDITED]
 print(f"edited items (cache eviction): {len(EDITED)}", flush=True)
+
+# item keys the PREVIOUS observation already held -- used to tell a retry of an old unparseable
+# answer from a genuinely new item. A set query now, not a hash map over a second corpus in memory.
+PREV_KEYS = {(k.split(":", 1)[0], int(k.split(":", 1)[1])) for (k,) in CON.execute(
+    "SELECT DISTINCT item_key FROM observations WHERE first_seen_at <= ? AND n_chars >= ?",
+    (PREV_AT, CS.MIN_CHARS)).fetchall()}
 cache = {(k0, int(k1)): c for (k0, k1), c in
          ((k.split(":", 1), c) for k, c in json.load(open(S / "claim_cache_agent.json")).items())}
 for k in EDITED: cache.pop(k, None)
@@ -103,7 +109,7 @@ todo_l = [(i, claims[i]) for i, (t, k, x, a) in enumerate(NEW)
 # which is a retro-movement channel the feed_lag block cannot see (it watches text edits and
 # backfill, not label coverage). Count them so the movement is attributable, not mysterious.
 _dayof = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
-RETRIED = [i for i, _ in todo_l if NEW[i][1] in _ph]                       # in the previous PULL
+RETRIED = [i for i, _ in todo_l if NEW[i][1] in PREV_KEYS]                 # in the previous PULL
 RETRIED_PUB = [i for i, _ in todo_l if _dayof(NEW[i][0]) in PREV_PUB]      # on a PUBLISHED day
 print(f"allocation delta-classify: {len(todo_l)} (retries: {len(RETRIED)} in the previous pull, "
       f"{len(RETRIED_PUB)} on days {PREV_PUB_NAME} already published)", flush=True)

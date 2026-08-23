@@ -20,6 +20,11 @@ Usage: MEMETIC_WORKDIR=... WEATHER_CUTOFF=YYYY-MM-DD python3 analysis/weather_al
 import json, os, sys, datetime as dt
 from pathlib import Path
 import numpy as np
+import sys as _sys
+_sys.path.insert(0, "/home/dan/personal/memetic/analysis")
+import corpus_store as CS
+
+_CON = CS.build_index()
 
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import weather_alloc_parse as AP
@@ -31,20 +36,10 @@ DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 D = Path("/home/dan/personal/memetic/data/posts")
 
 
-def load(d=D, cutoff=None):
-    cutoff = CUTOFF if cutoff is None else cutoff
-    items = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t / 1000 if t > 1e12 else t
-        items.append((t, ("post", p["id"]),
-                      ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip(),
-                      p.get("author") or "?"))
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc / 1000 if tc > 1e12 else tc
-            items.append((tc, ("comment", c["id"]), (c.get("body") or "").strip(), c.get("author") or "?"))
-    items.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
-    return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
+def load(d=D, cutoff=None, observed_at=None):
+    """-> [(created_at, (kind, id), text, author)] from the observation store."""
+    cutoff = cutoff if cutoff is not None else CUTOFF
+    return CS.weather_items(_CON, cutoff=cutoff, observed_at=observed_at)
 
 
 def labels(NEW, parse="strict"):
@@ -69,7 +64,8 @@ def labels(NEW, parse="strict"):
 
 
 def decompose(day, NEW=None, lab=None, draws=20000, seed=20260822, parse="strict"):
-    NEW = load() if NEW is None else NEW
+    NEW = load(observed_at=float(os.environ["WEATHER_OBSERVED_AT"])
+               if os.environ.get("WEATHER_OBSERVED_AT") else None) if NEW is None else NEW
     lab = labels(NEW, parse) if lab is None else lab
     first = {}
     for t, k, x, a in NEW:
@@ -114,7 +110,8 @@ def decompose(day, NEW=None, lab=None, draws=20000, seed=20260822, parse="strict
 
 
 if __name__ == "__main__":
-    NEW = load()
+    NEW = load(observed_at=float(os.environ["WEATHER_OBSERVED_AT"])
+               if os.environ.get("WEATHER_OBSERVED_AT") else None)
     days = sys.argv[1:] or [DAY(max(t for t, k, x, a in NEW))]
     out = {}
     for parse in ("strict", "corrected"):

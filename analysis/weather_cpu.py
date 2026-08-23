@@ -22,26 +22,35 @@ import weather_issue_boundary as IB   # issue/window boundaries, single source o
 
 CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 
-def load_items(d, cutoff=CUTOFF):
-    items = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t/1000 if t > 1e12 else t
-        items.append((t, ("post", p["id"]), ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip(), p.get("author") or "?"))
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc/1000 if tc > 1e12 else tc
-            items.append((tc, ("comment", c["id"]), (c.get("body") or "").strip(), c.get("author") or "?"))
-    items.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
-    return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
+import corpus_store as CS
 
-PREV = load_items(S / "prev_corpus/data/posts")          # issue-1 corpus state (git HEAD)
-NEW = load_items("/home/dan/personal/memetic/data/posts")
-prev_last = max(t for t, _, _, _ in PREV)
+# The corpus comes from the observation store, not from globbing a directory and not from a
+# prev_corpus tree unpacked out of git. Two consequences worth naming:
+#   * WEATHER_OBSERVED_AT pins which observations count, so a past issue is reproducible by
+#     argument rather than by checking out the commit its corpus was committed in.
+#   * There is no prev_corpus. The previous issue's state is a timestamp, so a mid-day catch-up
+#     pull no longer moves this issue's baseline -- which under the old scheme it silently did,
+#     because the baseline was `git archive HEAD data/posts`.
+CON = CS.build_index()
+OBSERVED_AT = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHER_OBSERVED_AT") \
+    else None
+PREV_AT = float(os.environ["WEATHER_PREV_OBSERVED_AT"]) if os.environ.get("WEATHER_PREV_OBSERVED_AT") \
+    else IB.previous_issue_observed_at(_c)
+
+NEW = CS.weather_items(CON, cutoff=CUTOFF, observed_at=OBSERVED_AT)
+# prev_last is the last item the PREVIOUS observation physically held. It still defines the
+# backfill comparison (see below), and it is now a query rather than a max() over an unpacked tree.
+prev_last = CON.execute("SELECT MAX(created_at) FROM observations WHERE first_seen_at <= ? "
+                        "AND n_chars >= ?", (PREV_AT, CS.MIN_CHARS)).fetchone()[0]
+PREV = None                                              # kept out of memory on purpose
 # The issue window starts at the previous issue's CUTOFF, not the previous pull's last item; see
 # analysis/weather_issue_boundary.py. prev_last still defines the BACKFILL comparison below, which
 # genuinely is about what the previous pull physically held.
 WIN_START, WIN_PROV = IB.issue_window_start(_c, prev_last)
-print(f"prev-issue items {len(PREV)} (last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
+_n_prev = CON.execute("SELECT COUNT(DISTINCT item_key) FROM observations WHERE first_seen_at <= ?"
+                     " AND n_chars >= ?", (PREV_AT, CS.MIN_CHARS)).fetchone()[0]
+print(f"prev observation {dt.datetime.utcfromtimestamp(PREV_AT):%m-%d %H:%M} "
+      f"({_n_prev} items, last {dt.datetime.utcfromtimestamp(prev_last):%m-%d %H:%M}), "
       f"this-issue items {len(NEW)} (cutoff {_c} 00:00 UTC)", flush=True)
 
 day = lambda t: dt.datetime.utcfromtimestamp(t).strftime("%m-%d")
@@ -50,14 +59,13 @@ days = sorted({day(t) for t, _, _, _ in NEW})
 # --- feed-lag / backfill instrument: items that existed-in-time at the previous pull but were
 # invisible to it (timestamp <= prev pull's last item, absent from prev_corpus). Quantifies the
 # undercount of trailing-day numbers so the newest day is reported as provisional. ---
-prev_keys = {k for _, k, _, _ in PREV}
-backfill = [(t, k, a) for t, k, x, a in NEW if k not in prev_keys and t <= prev_last]
+# ...and it is now a QUERY over recorded observations rather than a diff of two corpus trees.
+_bf = CS.backfill(CON, prev_at=PREV_AT, this_at=OBSERVED_AT or 9e18, basis="prev_last_item")
+backfill = [(b["created_at"], tuple(b["item_key"].split(":", 1)), b["author"]) for b in _bf]
 bf_day = {}
-for t, k, a in backfill: bf_day[day(t)] = bf_day.get(day(t), 0) + 1
-prev_first = {}
-for t, k, x, a in PREV:
-    if a not in prev_first: prev_first[a] = t
-bf_authors = {a for t, k, a in backfill if a not in prev_first}
+for b in _bf: bf_day[day(b["created_at"])] = bf_day.get(day(b["created_at"]), 0) + 1
+# "revealed" = the backfilled item is that author's first observation anywhere
+bf_authors = {b["author"] for b in _bf if b["reveals_author"]}
 lags_h = sorted((prev_last - t) / 3600 for t, k, a in backfill)
 feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
             "new_authors_revealed": len(bf_authors),
@@ -69,20 +77,31 @@ feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
 # same id whose TEXT changed after publication. id-keyed caches (claims, allocation labels)
 # cannot see this and retain stale values until the item is re-processed; observed moving
 # frozen-day register cells at the 4th decimal between issues. ---
-_h = lambda s: hashlib.sha256(s.encode("utf-8")).hexdigest()
-prev_text = {k: x for _, k, x, _ in PREV}
-edited = [(t, k, a) for t, k, x, a in NEW if k in prev_text and _h(x) != _h(prev_text[k])]
-ed_day = Counter(day(t) for t, k, a in edited)
-delta_chars = [len(x) - len(prev_text[k]) for _, k, x, _ in NEW if k in prev_text and _h(x) != _h(prev_text[k])]
+# The store records an edit as a ROW (version='edit'), so this is a window query. Under the old
+# scheme it required holding both corpora in memory and hashing every item in each -- which is the
+# only reason the pipeline needed a full re-read of every thread every issue.
+_ed = CS.edits(CON, since=PREV_AT, until=OBSERVED_AT or 9e18)
+edited = [(e["created_at"], tuple(e["item_key"].split(":", 1)), e["author"]) for e in _ed]
+ed_day = Counter(day(e["created_at"]) for e in _ed)
+_prev_chars = {}
+for e in _ed:
+    r = CON.execute("SELECT n_chars FROM observations WHERE item_key = ? AND first_seen_at < ? "
+                    "ORDER BY first_seen_at DESC LIMIT 1", (e["item_key"], e["first_seen_at"])).fetchone()
+    if r:
+        _prev_chars[e["item_key"]] = r[0]
+_now_chars = {r["item_key"]: r["n_chars"] for r in CS.items_at(CON, cutoff=CUTOFF,
+                                                              observed_at=OBSERVED_AT)}
+delta_chars = [_now_chars[k] - _prev_chars[k] for k in _prev_chars if k in _now_chars]
+_items_compared = _n_prev
 feed_lag["content_mutations"] = {
-    "items_compared": len(prev_text),
+    "items_compared": _items_compared,
     "edited_items": len(edited),
     "by_day": dict(sorted(ed_day.items())),
     "authors_affected": len({a for _, _, a in edited}),
     "char_delta": {"median": float(np.median(delta_chars)) if delta_chars else None,
                    "min": min(delta_chars) if delta_chars else None,
                    "max": max(delta_chars) if delta_chars else None},
-    "edited_keys": [f"{k[0]}:{k[1]}" for _, k, _ in edited],
+    "edited_keys": [e["item_key"] for e in _ed],
     "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them."}
 
 out = {"cutoff_utc": _c + "T00:00:00Z", "issue_window_start_utc":

@@ -46,7 +46,10 @@ def load_times(d=D, min_chars=20):
 
 
 def margins(cutoff_str, pull_at=None, d=D):
-    """-> the cutoff/pull margin block for a weather results.json."""
+    """LEGACY (issues #3-#10): the margin computed by globbing the corpus directory and trusting
+    data/manifest.json for the pull time. Kept so those issues stay reproducible. New issues should
+    use margin_from_store(), which reads the run log and returns coverage alongside the margin --
+    manifest.json describes only the last run, and describes it as though it were the corpus."""
     cut = dt.datetime(*map(int, cutoff_str.split("-")), tzinfo=dt.timezone.utc).timestamp()
     if pull_at is None:
         pull_at = json.load(open(MANIFEST))["pulled_at_utc"]
@@ -107,9 +110,51 @@ def history(results=RESULTS):
     return rows
 
 
+def margin_from_store(cutoff_str, con=None):
+    """The cutoff/pull margin taken from the FETCH RUN LOG rather than data/manifest.json.
+
+    manifest.json describes the last run only, and describes it as though it were the corpus: a
+    2026-08-23 run that saved 674 of 1,801 threads wrote a manifest that read like a complete pull,
+    and nothing in the data contradicted it. The run log records every run including partial ones,
+    so the margin can be reported alongside the coverage it was measured at -- which is the pair a
+    reader actually needs.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import corpus_store as CS
+    con = con or CS.build_index()
+    cut = dt.datetime(*map(int, cutoff_str.split("-")), tzinfo=dt.timezone.utc).timestamp()
+    row = con.execute("SELECT run_id, ended_at, mode, threads_ok, threads_429, complete "
+                      "FROM fetch_runs WHERE ended_at >= ? ORDER BY ended_at LIMIT 1",
+                      (cut,)).fetchone()
+    if not row:
+        return None
+    run_id, ended, mode, ok, e429, complete = row
+    # only what this run had OBSERVED -- counting everything we know now would describe a corpus
+    # the issue never saw, which is precisely the confusion the store exists to remove
+    ins_rows = CS.items_at(con, cutoff=cut, observed_at=ended)
+    ins = (max((r["created_at"] for r in ins_rows), default=None), len(ins_rows))
+    out = len(CS.items_at(con, cutoff=None, observed_at=ended)) - ins[1]
+    return {
+        "cutoff_utc": _iso(cut), "pull_at_utc": _iso(ended), "run_id": run_id, "mode": mode,
+        "pull_margin_hours": round((ended - cut) / 3600, 2),
+        "in_scope_items": ins[1], "last_in_scope_item_utc": _iso(ins[0]) if ins[0] else None,
+        "last_in_scope_gap_to_cutoff_hours": round((cut - ins[0]) / 3600, 2) if ins[0] else None,
+        "post_cutoff_items_excluded": out,
+        "run_complete": bool(complete), "threads_ok": ok, "threads_429": e429,
+        "coverage": CS.coverage(con),
+        "note": "margin AND coverage together: a margin means little if the run behind it verified "
+                "only part of the corpus, which the manifest alone could not express.",
+    }
+
+
 if __name__ == "__main__":
-    if "--history" in sys.argv[1:]:
+    argv = sys.argv[1:]
+    if "--history" in argv:
         print(json.dumps(history(), indent=1))
-    else:
+    elif "--legacy" in argv:
+        rest = [a for a in argv if not a.startswith("-")]
         print(json.dumps(margins(os.environ["WEATHER_CUTOFF"],
-                                 sys.argv[1] if len(sys.argv) > 1 else None), indent=1))
+                                 rest[0] if rest else None), indent=1))
+    else:
+        print(json.dumps(margin_from_store(os.environ["WEATHER_CUTOFF"]), indent=1))

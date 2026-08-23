@@ -95,7 +95,14 @@ if __name__ == "__main__":
             for k, r in items.items():
                 known[k] = r["content_sha"]
         else:
-            new, edit = CS.append_snapshot(items, obs_at, run_id=f"git:{sha[:8]}", known=known)
+            rid = f"git:{sha[:8]}"
+            new, edit = CS.append_snapshot(items, obs_at, run_id=rid, known=known)
+            # every historical pull was a full re-read of every thread, so it is a complete run
+            CS.append_run({"run_id": rid, "started_at": obs_at, "ended_at": obs_at, "mode": "full",
+                           "cursor_before": None, "cursor_after": None,
+                           "threads_attempted": len(_threads), "threads_ok": len(_threads),
+                           "threads_404": 0, "threads_429": 0, "complete": 1,
+                           "note": f"reconstructed from commit {sha[:8]}: {subj[:60]}"})
         total_new += new; total_edit += edit
         stamp = time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime(obs_at))
         print(f"{sha[:8]:9s} {stamp:20s} {len(items):>7d} {new:>7d} {edit:>6d}  {src}")

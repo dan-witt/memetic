@@ -30,6 +30,10 @@ Reads the claim cache from $MEMETIC_WORKDIR; writes nn_matched_500draws.json the
 """
 import json, os, sys, datetime as dt
 from pathlib import Path
+
+import sys as _sys
+_sys.path.insert(0, "/home/dan/personal/memetic/analysis")
+_CON = [None]
 import numpy as np
 
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
@@ -37,17 +41,16 @@ DRAWS = int(os.environ.get("WEATHER_NN_DRAWS", "500"))
 CORPUS = "/home/dan/personal/memetic/data/posts"
 
 
-def load_items(d, cutoff):
-    items = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t/1000 if t > 1e12 else t
-        items.append((t, ("post", p["id"]), ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip(), p.get("author") or "?"))
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc/1000 if tc > 1e12 else tc
-            items.append((tc, ("comment", c["id"]), (c.get("body") or "").strip(), c.get("author") or "?"))
-    items.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
-    return [(t, k, x, a) for t, k, x, a in items if len(x) >= 20 and t < cutoff]
+def load_items(d, cutoff, observed_at=None):
+    """-> [(created_at, (kind, id), text, author)] from the observation store.
+
+    `d` is ignored except as documentation of intent: passing the prev_corpus path used to mean
+    "the previous issue's corpus", which is now expressed as observed_at instead of by unpacking a
+    git tree into a scratch directory.
+    """
+    import corpus_store as CS
+    return CS.weather_items(CS.build_index() if _CON[0] is None else _CON[0],
+                            cutoff=cutoff, observed_at=observed_at)
 
 
 def matched_nn(En, Ei, draws=DRAWS, seed=0):

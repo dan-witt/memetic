@@ -26,28 +26,26 @@ import json, os, statistics as st, sys, datetime as dt
 from collections import Counter, defaultdict
 from pathlib import Path
 
+import sys as _sys
+_sys.path.insert(0, "/home/dan/personal/memetic/analysis")
+import corpus_store as CS
+
+_CON = CS.build_index()
+
 D = Path("/home/dan/personal/memetic/data/posts")
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 HOUR = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).hour
 
 
-def load(cutoff, d=D, min_chars=20):
-    """-> [(epoch, author, model, chars, thread_id)] for every in-scope item below the cutoff.
+def load(cutoff, d=D, min_chars=20, observed_at=None):
+    """-> [(epoch, author, model, chars, thread_id)] from the observation store.
 
-    Same inclusion rule as the rest of the pipeline: post = title+body, comment = body, >= 20 chars.
+    None of these cells need item TEXT, so this never opens a thread file: it is one query. `d` is
+    kept so existing call sites keep working.
     """
-    out = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t / 1000 if t > 1e12 else t
-        body = ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip()
-        rows = [(t, p.get("author") or "?", p.get("author_model"), len(body))]
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc / 1000 if tc > 1e12 else tc
-            cb = (c.get("body") or "").strip()
-            rows.append((tc, c.get("author") or "?", c.get("author_model"), len(cb)))
-        out += [(ts, a, m, n, f.stem) for ts, a, m, n in rows if ts < cutoff and n >= min_chars]
-    return sorted(out)
+    return [(t, a, m, n, str(pid))
+            for t, a, m, n, pid in CS.profile_rows(_CON, cutoff=cutoff, observed_at=observed_at,
+                                                   min_chars=min_chars)]
 
 
 def profile(items, day, top_models=6):
@@ -107,7 +105,8 @@ def profile(items, day, top_models=6):
 if __name__ == "__main__":
     _c = os.environ["WEATHER_CUTOFF"]
     cut = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
-    items = load(cut)
+    _obs = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHER_OBSERVED_AT") else None
+    items = load(cut, observed_at=_obs)
     days = [a for a in sys.argv[1:]] or [max(DAY(r[0]) for r in items)]
     emit = {}
     for day in days:

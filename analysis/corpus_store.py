@@ -279,7 +279,7 @@ def stale_threads(con, now=None, limit=None, min_idle_hours=1.0):
              "idle_hours": round(idl / 3600, 2)} for s, pid, st, idl in out]
 
 
-def backfill(con, run_id=None, basis="prev_last_item"):
+def backfill(con, prev_at=None, this_at=None, run_id=None, basis="prev_last_item"):
     """Items that a run saw for the first time although they predate the PREVIOUS run.
 
     This is the feed_lag instrument, as a query. The naive version -- first_seen_at - created_at >
@@ -290,10 +290,17 @@ def backfill(con, run_id=None, basis="prev_last_item"):
 
     -> [{run_id, prev_run_at, item_key, created_at, first_seen_at, age_at_missed_pull_h, author}]
     """
-    runs = [r[0] for r in con.execute(
-        "SELECT DISTINCT first_seen_at FROM observations ORDER BY first_seen_at").fetchall()]
+    # Explicit boundaries when given: the weather series compares ISSUE to issue, and once
+    # catch-up runs are daily there are several runs between two issues. Without them, fall back
+    # to consecutive observation times, which is the finest grain the log supports.
+    if prev_at is not None and this_at is not None:
+        pairs = [(prev_at, this_at)]
+    else:
+        runs = [r[0] for r in con.execute(
+            "SELECT DISTINCT first_seen_at FROM observations ORDER BY first_seen_at").fetchall()]
+        pairs = list(zip(runs, runs[1:]))
     out = []
-    for prev_at, this_at in zip(runs, runs[1:]):
+    for prev_at, this_at in pairs:
         if run_id is not None and this_at != run_id:
             continue
         # WHICH BOUNDARY. The weather series compares against the previous corpus's LAST ITEM
@@ -310,7 +317,8 @@ def backfill(con, run_id=None, basis="prev_last_item"):
             bound = row[0] if row and row[0] is not None else prev_at
         cur = con.execute(
             "SELECT item_key, created_at, first_seen_at, author FROM observations "
-            "WHERE version='new' AND first_seen_at = ? AND created_at <= ?", (this_at, bound))
+            "WHERE version='new' AND first_seen_at > ? AND first_seen_at <= ? "
+            "AND created_at <= ?", (prev_at, this_at, bound))
         for key, created, seen, author in cur.fetchall():
             # "revealed" an author only if this backfilled item is that author's FIRST observation
             # anywhere -- the previous corpus did not know the author existed at all.
@@ -324,12 +332,76 @@ def backfill(con, run_id=None, basis="prev_last_item"):
     return out
 
 
-def edits(con, since=None):
+def edits(con, since=None, until=None):
     """Post-publication text changes -- a column, not a corpus diff."""
     q = "SELECT item_key, post_id, author, created_at, first_seen_at FROM observations WHERE version='edit'"
     p = []
     if since is not None:
         q += " AND first_seen_at > ?"; p.append(since)
+    if until is not None:
+        q += " AND first_seen_at <= ?"; p.append(until)
     cur = con.execute(q + " ORDER BY first_seen_at", p)
     cols = [d[0] for d in cur.description]
     return [dict(zip(cols, r)) for r in cur.fetchall()]
+
+
+def item_texts(keys, posts_dir=POSTS):
+    """-> {item_key: text} for the requested keys, read from the raw thread archive.
+
+    Keyed, never zipped: read_thread() skips objects with no id, so pairing its output positionally
+    against the raw comment list would misalign the moment one comment lacks an id.
+    """
+    want, out = set(keys), {}
+    for f in Path(posts_dir).glob("*.json"):
+        try:
+            th = json.load(open(f))
+        except Exception:
+            continue
+        for kind, obj in [("post", th.get("post") or {})] + \
+                         [("comment", c) for c in th.get("comments", [])]:
+            oid = obj.get("id")
+            if oid is None:
+                continue
+            key = f"{kind}:{oid}"
+            if key in want:
+                out[key] = item_text(kind, obj)
+    return out
+
+
+def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=POSTS):
+    """The weather pipeline's tuple shape: [(created_at, (kind, id), text, author)], sorted the
+    way weather_cpu.py sorts (time, posts before comments, id).
+
+    The store decides WHICH items are in scope -- including, via observed_at, which observations
+    existed at the time an issue was produced -- and the raw archive supplies their text, because
+    the log holds a content hash rather than a body.
+    """
+    rows = items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
+    text = item_texts((r["item_key"] for r in rows), posts_dir)
+    missing = [r["item_key"] for r in rows if r["item_key"] not in text]
+    if missing:
+        raise SystemExit(f"{len(missing)} in-scope items have no text in {posts_dir} "
+                         f"(e.g. {missing[:3]}). The archive is behind the log: re-fetch, or pass "
+                         f"an observed_at that predates them.")
+    out = [(r["created_at"], (r["kind"], r["item_id"]), text[r["item_key"]], r["author"] or "?")
+           for r in rows]
+    out.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
+    return out
+
+
+def author_stream(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
+    """[(created_at, author)] -- the shape the churn and permeability controls consume.
+
+    No text needed, so this never touches the archive: it is a single query.
+    """
+    return [(r["created_at"], r["author"] or "?")
+            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)]
+
+
+def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
+    """[(created_at, author, author_model, n_chars, post_id)] -- weather_influx_profile's shape.
+
+    Also text-free. The model label is the platform's own, carried through unchanged.
+    """
+    return [(r["created_at"], r["author"] or "?", r["author_model"], r["n_chars"], r["post_id"])
+            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)]

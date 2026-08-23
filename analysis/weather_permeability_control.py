@@ -20,18 +20,20 @@ import json, os, datetime as dt
 from pathlib import Path
 from collections import defaultdict, Counter
 import numpy as np
+import sys as _sys
+_sys.path.insert(0, "/home/dan/personal/memetic/analysis")
+import corpus_store as CS
+import weather_issue_boundary as IB
 
-def load(d, cutoff):
-    items = []
-    for f in Path(d).glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t/1000 if t > 1e12 else t
-        items.append((t, ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip(), p.get("author") or "?"))
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc/1000 if tc > 1e12 else tc
-            items.append((tc, (c.get("body") or "").strip(), c.get("author") or "?"))
-    items.sort()
-    return [(t, a) for t, x, a in items if len(x) >= 20 and t < cutoff]
+_CON = CS.build_index()
+
+def load(d, cutoff, observed_at=None):
+    """-> [(created_at, author)] from the observation store; `d` is kept for call compatibility.
+
+    observed_at recomputes a historical issue's row against the observations that existed when it
+    ran, instead of against today's corpus filtered by its cutoff.
+    """
+    return CS.author_stream(_CON, cutoff=cutoff, observed_at=observed_at)
 
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).timestamp()
@@ -123,7 +125,7 @@ D = "/home/dan/personal/memetic/data/posts"
 EMIT = {"fixed_horizon": {}, "membership_held_fixed": {}, "cohort_trend": {}}
 print(f"{'issue':6s} {'cutoff':12s} {'published':>10s} {'reproduced':>11s}  {'N=3':>6s} {'N=4':>6s} {'N=5':>6s}")
 for tag, cut, pub, trunc in ISSUES:
-    ev = load(D, CUT(cut))
+    ev = load(D, CUT(cut), IB.issue_observed_at_for_cutoff(cut))
     if trunc:   # reproduce against the data that issue actually held
         lim = dt.datetime.strptime(trunc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc).timestamp()
         rep = published_permeability([(t, a) for t, a in ev if t <= lim])[0]
@@ -142,8 +144,8 @@ print("   the same metric reads 32.2 — a different measurement, not data drift
 # alongside the previous issue's cohort SET is what separates a behavioural move from an entry.
 NEWEST, PREV = ISSUES[-1], ISSUES[-2]
 print(f"\nper-cohort conversion at each horizon, issue {NEWEST[0]} — cohort: (pct, n)")
-ev = load(D, CUT(NEWEST[1]))
-ev_prev = load(D, CUT(PREV[1]))
+ev = load(D, CUT(NEWEST[1]), IB.issue_observed_at_for_cutoff(NEWEST[1]))
+ev_prev = load(D, CUT(PREV[1]), IB.issue_observed_at_for_cutoff(PREV[1]))
 for n in (3, 4, 5):
     _, c = fixed_horizon_permeability(ev, n)
     _, cp = fixed_horizon_permeability(ev_prev, n)
@@ -194,7 +196,7 @@ for label, mn in (("n>=10 (issues #6-#7 currency, frozen)", MIN_N),
 
 print("\ncohorts entering the PUBLISHED average, by issue (the average's membership changes):")
 for tag, cut, pub, trunc in ISSUES:
-    _, cohorts = published_permeability(load(D, CUT(cut)))
+    _, cohorts = published_permeability(load(D, CUT(cut), IB.issue_observed_at_for_cutoff(cut)))
     print(f"   {tag}: {cohorts}")
 
 out = Path(os.environ.get("MEMETIC_WORKDIR", ".")) / "weather_permeability_control_out.json"

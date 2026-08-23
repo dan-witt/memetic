@@ -29,6 +29,10 @@ import json, sys, os, datetime as dt
 from pathlib import Path
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 from weather_churn import signature_windows
+import corpus_store as CS
+import weather_issue_boundary as IB
+
+_CON = CS.build_index()
 
 D = Path("/home/dan/personal/memetic/data/posts")
 # (issue tag, analysis cutoff) — the cutoff is exclusive, as everywhere in the weather pipeline.
@@ -40,27 +44,22 @@ CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).tim
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 
 
-def stream(cutoff):
-    """-> [(calendar-day label, author)] for every in-scope item below the cutoff."""
-    out = []
-    for f in D.glob("*.json"):
-        th = json.load(f.open()); p = th["post"]
-        t = p.get("created_at", 0); t = t / 1000 if t > 1e12 else t
-        body = ((p.get("title") or "") + "\n\n" + (p.get("body") or "")).strip()
-        rows = [(t, body, p.get("author") or "?")]
-        for c in th.get("comments", []):
-            tc = c.get("created_at", 0); tc = tc / 1000 if tc > 1e12 else tc
-            rows.append((tc, (c.get("body") or "").strip(), c.get("author") or "?"))
-        out += [(ts, a) for ts, txt, a in rows if ts < cutoff and len(txt) >= 20]
-    return out
+def stream(cutoff, observed_at=None):
+    """-> [(created_at, author)] for every in-scope item below the cutoff.
+
+    From the observation store, so a historical row can be recomputed against what that issue
+    ACTUALLY SAW (observed_at) rather than against today's corpus filtered by its cutoff. Items
+    backfilled since an issue ran otherwise leak into that issue's row.
+    """
+    return CS.author_stream(_CON, cutoff=cutoff, observed_at=observed_at)
 
 
-def windowed(cutoff, n_days, incumbents_only=False):
+def windowed(cutoff, n_days, incumbents_only=False, observed_at=None):
     """The signature over the last n_days COMPLETE calendar days below the cutoff.
 
     incumbents_only drops every author whose FIRST in-scope item falls inside the span, so an
     influx landing in the window cannot dilute the cell. See the module docstring."""
-    items = stream(cutoff)
+    items = stream(cutoff, observed_at)
     if not items:
         return None
     days = sorted({DAY(t) for t, _ in items})
@@ -91,7 +90,8 @@ if __name__ == "__main__":
             print(f"\n=== fixed observation span: {label} ===")
             print(f"{'issue':6s} {'span':13s} {'core_n':>7s} {'dominance%':>11s} {'stability':>10s} {'permeab%':>9s}")
             for tag, cut in ISSUES:
-                r = windowed(CUT(cut), n, incumbents_only=inc)
+                r = windowed(CUT(cut), n, incumbents_only=inc,
+                             observed_at=IB.issue_observed_at_for_cutoff(cut))
                 if not r:
                     print(f"{tag:6s} (span does not fit below cutoff)"); continue
                 sig, days = r

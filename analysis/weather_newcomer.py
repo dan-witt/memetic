@@ -169,9 +169,15 @@ if __name__ == "__main__":
     K = int(sys.argv[1]) if len(sys.argv) > 1 else 3
     _c = os.environ["WEATHER_CUTOFF"]
     CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
-    NEW = NNR.load_items("/home/dan/personal/memetic/data/posts", CUTOFF)
-    PREV = NNR.load_items(S / "prev_corpus/data/posts", CUTOFF)
-    prev_last = max(t for t, _, _, _ in PREV)
+    import corpus_store as CS
+    _con = CS.build_index()
+    _obs = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHER_OBSERVED_AT") else None
+    _prev_at = float(os.environ["WEATHER_PREV_OBSERVED_AT"]) \
+        if os.environ.get("WEATHER_PREV_OBSERVED_AT") else IB.previous_issue_observed_at(_c)
+    NEW = CS.weather_items(_con, cutoff=CUTOFF, observed_at=_obs)
+    # prev_last is a query against recorded observations; there is no prev_corpus tree any more.
+    prev_last = _con.execute("SELECT MAX(created_at) FROM observations WHERE first_seen_at <= ? "
+                             "AND n_chars >= ?", (_prev_at, CS.MIN_CHARS)).fetchone()[0]
     cache = {(k0, int(k1)): c for (k0, k1), c in
              ((k.split(":", 1), c) for k, c in json.load(open(S / "claim_cache_agent.json")).items())}
     missing = [k for _, k, _, _ in NEW if k not in cache]

@@ -106,5 +106,121 @@ def verify(issue_date):
     return all(R)
 
 
+def verify_gpu_output(issue_date, out_path=None):
+    """Diff a store-backed weather_gpu.py run against the published issue.
+
+    RESULT cells only. The audit counters (delta_classified, retries_in_previous_pull) describe
+    WORK DONE by a particular run, so a re-run with warm caches legitimately reports different
+    numbers -- comparing those would fail for the right reason and tell us nothing.
+    """
+    import os
+    out_path = out_path or Path(os.environ.get("MEMETIC_WORKDIR",
+                                Path.home() / "personal/memetic-workdir")) / "weather_gpu_out.json"
+    got = json.load(open(out_path))
+    pub = json.load(open(REPO / "results" / "weather" / issue_date / "results.json"))
+    at = pub["allocation_trend"]
+    R = []
+    print(f"\n=== weather_gpu.py output vs published {pub['issue']} ===\n")
+
+    print("allocation")
+    check(R, "venue share/day (strict)", got["allocation_daily_venue_share"],
+          at["venue_share_per_day_qwen_binary"])
+    check(R, "venue share/day (corrected)", got["allocation_daily_venue_share_corrected"],
+          at["venue_share_per_day_corrected_parse"])
+    check(R, "unlabelled after run", got["allocation_label_audit"]["unlabelled_after_run"],
+          at["label_audit"]["unlabelled_after_run"])
+    check(R, "published days moved", got["allocation_label_audit"]["published_days_moved"],
+          at["label_audit"]["published_days_moved"])
+    check(R, "vs lemmy per day", got["allocation_daily_vs_lemmy"], at["vs_lemmy_per_day"])
+
+    print("\nplacement (three embedders, full + window)")
+    for emb, fams in pub["placement_vs_frozen_anchors"].items():
+        for fam, cells in fams.items():
+            for scope in ("full", "window_only"):
+                check(R, f"{emb} {fam} {scope}", got["placement"][emb][fam][scope],
+                      cells[scope])
+
+    print("\nidea series + newcomer")
+    check(R, "rolling halves", got["rolling_halves_bge"], pub["idea_time_series"]["halves"])
+    check(R, "newcomer counts", got["newcomer_counts"],
+          pub["newcomer_cells_issue_window"]["counts"])
+    check(R, "within-pool parity", got["newcomer_within_pool_parity"],
+          pub["newcomer_cells_issue_window"]["within_pool_parity"])
+    check(R, "union over incumbent", got["refresh_union_over_incumbent"],
+          pub["newcomer_cells_issue_window"]["union_over_incumbent"])
+    check(R, "NN matched", got["refresh_nn_distance_matched"],
+          pub["newcomer_cells_issue_window"]["nn_distance_matched"])
+
+    print("\nwindow basis")
+    check(R, "issue_window_items", got["issue_window_items"], pub["corpus"]["issue_window_items"])
+
+    print(f"\n{sum(R)}/{len(R)} cells reproduced" + ("" if all(R) else "  *** FAILURES ***"))
+    return all(R)
+
+
+def verify_cpu_output(issue_date, out_path=None):
+    """Diff a store-backed weather_cpu.py run against the published issue, cell for cell.
+
+    corpus_verify's other half rebuilds cells with its own queries; this one checks the ACTUAL
+    pipeline output, so a port that quietly changed a definition cannot pass by agreeing with a
+    re-implementation of itself.
+    """
+    import os
+    out_path = out_path or Path(os.environ.get("MEMETIC_WORKDIR",
+                                Path.home() / "personal/memetic-workdir")) / "weather_cpu_out.json"
+    got = json.load(open(out_path))
+    pub = json.load(open(REPO / "results" / "weather" / issue_date / "results.json"))
+    R = []
+    print(f"\n=== weather_cpu.py output vs published {pub['issue']} ===\n")
+
+    print("corpus")
+    for k in ("items", "posts", "authors", "issue_window_items"):
+        check(R, k, got["corpus"][k], pub["corpus"][k])
+
+    print("\ninflows")
+    bad = [d for d in pub["structure"]["inflows"]
+           if got["inflows"].get(d) != pub["structure"]["inflows"][d]]
+    check(R, f"all {len(pub['structure']['inflows'])} days", bad, [])
+
+    print("\nchurn + activity clock")
+    for k in ("core_n", "core_dominance_pct", "stability_ratio", "permeability_pct"):
+        check(R, f"day-window {k}", got["churn_signature_day_K3"][k],
+              pub["structure"]["churn_signature_day_K3"][k])
+    for fam, sig in pub["structure"]["activity_clock_signatures"]["signatures"].items():
+        g = got["activity_clock_signatures"]["signatures"][fam]
+        check(R, f"clock {fam}", [g[k] for k in ("core_dominance_pct", "stability_ratio",
+                                                 "permeability_pct")],
+              [sig[k] for k in ("core_dominance_pct", "stability_ratio", "permeability_pct")])
+
+    print("\nregister (zstd)")
+    check(R, "whole", got["zstd_raw"]["whole"], pub["register_trend_zstd_raw"]["whole"])
+    bad = [d for d in pub["register_trend_zstd_raw"]["per_day"]
+           if got["zstd_raw"]["per_day"].get(d) != pub["register_trend_zstd_raw"]["per_day"][d]]
+    check(R, "per-day series", bad, [])
+
+    print("\nfeed lag")
+    g, w = got["feed_lag"], pub["feed_lag"]
+    for k in ("backfilled_items", "by_day", "new_authors_revealed"):
+        check(R, k, g[k], w[k])
+    check(R, "item age median", g["item_age_at_missed_pull_hours"]["median"],
+          w["item_age_at_missed_pull_hours"]["median"])
+    for k in ("edited_items", "items_compared", "authors_affected"):
+        check(R, f"mutations {k}", g["content_mutations"][k], w["content_mutations"][k])
+
+    print("\ncohort survival")
+    bad = [d for d in pub["structure"]["cohort_survival"]
+           if got["cohort_survival"].get(d) != pub["structure"]["cohort_survival"][d]]
+    check(R, f"all {len(pub['structure']['cohort_survival'])} cohorts", bad, [])
+
+    print(f"\n{sum(R)}/{len(R)} cells reproduced" + ("" if all(R) else "  *** FAILURES ***"))
+    return all(R)
+
+
 if __name__ == "__main__":
-    sys.exit(0 if verify(sys.argv[1] if len(sys.argv) > 1 else "2026-08-22") else 1)
+    date = [a for a in sys.argv[1:] if not a.startswith("-")]
+    date = date[0] if date else "2026-08-22"
+    if "--cpu" in sys.argv:
+        sys.exit(0 if verify_cpu_output(date) else 1)
+    if "--gpu" in sys.argv:
+        sys.exit(0 if verify_gpu_output(date) else 1)
+    sys.exit(0 if verify(date) else 1)
