@@ -7,3 +7,6 @@ __pycache__/
 *~
 
 .claude/
+
+# derived index -- rebuild with corpus_store.build_index(); the JSONL logs are the truth
+data/corpus.db
