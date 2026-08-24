@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import corpus_store as CS
 from weather_churn import signature_windows
 from weather_cutoff_margin import _parse_stamp
+import weather_issue_boundary as IB
 
 REPO = Path(__file__).resolve().parent.parent
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
@@ -44,7 +45,9 @@ def verify(issue_date):
     pub = json.load(open(REPO / "results" / "weather" / issue_date / "results.json"))
     cutoff = _parse_stamp(pub["cutoff"])
     observed = _parse_stamp(pub["pull_at"])
-    con = sqlite3.connect(CS.DB)
+    # Rebuild rather than open: the index is DERIVED, so verifying against whatever happens to be
+    # on disk can pass or fail on a stale index instead of on the log the store actually holds.
+    con = CS.build_index()
     rows = CS.items_at(con, cutoff=cutoff, observed_at=observed)
     R = []
 
@@ -84,8 +87,13 @@ def verify(issue_date):
 
     print("\nfeed lag (a query here, a corpus diff in the directory version)")
     fl = pub["feed_lag"]
-    bf = [b for b in CS.backfill(con, basis="prev_last_item")
-          if abs(b["observed_at"] - observed) < 1]
+    # ISSUE TO ISSUE, explicitly. Letting backfill() fall back to consecutive observation times
+    # measures the gap between the last two RUNS, which stopped being the same thing the moment
+    # catch-up runs landed between two issues: at issue #11 that fallback gives 5 where the
+    # published window (previous issue's pull -> this issue's pull) gives 3. weather_cpu.py passes
+    # these boundaries; so must the verifier, or it can never confirm an issue as published.
+    prev_at = IB.previous_issue_observed_at(pub["cutoff"][:10])
+    bf = CS.backfill(con, prev_at=prev_at, this_at=observed, basis="prev_last_item")
     check(R, "backfilled_items", len(bf), fl["backfilled_items"])
     check(R, "by_day", dict(collections.Counter(DAY(b["created_at"]) for b in bf)), fl["by_day"])
     check(R, "new_authors_revealed", sum(1 for b in bf if b["reveals_author"]),
@@ -94,10 +102,10 @@ def verify(issue_date):
         ages = sorted(b["age_at_missed_pull_h"] for b in bf)
         check(R, "item age at missed pull (median)", round(ages[len(ages) // 2], 2),
               fl["item_age_at_missed_pull_hours"]["median"])
-    ed = [e for e in CS.edits(con) if abs(e["first_seen_at"] - observed) < 1]
+    ed = CS.edits(con, since=prev_at, until=observed)
     check(R, "edited_items", len(ed), fl["content_mutations"]["edited_items"])
 
-    strict = [b for b in CS.backfill(con, basis="prev_run") if abs(b["observed_at"] - observed) < 1]
+    strict = CS.backfill(con, prev_at=prev_at, this_at=observed, basis="prev_run")
     print(f"\n    (basis note: prev_last_item -> {len(bf)} backfilled, matching the series; "
           f"prev_run -> {len(strict)}. The directory version could express only the first, "
           f"implicitly.)")

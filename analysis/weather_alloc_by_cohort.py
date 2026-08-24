@@ -102,10 +102,22 @@ def decompose(day, NEW=None, lab=None, draws=20000, seed=20260822, parse="strict
             # noise only, on the group's own labelled count; classifier error is not in it.
             "counting_se_incumbents": round((s_inc * (1 - s_inc) / n_inc) ** 0.5, 4),
             "counting_se_newcomers": round((s_new * (1 - s_new) / n_new) ** 0.5, 4),
+            # THE PUBLISHED/INCUMBENT GAP IS A PRODUCT, NOT A READING. Identically,
+            #     day_share - incumbent_share = newcomer_weight * difference,
+            # so the gap moves when EITHER the difference moves or the arrival mix does. Issue #11
+            # found the gap collapsing 0.0224 -> 0.0060 between 08-22 and 08-23 while `difference`
+            # barely moved (+0.0365 -> +0.0335): the whole collapse was newcomer_weight falling
+            # 0.614 -> 0.180. Read `difference`; a gap that shrinks because arrivals stopped is not
+            # evidence that newcomers and incumbents allocate alike.
+            "newcomer_weight": round(n_new / (n_new + n_inc), 4),
+            "gap_day_minus_incumbent": round(float(v.mean()) - s_inc, 4),
+            "gap_identity_check": round((n_new / (n_new + n_inc)) * obs, 4),
             "note": "decomposition, not a causal claim; one day; newcomer = author's first item in "
                     "the whole stream falls on this day. The test has power only for large "
                     "differences, so a non-significant result licenses 'the difference does not run "
-                    "the way the compositional story needs', not 'the groups are identical'.",
+                    "the way the compositional story needs', not 'the groups are identical'. The "
+                    "gap against the published series is newcomer_weight * difference and moves "
+                    "with the arrival mix on its own.",
             }
 
 

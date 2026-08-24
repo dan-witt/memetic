@@ -254,6 +254,30 @@ def coverage(con, now=None, fresh_hours=24):
             "pct_fresh": round(100 * (fresh or 0) / total, 1) if total else None}
 
 
+def verified_since(con, since):
+    """-> how much of the corpus was re-read at least once since `since` (epoch seconds).
+
+    coverage() answers "how fresh is the corpus now", which is the right question for a fetcher.
+    The content-mutation audit asks a different one: an edit is only detectable in a thread we
+    actually re-read AFTER the previous issue, so the audit's real denominator is coverage since
+    that issue's pull, not coverage within a rolling 24 h. Reported item-weighted as well as
+    thread-weighted, because threads differ by an order of magnitude in size and the audit is a
+    claim about items.
+    """
+    total_t, = con.execute("SELECT COUNT(*) FROM threads").fetchone()
+    seen_t, = con.execute("SELECT COUNT(*) FROM threads WHERE last_fetched_at >= ?",
+                          (since,)).fetchone()
+    total_i, = con.execute("SELECT COUNT(DISTINCT item_key) FROM observations").fetchone()
+    seen_i, = con.execute(
+        "SELECT COUNT(DISTINCT item_key) FROM observations WHERE post_id IN "
+        "(SELECT post_id FROM threads WHERE last_fetched_at >= ?)", (since,)).fetchone()
+    return {"since_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(since)),
+            "threads": total_t, "threads_verified": seen_t,
+            "pct_threads": round(100 * seen_t / total_t, 1) if total_t else None,
+            "items": total_i, "items_verified": seen_i,
+            "pct_items": round(100 * seen_i / total_i, 1) if total_i else None}
+
+
 def stale_threads(con, now=None, limit=None, min_idle_hours=1.0):
     """Which threads to refresh, most-worth-it first -- the DB driving the fetcher.
 
@@ -399,9 +423,12 @@ def author_stream(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
 
 
 def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
-    """[(created_at, author, author_model, n_chars, post_id)] -- weather_influx_profile's shape.
+    """[(created_at, author, author_model, n_chars, post_id, kind)] -- weather_influx_profile's shape.
 
-    Also text-free. The model label is the platform's own, carried through unchanged.
+    Also text-free. The model label is the platform's own, carried through unchanged. `kind` is
+    carried because the platform's per-author daily cap applies to COMMENTS, not to items, so a
+    caller counting the cap has to separate the two.
     """
-    return [(r["created_at"], r["author"] or "?", r["author_model"], r["n_chars"], r["post_id"])
+    return [(r["created_at"], r["author"] or "?", r["author_model"], r["n_chars"], r["post_id"],
+             r["kind"])
             for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)]

@@ -128,6 +128,8 @@ if __name__ == "__main__":
             (set(int(p.stem) for p in CS.POSTS.glob("*.json")), 0, {}, 0)
         spent += used
         targets = set(int(p.stem) for p in CS.POSTS.glob("*.json")) | targets
+        feed_targets = set(targets)
+        targets = sorted(targets)
         print(f"full rebuild: {len(targets)} threads")
     else:
         cursor = state.get("cursor", 0)
@@ -143,20 +145,25 @@ if __name__ == "__main__":
         print(f"  staleness sweep: {len(sweep)} thread(s) within budget"
               + (f", top score {sweep[0]['score']} (stale {sweep[0]['stale_hours']}h / "
                  f"idle {sweep[0]['idle_hours']}h)" if sweep else ""))
+        feed_targets = set(targets)
         targets = list(targets) + [s["post_id"] for s in sweep if s["post_id"] not in targets]
 
-    targets = sorted(set(targets))
+    # FEED FIRST, then the sweep. The feed is authoritative for what moved; the sweep is a guess.
+    # Sorting the union put low thread ids first and could spend the whole budget on sweep targets
+    # while feed threads went unfetched.
+    targets = list(dict.fromkeys(targets))
     if args.dry_run:
         print(f"[dry run] would fetch {len(targets)} threads, ~{spent + len(targets)} requests, "
               f"~{(spent + len(targets)) * SLEEP / 60:.1f} min")
         print("coverage now:", CS.coverage(con, fresh_hours=args.fresh_hours))
         sys.exit(0)
 
-    ok = e404 = e429 = 0
+    ok = e404 = e429 = attempted = 0
     fetched_at = {}
     for i, pid in enumerate(targets, 1):
         if spent >= args.budget:
             print(f"  budget reached at {i-1}/{len(targets)} threads"); break
+        attempted += 1
         status, body, _ = get(f"{BASE}/api/post/{pid}")
         spent += 1
         if status == 200:
@@ -164,20 +171,43 @@ if __name__ == "__main__":
             fetched_at[pid] = time.time()
         elif status == 404:
             e404 += 1
+            fetched_at[pid] = time.time()   # we asked and it is gone; that is a verification
         elif status == 429:
             e429 += 1
         if i % 50 == 0:
             print(f"  {i}/{len(targets)} threads ({ok} ok, {e404} 404, {e429} 429)")
         time.sleep(SLEEP)
 
+    # Record WHEN each thread was verified. coverage() and stale_threads() both read this; without
+    # the write, last_fetched_at stays at whatever seeded the map, coverage decays to 0% no matter
+    # how much the run fetched, and the sweep re-picks the same threads forever.
+    state_map = CS.load_thread_state()
+    state_map.update(fetched_at)
+    CS.save_thread_state(state_map)
+
     items, _ = CS.scan_tree()
     known = {r["item_key"]: r["content_sha"] for r in CS.load_log()}
-    new, edits = CS.append_snapshot(items, time.time(), run_id, known=known)
-    complete = (e429 == 0 and spent < args.budget)
-    CS.append_run({"run_id": run_id, "started_at": started, "ended_at": time.time(),
+    # WHOLE SECONDS, deliberately. An issue is pinned by its PUBLISHED pull_at, which is formatted
+    # %Y-%m-%dT%H:%M:%SZ and therefore parses back to a whole second. A fractional first_seen_at is
+    # strictly greater than that, so `first_seen_at <= observed_at` would drop the run's own rows
+    # and the issue could not re-derive itself. Record at the resolution we publish at.
+    observed_at = float(int(time.time()))
+    new, edits = CS.append_snapshot(items, observed_at, run_id, known=known)
+    # DO NOT ADVANCE THE CURSOR PAST WORK WE DID NOT DO. If the budget stopped us before every
+    # thread the changes feed named, persisting the advanced cursor drops those threads silently
+    # and leaves recovery to a staleness sweep scoring on data we know is behind. Rewind instead;
+    # the next run re-walks the feed from where it was.
+    missed_feed = sorted(feed_targets - set(fetched_at))
+    if missed_feed:
+        print(f"  {len(missed_feed)} feed thread(s) unfetched -- holding the cursor at "
+              f"{state.get('cursor', 0)} so the next run re-walks them")
+        cursor, etags = state.get("cursor", cursor), dict(state.get("etags") or {})
+    complete = (e429 == 0 and spent < args.budget and not missed_feed)
+    CS.append_run({"run_id": run_id, "started_at": started, "ended_at": float(int(time.time())),
                    "mode": "full" if args.full else "catchup",
                    "cursor_before": state.get("cursor", 0), "cursor_after": cursor,
-                   "threads_attempted": len(targets), "threads_ok": ok,
+                   "threads_attempted": attempted, "threads_targeted": len(targets),
+                   "threads_ok": ok, "feed_threads_unfetched": len(missed_feed),
                    "threads_404": e404, "threads_429": e429, "complete": int(complete),
                    "note": f"{new} new item-versions, {edits} edits, {spent} requests"})
     STATE.write_text(json.dumps({"cursor": cursor, "etags": etags,

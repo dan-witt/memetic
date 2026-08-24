@@ -31,7 +31,7 @@ deliberately conservative about what they license.
 Usage: python3 analysis/weather_trend_tests.py [issue-date]   (default: newest published issue)
 """
 import json, sys
-from math import comb
+from math import comb, sqrt
 from pathlib import Path
 
 W = Path("/home/dan/personal/memetic/results/weather")
@@ -219,6 +219,92 @@ def report(issue_date):
             "effective_independent_windows_each": "~6-7 (120-item windows advancing by 40)",
             "read": "anti-conservative on the nominal n; a non-significant result here is safe, a "
                     "significant one would not be."}
+
+    # (5) register sensitivity. Five issues of watch items treated raw zstd as a cell waiting to
+    # move. Whether it CAN move is answerable from its own history: report the series range and the
+    # median absolute day-to-day move, so "did anything move register" gets a scale instead of
+    # another observation.
+    z = (d.get("register_trend_zstd_raw") or {}).get("per_day") or {}
+    days = sorted(z)
+    if len(days) >= 3:
+        vals = [z[k] for k in days]
+        moves = [vals[i + 1] - vals[i] for i in range(len(vals) - 1)]
+        med = sorted(abs(m) for m in moves)[len(moves) // 2]
+        out["register_sensitivity"] = {
+            "days": len(days), "min": min(vals), "max": max(vals),
+            "range": round(max(vals) - min(vals), 4),
+            "median_abs_day_move": round(med, 4),
+            "newest_day_move": round(moves[-1], 4),
+            "band_floor": (d.get("register_trend_zstd_raw") or {}).get("band_floor"),
+            "gap_to_floor_from_newest": round(
+                ((d.get("register_trend_zstd_raw") or {}).get("band_floor") or 0) - vals[-1], 4),
+            "read": "a day moving the cell by more than the whole observed range would be the first "
+                    "to take it outside its own history. Compare any candidate event's move against "
+                    "median_abs_day_move before calling the cell unmoved."}
+
+    # (6) the entering per-cohort conversion cohort against the pool it joins. The published N=3
+    # cell is an UNWEIGHTED mean over cohorts, so a new cohort moves it by (its rate - the old
+    # mean)/n_cohorts regardless of size; that arithmetic is not a test of whether the cohort is
+    # unusual. This compares it to the AUTHOR-WEIGHTED pool of the cohorts already in the table.
+    ct = ((d.get("structure") or {}).get("permeability_cohort_trend") or {})
+    per = {c: (pct, n) for c, pct, n in (ct.get("N3_minn10") or {}).get("per_cohort", [])}
+    prevdirs = [q for q in sorted(W.glob("20*-*-*"), reverse=True)
+                if (q / "results.json").exists() and q.name < issue_date]
+    was = {}
+    if prevdirs:
+        pd = json.load(open(prevdirs[0] / "results.json"))
+        was = {c: (pct, n) for c, pct, n in
+               (((pd.get("structure") or {}).get("permeability_cohort_trend") or {})
+                .get("N3_minn10") or {}).get("per_cohort", [])}
+    entering = [c for c in per if c not in was]
+    if per and was and entering:
+        new = sorted(entering)[-1]
+        prior = {c: v for c, v in per.items() if c not in entering}
+        tot_n = sum(n for _, n in prior.values())
+        pool = sum(pct / 100 * n for pct, n in prior.values()) / tot_n
+        pct_new, n_new = per[new]
+        p = pct_new / 100
+        se = sqrt(p * (1 - p) / n_new + pool * (1 - pool) / tot_n)
+        old_mean = sum(pct for pct, _ in prior.values()) / len(prior)
+        out["entering_cohort_vs_pool"] = {
+            "cohort": new, "n": n_new, "pct": pct_new,
+            "entering_this_issue": sorted(entering),
+            "pool_author_weighted_pct": round(100 * pool, 1),
+            "pool_authors": tot_n,
+            "difference_pts": round(pct_new - 100 * pool, 1),
+            "difference_in_counting_se": round((p - pool) / se, 2),
+            "cohorts_n_ge_50": {c: v[0] for c, v in sorted(per.items()) if v[1] >= 50},
+            "unweighted_cell": {"before": round(old_mean, 1),
+                                "after": round(sum(pct for pct, _ in per.values()) / len(per), 1),
+                                "move_pts": round((pct_new - old_mean) / len(per), 2)},
+            "read": "the published cell is an UNWEIGHTED mean over cohorts, so the entering cohort "
+                    "moves it by (its rate - the old mean)/n_cohorts regardless of size; that "
+                    "arithmetic is not evidence the cohort is unusual. The author-weighted "
+                    "comparison is. One cohort, entering because it completed its window rather "
+                    "than because it was selected: suggestive at ~2 SE, not a trend."}
+    # (7) the NEXT issue's pre-registered bar, and the incumbent-only trailing mean. Both were
+    # prose arithmetic in issue #11's draft, which is the pattern this module exists to stop: a
+    # report that pre-registers a threshold has to emit it, or the next issue cannot check it.
+    _al = d["allocation_trend"]["venue_share_per_day_qwen_binary"]
+    _dl = sorted(_al)
+    if len(_dl) >= 4 and _lo:
+        _keep = _dl[-4:]                     # the four days that stay in next issue's 5-day window
+        _sum4 = sum(_al[k] for k in _keep)
+        out["next_issue_bar"] = {
+            "window": _keep + ["<next day>"], "sum_of_first_four": round(_sum4, 4),
+            "threshold": round(5 * _lo - _sum4, 4), "bound": _lo,
+            "read": "the trailing 5-day mean stays below the bound if and only if the next day "
+                    "reads BELOW this threshold. A HIGHER threshold is an EASIER bar. Assumes the "
+                    "four retained days do not move; label-retry can move a published day "
+                    "(label_audit.published_days_moved records it)."}
+    _inc = ((d["allocation_trend"].get("incumbent_only_daily_series") or {}).get("strict") or {})
+    if len(_inc) >= 5:
+        _ik = sorted(_inc)[-5:]
+        out["incumbent_trailing_mean"] = {
+            "days": _ik, "mean": round(sum(_inc[k] for k in _ik) / 5, 4),
+            "newest": _inc[_ik[-1]],
+            "read": "the same trailing statistic as the decider, over incumbents only. NOT the "
+                    "decider: issue #8's pre-registered rule is on the published series."}
     return out
 
 

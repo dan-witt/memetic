@@ -38,20 +38,75 @@ HOUR = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).hour
 
 
 def load(cutoff, d=D, min_chars=20, observed_at=None):
-    """-> [(epoch, author, model, chars, thread_id)] from the observation store.
+    """-> [(epoch, author, model, chars, thread_id, kind)] from the observation store.
 
     None of these cells need item TEXT, so this never opens a thread file: it is one query. `d` is
     kept so existing call sites keep working.
     """
-    return [(t, a, m, n, str(pid))
-            for t, a, m, n, pid in CS.profile_rows(_CON, cutoff=cutoff, observed_at=observed_at,
-                                                   min_chars=min_chars)]
+    return [(t, a, m, n, str(pid), k)
+            for t, a, m, n, pid, k in CS.profile_rows(_CON, cutoff=cutoff, observed_at=observed_at,
+                                                      min_chars=min_chars)]
+
+
+ADMIN_AUTHOR = "1f916-agent"   # the platform's own account; exempt from the posting cap
+
+
+def ceiling_history(items):
+    """-> the platform's per-author daily posting cap, and each day against it.
+
+    THE CAP IS 20 COMMENTS PER AUTHOR PER DAY, and it is hard: across the whole corpus no
+    non-admin author-day carries a 21st comment. Posts are not capped the same way (most authors
+    make 0 or 1, a handful make more), so the modal per-author daily maximum is 1 post + 20
+    comments = 21 -- which is why the influx profile's "max" column reads 21 on every day of the
+    recruitment event and on most days before it.
+
+    This matters for two readings. The "max" column is a PLATFORM CONSTANT, not a behavioural
+    signature of an influx. And a day's volume cannot grow by authors posting more without bound:
+    past ~21 items per active author a day can only get bigger by recruiting, which is what makes
+    items-per-active-author worth reporting beside the raw count.
+
+    Only `1f916-agent` exceeds the cap (up to 47 comments in a day). Its exemption is what produced
+    every apparent ceiling breach in the per-day maxima; the one other day above 21 is an author
+    who made six POSTS while still stopping at 20 comments.
+
+    Rows carry their kind (corpus_store.profile_rows), because the cap applies to comments and
+    not to items; a caller counting items alone cannot see it.
+    """
+    tot, com, pos = defaultdict(Counter), defaultdict(Counter), defaultdict(Counter)
+    for r in items:
+        t, a = r[0], r[1]
+        tot[DAY(t)][a] += 1
+        k = r[5] if len(r) > 5 else None
+        if k == "comment":
+            com[DAY(t)][a] += 1
+        elif k == "post":
+            pos[DAY(t)][a] += 1
+    out = {}
+    for day in sorted(tot):
+        c = tot[day]
+        nonadmin = {a: v for a, v in c.items() if a != ADMIN_AUTHOR}
+        mx = max(c.values())
+        at_max = sum(1 for v in c.values() if v == mx)
+        row = {"authors": len(c), "items": sum(c.values()),
+               "items_per_active_author": round(sum(c.values()) / len(c), 2),
+               "max_items_per_author": mx, "authors_at_max": at_max,
+               "pct_authors_at_max": round(100 * at_max / len(c), 1),
+               "max_items_per_author_non_admin": max(nonadmin.values()) if nonadmin else None,
+               "author_days_above_21": sorted(a for a, v in c.items() if v > 21)}
+        if com[day]:
+            cna = {a: v for a, v in com[day].items() if a != ADMIN_AUTHOR}
+            row["max_comments_non_admin"] = max(cna.values()) if cna else None
+            row["authors_at_comment_cap"] = sum(1 for v in cna.values() if v == 20)
+            row["max_posts_non_admin"] = max(
+                (v for a, v in pos[day].items() if a != ADMIN_AUTHOR), default=None)
+        out[day] = row
+    return out
 
 
 def profile(items, day, top_models=6):
     """-> the descriptive block for one calendar day."""
     first = {}
-    for t, a, _, _, _ in items:
+    for t, a, _, _, _, _ in items:
         if a not in first or t < first[a]:
             first[a] = t
     today = [r for r in items if DAY(r[0]) == day]
@@ -65,7 +120,7 @@ def profile(items, day, top_models=6):
     def mix(auths):
         c = Counter()
         for a in auths:
-            c[next((m for t, aa, m, _, _ in items if aa == a and m), None)] += 1
+            c[next((m for t, aa, m, _, _, _ in items if aa == a and m), None)] += 1
         tot = sum(c.values()) or 1
         return {"n_authors": tot, "distinct_labels": len(c),
                 "top": [[k, round(100 * v / tot, 1)] for k, v in c.most_common(top_models)]}
@@ -128,6 +183,16 @@ if __name__ == "__main__":
         print(f"      incumbent model labels: "
               f"{r['model_label_mix_incumbents_active_today']['distinct_labels']} distinct, top "
               f"{r['model_label_mix_incumbents_active_today']['top'][:4]}")
+    ch = ceiling_history(items)
+    emit["_ceiling_history"] = ch
+    print("\nper-author daily cap (the 'max' column is a PLATFORM CONSTANT, not a signature):")
+    print("  max comments/author/day, non-admin: "
+          + "  ".join(f"{d}:{v.get('max_comments_non_admin')}" for d, v in ch.items()))
+    print("  items/active author:               "
+          + "  ".join(f"{d}:{v['items_per_active_author']}" for d, v in ch.items()))
+    breach = {d: v["author_days_above_21"] for d, v in ch.items() if v["author_days_above_21"]}
+    print(f"  author-days above 21 items: {sum(len(v) for v in breach.values())} "
+          f"-> {breach if breach else 'none'}")
     out = Path(os.environ.get("MEMETIC_WORKDIR", ".")) / "weather_influx_profile_out.json"
     out.write_text(json.dumps(emit, indent=1))
     print(f"saved {out}")

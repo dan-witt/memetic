@@ -102,6 +102,10 @@ feed_lag["content_mutations"] = {
                    "min": min(delta_chars) if delta_chars else None,
                    "max": max(delta_chars) if delta_chars else None},
     "edited_keys": [e["item_key"] for e in _ed],
+    # An edit is only detectable in a thread re-read AFTER the previous issue, so the audit's
+    # denominator is coverage since that issue's pull -- not the rolling 24 h freshness figure,
+    # and not an assumed full re-read. Publish it beside the count or the count means nothing.
+    "audit_coverage": CS.verified_since(CON, PREV_AT),
     "note": "post-publication text edits; invisible to id-keyed claim/allocation caches. weather_gpu.py evicts these keys and re-processes them."}
 
 out = {"cutoff_utc": _c + "T00:00:00Z", "issue_window_start_utc":

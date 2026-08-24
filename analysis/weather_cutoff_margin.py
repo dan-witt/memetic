@@ -99,12 +99,20 @@ def history(results=RESULTS):
         cut, pull = d.get("cutoff"), d.get("pull_at")
         ct, pt = _parse_stamp(cut), _parse_stamp(pull)
         fl = d.get("feed_lag") or {}
+        bf = fl.get("backfilled_items")
+        # Adopted at issue #11 (issue #10's watch item #8): counts are not comparable across days
+        # of different size. 08-22 carried ~3x the traffic of the days before it, so a raw count of
+        # 7 and a raw count of 2 sat on very different denominators.
+        win = (d.get("corpus") or {}).get("issue_window_items")
         rows.append({
             "issue": q.parent.name,
             "cutoff_utc": cut,
             "pull_at_utc": pull,
             "pull_margin_hours": round((pt - ct) / 3600, 2) if (ct and pt) else None,
-            "backfilled_items": fl.get("backfilled_items"),
+            "backfilled_items": bf,
+            "issue_window_items": win,
+            "backfill_per_1000_window_items": round(1000 * bf / win, 2)
+            if (bf is not None and win) else None,
             "edited_items": (fl.get("content_mutations") or {}).get("edited_items"),
         })
     return rows
