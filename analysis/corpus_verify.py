@@ -100,7 +100,9 @@ def verify(issue_date):
           fl["new_authors_revealed"])
     if bf:
         ages = sorted(b["age_at_missed_pull_h"] for b in bf)
-        check(R, "item age at missed pull (median)", round(ages[len(ages) // 2], 2),
+        mid = len(ages) // 2
+        med = ages[mid] if len(ages) % 2 else (ages[mid - 1] + ages[mid]) / 2
+        check(R, "item age at missed pull (median)", round(med, 2),
               fl["item_age_at_missed_pull_hours"]["median"])
     ed = CS.edits(con, since=prev_at, until=observed)
     check(R, "edited_items", len(ed), fl["content_mutations"]["edited_items"])

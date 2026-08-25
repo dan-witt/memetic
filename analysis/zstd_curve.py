@@ -123,27 +123,97 @@ def shuffle_sample(encoded: list[bytes], exclude: range, budget: int, rng: rando
     return SEP.join(out)
 
 
-def compute_metrics(items, args):
+ALL_COLUMNS = ("self", "cond_win", "cond_full", "cond_shuf")
+
+
+def compute_metrics(items, args, columns=ALL_COLUMNS, reuse=None):
+    """-> one row per non-empty item.
+
+    COST. Three of the four conditioners are cheap and one is not. `win` builds a dictionary from a
+    fixed `window_bytes` tail and `shuf` from a fixed-size sample, so both cost the same per bucket
+    however long the corpus is. `full` builds one from the ENTIRE prior history, once per bucket,
+    so its cost grows with the corpus and the pass is quadratic overall: at 19,334 items that was
+    ~773 dictionary builds over an average ~12 MB, and it dominated everything else.
+
+    `columns` selects which of those to pay for. A caller that reads only self_bits and
+    cond_win_bits -- the weather report's register cell does -- passes ("self", "cond_win") and the
+    quadratic term disappears entirely. The default computes all four, so the standalone zstd pass
+    is unchanged.
+
+    `reuse` makes the remainder incremental: {item_key: row} from a previous run. self_bits depends
+    only on the item, and cond_win_bits on the item plus the trailing window of history BEFORE its
+    bucket, so both are PREFIX-STABLE -- appending later items cannot change an earlier item's
+    value. Rows are reused for the longest leading run whose key and content hash match, and
+    everything from the first divergence is recomputed. Three things break the prefix and are
+    detected rather than assumed: an edited item (hash mismatch), an item inserted mid-stream by
+    backfill (key mismatch, and it shifts every later bucket boundary because buckets are indexed
+    from 0), and a change to level/bucket/window_bytes (the caller must not reuse across those).
+    cond_full IS prefix-stable in the same sense (its dictionary is the history before the bucket),
+    so it is reusable; it is simply not worth computing for a caller that does not read it. Only
+    cond_shuf is NOT prefix-stable -- it samples items regardless of time, including ones after the
+    item being scored -- so requesting it alongside `reuse` is refused.
+    """
+    columns = tuple(columns)
+    if reuse is not None and "cond_shuf" in columns:
+        raise ValueError("cond_shuf samples items regardless of time, including items AFTER the "
+                         "one being scored, so it is not prefix-stable and cannot be reused; "
+                         "drop it from `columns` or drop `reuse`")
+    want_full = "cond_full" in columns
+    want_shuf = "cond_shuf" in columns
     encoded = [it["text"].encode("utf-8") for it in items]
+    n = len(items)
+
+    # Where the cached prefix stops being valid.
+    resume = 0
+    shas = None
+    if reuse is not None:
+        shas = [hashlib.sha256(b).hexdigest()[:16] for b in encoded]
+        for i in range(n):
+            key = f"{items[i]['kind']}:{items[i]['id']}"
+            prev = reuse.get(key)
+            # Key, content AND POSITION. The cache is keyed by item, so an insertion is caught by
+            # the key lookup and an edit by the hash -- but a DELETION would shift every later item
+            # down while leaving all keys and hashes intact, and those items' cond_win was computed
+            # against a history that still contained the removed item. Requiring the cached seq to
+            # equal the current index makes the prefix check exact instead of nearly exact.
+            if prev is None or prev.get("sha") != shas[i] or prev.get("seq") != i:
+                break
+            resume = i + 1
+        print(f"  zstd cache: {resume}/{n} rows reusable, recomputing from {resume}",
+              file=sys.stderr)
+
     history: list[bytes] = []
     rows = []
     plain = Conditioner(args.level)
-    n = len(items)
     for start in range(0, n, args.bucket):
         bucket = range(start, min(start + args.bucket, n))
+        if bucket.stop <= resume:
+            # Entirely inside the valid prefix: reuse the rows and only carry the history forward.
+            for i in bucket:
+                if len(items[i]["text"]) == 0:
+                    history.append(encoded[i]); continue
+                rows.append(reuse[f"{items[i]['kind']}:{items[i]['id']}"])
+                history.append(encoded[i])
+            continue
         if history:
             win = Conditioner(args.level, tail_bytes(history, args.window_bytes))
-            full = Conditioner(args.level, SEP.join(history))
+            full = Conditioner(args.level, SEP.join(history)) if want_full else None
         else:
-            win = full = plain
-        rng = random.Random(f"{args.seed}:{start}")
-        shuf_hist = shuffle_sample(encoded, bucket, args.window_bytes, rng)
-        shuf = Conditioner(args.level, shuf_hist) if shuf_hist else plain
+            win = plain
+            full = plain if want_full else None
+        if want_shuf:
+            rng = random.Random(f"{args.seed}:{start}")
+            shuf_hist = shuffle_sample(encoded, bucket, args.window_bytes, rng)
+            shuf = Conditioner(args.level, shuf_hist) if shuf_hist else plain
 
         for i in bucket:
             it, data = items[i], encoded[i]
             chars = len(it["text"])
             if chars == 0:
+                history.append(data)
+                continue
+            if i < resume:
+                rows.append(reuse[f"{it['kind']}:{it['id']}"])
                 history.append(data)
                 continue
             self_bits = plain.bits(data)
@@ -153,12 +223,16 @@ def compute_metrics(items, args):
                 "author_model": it["author_model"], "chars": chars, "bytes": len(data),
                 "self_bits": self_bits,
                 "cond_win_bits": win.bits(data),
-                "cond_full_bits": full.bits(data),
-                "cond_shuf_bits": shuf.bits(data),
             }
-            for k in ("self", "cond_win", "cond_full", "cond_shuf"):
+            if want_full:
+                row["cond_full_bits"] = full.bits(data)
+            if want_shuf:
+                row["cond_shuf_bits"] = shuf.bits(data)
+            for k in columns:
                 row[f"{k}_bpc"] = round(row[f"{k}_bits"] / chars, 4)
             row["novelty_ratio"] = round(row["cond_win_bits"] / self_bits, 4) if self_bits else None
+            if shas is not None:
+                row["sha"] = shas[i]
             rows.append(row)
             history.append(data)
         done = bucket.stop

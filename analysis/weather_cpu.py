@@ -69,7 +69,10 @@ bf_authors = {b["author"] for b in _bf if b["reveals_author"]}
 lags_h = sorted((prev_last - t) / 3600 for t, k, a in backfill)
 feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
             "new_authors_revealed": len(bf_authors),
-            "item_age_at_missed_pull_hours": {"median": round(lags_h[len(lags_h)//2], 2) if lags_h else None,
+            # proper median: lags_h[len//2] is the upper-middle value and is only the median for
+            # odd n. Issue #12 was the first even-count backfill and published 7.82 for a set whose
+            # median is 3.97 -- with the three-and-three split that made the reading, not a summary.
+            "item_age_at_missed_pull_hours": {"median": round(float(np.median(lags_h)), 2) if lags_h else None,
                                               "p90": round(lags_h[int(len(lags_h)*0.9)], 2) if lags_h else None},
             "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate"}
 
@@ -162,7 +165,32 @@ out["activity_clock_signatures"] = {"design": "each corpus's first min(N, n_agen
 class Args: level = 19; window_bytes = 524288; bucket = 25; seed = 42
 mk = [{"kind": k[0], "id": k[1], "post_id": 0, "created_at": t, "author": a, "author_model": "", "text": x}
       for t, k, x, a in NEW]
-rows = Z.compute_metrics(mk, Args())
+# Only self_bits and cond_win_bits are read below, so only those are computed. cond_full rebuilt a
+# level-19 dictionary over the WHOLE history once per 25-item bucket -- the quadratic term that made
+# this stage ~55 min at issue #11 -- and nothing in the weather series has ever consumed it; it
+# belongs to the standalone zstd pass. Both remaining columns are prefix-stable, so rows carry over
+# from the previous issue and only the new tail is computed. The cache is keyed kind:id like every
+# other cache here, and is discarded whole if the compression parameters move.
+_ZCACHE = S / "zstd_row_cache_agent.json"
+import zstandard as _zstd
+# The compressor VERSION belongs in the key: an upgrade that changes compressed sizes would splice
+# old-prefix and new-tail values into one published series with nothing to detect it. That is the
+# only invalidation path the key+hash+position check cannot see.
+_ZPARAMS = {"level": Args.level, "window_bytes": Args.window_bytes, "bucket": Args.bucket,
+            "zstd": _zstd.__version__}
+_zc = json.load(open(_ZCACHE)) if _ZCACHE.exists() else {}
+_reuse = _zc.get("rows", {}) if _zc.get("params") == _ZPARAMS else {}
+if _zc and not _reuse:
+    print("zstd cache: parameters changed, discarding", flush=True)
+rows = Z.compute_metrics(mk, Args(), columns=("self", "cond_win"), reuse=_reuse)
+# A pinned re-run (WEATHER_OBSERVED_AT) describes a PAST corpus; writing its rows back would roll
+# the live pipeline's cache to that state. Values could not go wrong -- the prefix check is exact --
+# but the next live run would recompute a tail it already had.
+if OBSERVED_AT is None:
+    json.dump({"params": _ZPARAMS, "rows": {f"{r['kind']}:{r['id']}": r for r in rows}},
+              open(_ZCACHE, "w"))
+else:
+    print("pinned run (WEATHER_OBSERVED_AT set): zstd cache left untouched", flush=True)
 agg = lambda rs: sum(r["cond_win_bits"] for r in rs) / sum(r["self_bits"] for r in rs)
 per_day_z = {d: round(agg([r for r in rows if day(r["created_at"]) == d]), 4)
              for d in days if sum(1 for r in rows if day(r["created_at"]) == d) >= 50}

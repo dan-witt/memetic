@@ -39,7 +39,8 @@ D = Path("/home/dan/personal/memetic/data/posts")
 ISSUES = [("#1", "2026-08-12"), ("#2", "2026-08-13"), ("#3", "2026-08-14"),
           ("#4", "2026-08-15"), ("#5", "2026-08-18"), ("#6", "2026-08-19"),
           ("#7", "2026-08-20"), ("#8", "2026-08-21"), ("#9", "2026-08-22"),
-          ("#10", "2026-08-23"), ("#11", "2026-08-24")]
+          ("#10", "2026-08-23"), ("#11", "2026-08-24"),
+          ("#12", "2026-08-25")]
 CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).timestamp()
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 

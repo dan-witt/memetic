@@ -137,6 +137,27 @@ if __name__ == "__main__":
         if not cursor:
             sys.exit("no cursor yet: run once with --full, or seed data/fetch_state.json")
         print(f"catch-up from cursor {cursor}")
+        # BLIND-WINDOW GUARD. The feed is only walked FORWARD from the cursor, so anything created
+        # between the newest item we actually hold and the cursor is invisible to it -- recoverable
+        # only if the staleness sweep happens to re-read that thread. At store bring-up the cursor
+        # was seeded at 17:31:47 while the full pull's clock was 17:12:19, and the resulting
+        # 19-minute hole hid three items for ~34 h until the sweep found them (issue #12's feed-lag
+        # block). Seed a cursor at or BEFORE the newest item held, never after.
+        # A cursor is only suspect if NO recorded run produced it. A cursor that came out of a
+        # completed feed walk is legitimately at server-now, and on a quiet day that is hours ahead
+        # of the newest item with no hole at all -- warning on the gap alone would cry wolf after
+        # every lull. A cursor with no run behind it was seeded by hand, which is the bring-up case
+        # that hid three items at issue #12.
+        _walked = con.execute("SELECT COUNT(*) FROM fetch_runs WHERE cursor_after = ?",
+                              (str(cursor),)).fetchone()[0]
+        _newest = con.execute("SELECT MAX(created_at) FROM observations").fetchone()[0] or 0
+        _gap_s = cursor / 1000 - _newest
+        if _gap_s > 60 and not _walked:
+            print(f"  WARNING: cursor is {_gap_s/60:.1f} min ahead of the newest item held "
+                  f"({time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(_newest))}) and no recorded "
+                  f"run produced it, so it was seeded rather than walked. Anything created in that "
+                  f"window is invisible to the changes feed and can only be recovered by the "
+                  f"staleness sweep.")
         targets, cursor, etags, used = changed_since(cursor, etags, args.budget) \
             if not args.dry_run else (set(), cursor, etags, 0)
         spent += used
