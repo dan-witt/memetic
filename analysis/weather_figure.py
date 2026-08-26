@@ -39,7 +39,18 @@ for ax in axs:
 
 ts = d["idea_time_series"]
 xs = range(len(ts["vendi_over_W"]))
-ax1.plot(xs, ts["vendi_over_W"], color=C_MAIN, lw=1.8)
+# The published series counts 1f916's moderation placeholder as content (issue #13). Where the
+# placeholder-free recomputation exists it is drawn UNDER the published line, because a window
+# holding several identical boilerplate bodies collapses and the dip is the platform's, not the
+# community's. Both are shown: the published line stays the series, the overlay is the reading.
+_clean = (d.get("moderation_placeholders") or {}).get("rolling_series_without")
+if _clean:
+    ax1.plot(range(len(_clean)), _clean, color=C_ANCHOR, lw=1.1, alpha=.85,
+             label="excluding moderation placeholders")
+ax1.plot(xs, ts["vendi_over_W"], color=C_MAIN, lw=1.8,
+         label="published series" if _clean else None)
+if _clean:
+    ax1.legend(loc="lower left", fontsize=7, frameon=False, labelcolor=MUTED)
 lv = ts["anchor_levels"]
 tight = {k: v for k, v in lv.items() if k in ("lisp", "smalltalk", "scheme")}
 ax1.axhspan(min(tight.values()), max(tight.values()), color=BASE, alpha=.35, lw=0)
