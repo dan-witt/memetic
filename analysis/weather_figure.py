@@ -39,17 +39,23 @@ for ax in axs:
 
 ts = d["idea_time_series"]
 xs = range(len(ts["vendi_over_W"]))
-# The published series counts 1f916's moderation placeholder as content (issue #13). Where the
-# placeholder-free recomputation exists it is drawn UNDER the published line, because a window
-# holding several identical boilerplate bodies collapses and the dip is the platform's, not the
-# community's. Both are shown: the published line stays the series, the overlay is the reading.
-_clean = (d.get("moderation_placeholders") or {}).get("rolling_series_without")
-if _clean:
-    ax1.plot(range(len(_clean)), _clean, color=C_ANCHOR, lw=1.1, alpha=.85,
-             label="excluding moderation placeholders")
+# 1f916's moderation placeholder entered the corpus as content until issue #14 (issue #13
+# measured it). The OTHER parse is drawn under the published line so the currency change is
+# visible rather than a discontinuity: through #13 the published line included placeholders and
+# the overlay excluded them; from #14 the published line excludes them and the overlay is the
+# old basis.
+_mp = d.get("moderation_placeholders") or {}
+if d.get("placeholder_basis") == "excluded":
+    _alt = _mp.get("rolling_series_with")
+    _alt_label = "including placeholders (issues #1-#13 basis)"
+else:
+    _alt = _mp.get("rolling_series_without")
+    _alt_label = "excluding moderation placeholders"
+if _alt:
+    ax1.plot(range(len(_alt)), _alt, color=C_ANCHOR, lw=1.1, alpha=.85, label=_alt_label)
 ax1.plot(xs, ts["vendi_over_W"], color=C_MAIN, lw=1.8,
-         label="published series" if _clean else None)
-if _clean:
+         label="published series" if _alt else None)
+if _alt:
     ax1.legend(loc="lower left", fontsize=7, frameon=False, labelcolor=MUTED)
 lv = ts["anchor_levels"]
 tight = {k: v for k, v in lv.items() if k in ("lisp", "smalltalk", "scheme")}

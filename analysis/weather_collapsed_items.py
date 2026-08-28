@@ -45,18 +45,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import corpus_store as CS
 
-MARKER = "[collapsed"      # the placeholder always opens with it; a doubled body repeats it
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 
-
-def is_placeholder(text):
-    """A body that is ONLY collapse boilerplate, possibly repeated.
-
-    Deliberately strict: a real comment that merely quotes the marker keeps its other content, so
-    requiring every non-empty line to start with it avoids dropping genuine items.
-    """
-    lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
-    return bool(lines) and all(l.startswith(MARKER) for l in lines)
+# The detector moved into corpus_store at issue #14, when the exclusion became the published
+# currency and the text-free loaders needed the same rule.
+from corpus_store import is_placeholder, PLACEHOLDER_MARKER as MARKER
 
 
 def find(NEW):
@@ -80,7 +73,10 @@ def main():
     observed = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHER_OBSERVED_AT") else None
 
     con = CS.build_index()
-    NEW = CS.weather_items(con, cutoff=cutoff, observed_at=observed)
+    # This script MEASURES the placeholders, so it always loads them regardless of the
+    # process default that issue #14 set for the published pipeline.
+    NEW = CS.weather_items(con, cutoff=cutoff, observed_at=observed,
+                           exclude_placeholders=False)
     idx = find(NEW)
     drop = set(idx)
     by_day = dict(sorted(Counter(DAY(NEW[i][0]) for i in idx).items()))
@@ -182,7 +178,10 @@ def main():
                   f" = {out[tag]['issue_below_forth_pct']}%")
         emit["rolling_with"] = {k: v for k, v in out["with"].items() if k != "series"}
         emit["rolling_without"] = {k: v for k, v in out["without"].items() if k != "series"}
+        # Both series are emitted: whichever parse is NOT the published currency is the figure's
+        # overlay, and that flipped at issue #14.
         emit["rolling_series_without"] = out["without"]["series"]
+        emit["rolling_series_with"] = out["with"]["series"]
 
     json.dump(emit, open(OUTP, "w"), indent=1)
     print(f"\nsaved {OUTP}")

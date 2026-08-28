@@ -16,14 +16,20 @@ the per-issue rates are not comparable until it is explained.
 
 Usage: python3 analysis/weather_dip_rate.py            (all published issues)
 """
+import datetime as dt
 import json, sys
 from pathlib import Path
 
 W = Path("/home/dan/personal/memetic/results/weather")
-ISSUES = [("#1", "2026-08-11"), ("#2", "2026-08-12"), ("#3", "2026-08-13"),
-          ("#4", "2026-08-14"), ("#5", "2026-08-17"), ("#6", "2026-08-18"),
-          ("#7", "2026-08-19"), ("#8", "2026-08-20"), ("#9", "2026-08-21"),
-          ("#10", "2026-08-22"), ("#11", "2026-08-23"), ("#12", "2026-08-24"), ("#13", "2026-08-25")]
+
+
+def _issues(root=W):
+    """[(tag, issue-date)] for every published issue — derived, so it needs no edit per issue."""
+    ds = sorted(q.name for q in Path(root).glob("20*-*-*") if (q / "results.json").exists())
+    return [(f"#{i+1}", d) for i, d in enumerate(ds)]
+
+
+ISSUES = _issues()
 
 
 def series(date):
@@ -67,7 +73,100 @@ def rates(issues=ISSUES):
     return out
 
 
+def rebaselined_rates(series, t_utc, anchor, issues=None):
+    """Per-issue dip rates recomputed on ONE series, so every issue is on the same basis.
+
+    `rates()` reads each issue's own published series, which is correct while the instrument is
+    constant and wrong across a currency change: issue #14 excluded moderation placeholders, so its
+    cell was computed on a different corpus from #1-#13's and the two cannot be compared. This
+    assigns every window of the CURRENT series to the issue that first published a cutoff above it,
+    which needs no window-count arithmetic and survives the boundaries shifting when items are
+    dropped.
+
+    Returns the full back-series under the current currency -- the republication issue #13's watch
+    item #2 asked for.
+    """
+    issues = issues or ISSUES
+    cuts = [(tag, (dt.datetime.strptime(d, "%Y-%m-%d") + dt.timedelta(days=1)))
+            for tag, d in issues]
+    # window stamps carry no year; the corpus is inside one year, so borrow it from the cutoffs
+    year = cuts[0][1].year
+    stamps = [dt.datetime.strptime(f"{year}-{x}", "%Y-%m-%d %H:%M") for x in t_utc]
+    rows, lo = [], 0
+    for tag, cut in cuts:
+        hi = lo
+        while hi < len(stamps) and stamps[hi] < cut:
+            hi += 1
+        add = series[lo:hi]
+        if add:
+            n_below = sum(1 for v in add if v < anchor)
+            rows.append({"issue": tag, "new_windows": len(add), "new_below_forth": n_below,
+                         "new_below_forth_pct": round(100 * n_below / len(add), 1),
+                         "new_window_mean": round(sum(add) / len(add), 4),
+                         "pooled_below_forth_pct": round(
+                             100 * sum(1 for v in series[:hi] if v < anchor) / hi, 1)})
+        lo = hi
+    return rows
+
+
+def threshold_sensitivity(issues=None, anchor_name="forth"):
+    """Decompose a change in the dip RATE into a level shift and a shape change.
+
+    The dip rate counts windows below a fixed anchor. That anchor sits INSIDE the rolling series'
+    own distribution, so the rate is a step readout of a continuous level: a shift of a few
+    thousandths moves many windows across the line without any change in how the windows are
+    spread. Issue #14 found 27 of 30 sub-forth windows within 0.005 of the anchor.
+
+    For each consecutive pair, this reports the issue's own added windows, their median, the
+    observed rate, and the counterfactual rate after removing the median shift against the
+    previous issue. If the counterfactual lands near the previous rate, the whole move was level.
+    """
+    import statistics as st
+    issues = issues or ISSUES
+    rows, prev = [], None
+    for tag, date in issues:
+        ts = series(date)
+        if not ts:
+            continue
+        anchor = (ts.get("anchor_levels") or {}).get(anchor_name)
+        cur = ts["vendi_over_W"]
+        add = cur[len(prev["vendi_over_W"]):] if prev else cur
+        if not add or anchor is None:
+            prev = ts; continue
+        med = st.median(add)
+        rate = sum(1 for v in add if v < anchor) / len(add)
+        row = {"issue": tag, "date": date, "n_windows": len(add), "median": round(med, 4),
+               "anchor": anchor, "rate_pct": round(100 * rate, 1),
+               "sub_anchor_within_0.005": sum(1 for v in add if 0 <= anchor - v < 0.005),
+               "sub_anchor_n": sum(1 for v in add if v < anchor)}
+        if prev is not None:
+            padd = prev.get("_added")
+            if padd:
+                shift = med - st.median(padd)
+                moved = [v - shift for v in add]
+                row["median_shift_vs_prev"] = round(shift, 4)
+                row["rate_pct_without_level_shift"] = round(
+                    100 * sum(1 for v in moved if v < anchor) / len(moved), 1)
+                row["prev_rate_pct"] = round(100 * sum(1 for v in padd if v < anchor) / len(padd), 1)
+        ts["_added"] = add
+        rows.append(row)
+        prev = ts
+    return rows
+
+
 if __name__ == "__main__":
+    if "--threshold" in sys.argv:
+        import json as _j
+        rows = threshold_sensitivity()
+        print(f"{'issue':6s} {'n':>5s} {'median':>8s} {'rate%':>7s} {'shift':>8s} "
+              f"{'rate% if level held':>20s} {'prev%':>7s}  near-anchor")
+        for r in rows:
+            print(f"{r['issue']:6s} {r['n_windows']:5d} {r['median']:8.4f} {r['rate_pct']:7.1f} "
+                  f"{r.get('median_shift_vs_prev','-')!s:>8s} "
+                  f"{r.get('rate_pct_without_level_shift','-')!s:>20s} "
+                  f"{r.get('prev_rate_pct','-')!s:>7s}  "
+                  f"{r['sub_anchor_within_0.005']}/{r['sub_anchor_n']} within 0.005")
+        sys.exit(0)
     rows = rates()
     print(f"{'issue':6s} {'windows':>8s} {'new':>5s} {'pooled<forth':>13s} {'NEW<forth':>12s} "
           f"{'new mean':>9s} {'drift':>6s}")

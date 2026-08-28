@@ -44,12 +44,27 @@ import weather_issue_boundary as IB
 _CON = CS.build_index()
 
 D = Path("/home/dan/personal/memetic/data/posts")
+WEATHER = Path("/home/dan/personal/memetic/results/weather")
+
+
+def _issues():
+    """[(issue tag, analysis cutoff)] — derived, not hand-listed.
+
+    An issue dated D is produced with cutoff D+1, so the published directories give the whole
+    table. The issue being produced has no directory yet, so WEATHER_CUTOFF appends it; that is
+    also what lets this issue's own cell appear in the comparison it is written from.
+    """
+    dirs = sorted(q.name for q in WEATHER.glob("20*-*-*") if (q / "results.json").exists())
+    cuts = [(dt.datetime.strptime(d, "%Y-%m-%d") + dt.timedelta(days=1)).strftime("%Y-%m-%d")
+            for d in dirs]
+    cur = os.environ.get("WEATHER_CUTOFF")
+    if cur and cur not in cuts:
+        cuts.append(cur)
+    return [(f"#{i+1}", c) for i, c in enumerate(cuts)]
+
+
 # (issue tag, analysis cutoff) — the cutoff is exclusive, as everywhere in the weather pipeline.
-ISSUES = [("#1", "2026-08-12"), ("#2", "2026-08-13"), ("#3", "2026-08-14"),
-          ("#4", "2026-08-15"), ("#5", "2026-08-18"), ("#6", "2026-08-19"),
-          ("#7", "2026-08-20"), ("#8", "2026-08-21"), ("#9", "2026-08-22"),
-          ("#10", "2026-08-23"), ("#11", "2026-08-24"),
-          ("#12", "2026-08-25"), ("#13", "2026-08-26")]
+ISSUES = _issues()
 CUT = lambda s: dt.datetime(*map(int, s.split("-")), tzinfo=dt.timezone.utc).timestamp()
 DAY = lambda t: dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
 

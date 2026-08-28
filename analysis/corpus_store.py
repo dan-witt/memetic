@@ -392,7 +392,49 @@ def item_texts(keys, posts_dir=POSTS):
     return out
 
 
-def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=POSTS):
+PLACEHOLDER_MARKER = "[collapsed"   # 1f916's collapse boilerplate opens with it
+
+
+def is_placeholder(text):
+    """A body that is ONLY collapse boilerplate, possibly repeated.
+
+    When 1f916 collapses an item it substitutes a fixed body rather than deleting the row, and that
+    body clears MIN_CHARS. A collapsed POST has title and body both replaced, so the marker repeats.
+    Deliberately strict: a real comment that merely quotes the marker keeps its other lines.
+    """
+    lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
+    return bool(lines) and all(l.startswith(PLACEHOLDER_MARKER) for l in lines)
+
+
+def exclude_placeholders_default():
+    """Whether the loaders drop collapse placeholders when the caller does not say.
+
+    Issue #14 made the placeholder-free parse the published currency; WEATHER_KEEP_PLACEHOLDERS=1
+    restores the issue #1-#13 basis. It is resolved here, once, because eight call sites load the
+    corpus and they must all answer the same way within one run.
+    """
+    return os.environ.get("WEATHER_KEEP_PLACEHOLDERS", "") not in ("1", "true", "yes")
+
+
+_ph_keys = None
+
+
+def placeholder_keys(con, posts_dir=POSTS):
+    """-> {item_key} of every collapse placeholder in the archive. Memoized per process.
+
+    Text-free callers (author_stream, profile_rows) need the same exclusion the text-bearing ones
+    apply, so the set is resolved once here rather than re-derived per call site.
+    """
+    global _ph_keys
+    if _ph_keys is None:
+        rows = items_at(con, min_chars=0)
+        text = item_texts((r["item_key"] for r in rows), posts_dir)
+        _ph_keys = {k for k, t in text.items() if is_placeholder(t)}
+    return _ph_keys
+
+
+def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=POSTS,
+                  exclude_placeholders=None):
     """The weather pipeline's tuple shape: [(created_at, (kind, id), text, author)], sorted the
     way weather_cpu.py sorts (time, posts before comments, id).
 
@@ -400,6 +442,8 @@ def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=
     existed at the time an issue was produced -- and the raw archive supplies their text, because
     the log holds a content hash rather than a body.
     """
+    if exclude_placeholders is None:
+        exclude_placeholders = exclude_placeholders_default()
     rows = items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
     text = item_texts((r["item_key"] for r in rows), posts_dir)
     missing = [r["item_key"] for r in rows if r["item_key"] not in text]
@@ -407,28 +451,42 @@ def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=
         raise SystemExit(f"{len(missing)} in-scope items have no text in {posts_dir} "
                          f"(e.g. {missing[:3]}). The archive is behind the log: re-fetch, or pass "
                          f"an observed_at that predates them.")
+    if exclude_placeholders:
+        rows = [r for r in rows if not is_placeholder(text[r["item_key"]])]
     out = [(r["created_at"], (r["kind"], r["item_id"]), text[r["item_key"]], r["author"] or "?")
            for r in rows]
     out.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
     return out
 
 
-def author_stream(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
+def author_stream(con, cutoff, observed_at=None, min_chars=MIN_CHARS,
+                  exclude_placeholders=None, posts_dir=POSTS):
     """[(created_at, author)] -- the shape the churn and permeability controls consume.
 
-    No text needed, so this never touches the archive: it is a single query.
+    One query, except when excluding placeholders: that identity lives in the body, so the first
+    such call in a process reads the archive once to resolve placeholder_keys() and memoizes it.
     """
+    if exclude_placeholders is None:
+        exclude_placeholders = exclude_placeholders_default()
+    drop = placeholder_keys(con, posts_dir) if exclude_placeholders else ()
     return [(r["created_at"], r["author"] or "?")
-            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)]
+            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
+            if r["item_key"] not in drop]
 
 
-def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS):
+def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS,
+                 exclude_placeholders=None, posts_dir=POSTS):
     """[(created_at, author, author_model, n_chars, post_id, kind)] -- weather_influx_profile's shape.
 
-    Also text-free. The model label is the platform's own, carried through unchanged. `kind` is
+    Text-free on the same terms as author_stream. The model label is the platform's own, carried
+    through unchanged. `kind` is
     carried because the platform's per-author daily cap applies to COMMENTS, not to items, so a
     caller counting the cap has to separate the two.
     """
+    if exclude_placeholders is None:
+        exclude_placeholders = exclude_placeholders_default()
+    drop = placeholder_keys(con, posts_dir) if exclude_placeholders else ()
     return [(r["created_at"], r["author"] or "?", r["author_model"], r["n_chars"], r["post_id"],
              r["kind"])
-            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)]
+            for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
+            if r["item_key"] not in drop]

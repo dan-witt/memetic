@@ -37,6 +37,10 @@ OBSERVED_AT = float(os.environ["WEATHER_OBSERVED_AT"]) if os.environ.get("WEATHE
 PREV_AT = float(os.environ["WEATHER_PREV_OBSERVED_AT"]) if os.environ.get("WEATHER_PREV_OBSERVED_AT") \
     else IB.previous_issue_observed_at(_c)
 
+# Issue #14 made the placeholder-free parse the published currency (issue #13 measured the
+# defect: 1f916 substitutes a fixed body for a collapsed item instead of deleting it, and that
+# body clears MIN_CHARS). WEATHER_KEEP_PLACEHOLDERS=1 reproduces issues #1-#13.
+EXCLUDE_PH = CS.exclude_placeholders_default()
 NEW = CS.weather_items(CON, cutoff=CUTOFF, observed_at=OBSERVED_AT)
 # prev_last is the last item the PREVIOUS observation physically held. It still defines the
 # backfill comparison (see below), and it is now a query rather than a max() over an unpacked tree.

@@ -116,14 +116,39 @@ def cohort_trend(ev, N, draws=20000, seed=20260819, min_n=MIN_N):
 # cutoff = each issue's analysis cutoff; last_item = the last item that issue's pull actually had
 # (issue #1's pull ran mid-day on 08-11, so its final day was partial — its cell is not on the
 # same footing as #2-#4 and only reproduces against that truncation, not against a complete 08-11)
-ISSUES = [("#1", "2026-08-12", 30.5, "2026-08-11T19:56:47Z"), ("#2", "2026-08-13", 33.6, None),
-          ("#3", "2026-08-14", 35.5, None), ("#4", "2026-08-15", 39.4, None),
-          ("#5", "2026-08-18", 42.9, None), ("#6", "2026-08-19", 43.9, None),
-          ("#7", "2026-08-20", 46.9, None), ("#8", "2026-08-21", 47.2, None),
-          ("#9", "2026-08-22", 48.2, None), ("#10", "2026-08-23", 48.3, None),
-          ("#11", "2026-08-24", 45.6, None),
-          ("#12", "2026-08-25", 45.7, None),
-          ("#13", "2026-08-26", 47.2, None)]
+# Issue #1's pull ran mid-day, so its final day was partial and its cell only reproduces against
+# that truncation. That is a fact about one pull, not a per-issue parameter, so it stays here.
+_TRUNC = {"#1": "2026-08-11T19:56:47Z"}
+_WEATHER = Path("/home/dan/personal/memetic/results/weather")
+
+
+def _issues():
+    """[(tag, cutoff, published cell, truncation)] — derived from the published issues.
+
+    Was a hand-maintained list, which silently pinned the WHOLE script to the previous issue's
+    cutoff when someone forgot to extend it: at issue #14 the cohort-trend table was still being
+    computed at #13's cutoff, so no newly eligible cohort could ever enter. The published column
+    is read from the newest issue's own reproduction table; the issue being produced has no
+    published value yet and passes None.
+    """
+    dirs = sorted(q for q in _WEATHER.glob("20*-*-*") if (q / "results.json").exists())
+    pub = {}
+    if dirs:
+        prev = json.load(open(dirs[-1] / "results.json"))
+        pub = {t: r.get("published") for t, r in
+               (((prev.get("structure") or {}).get("permeability_fixed_horizon")) or {}).items()}
+    out = []
+    for i, q in enumerate(dirs):
+        tag = f"#{i+1}"
+        cut = (dt.datetime.strptime(q.name, "%Y-%m-%d") + dt.timedelta(days=1)).strftime("%Y-%m-%d")
+        out.append((tag, cut, pub.get(tag), _TRUNC.get(tag)))
+    cur = os.environ.get("WEATHER_CUTOFF")
+    if cur and cur not in [c for _, c, _, _ in out]:
+        out.append((f"#{len(out)+1}", cur, None, None))
+    return out
+
+
+ISSUES = _issues()
 D = "/home/dan/personal/memetic/data/posts"
 EMIT = {"fixed_horizon": {}, "membership_held_fixed": {}, "cohort_trend": {}}
 print(f"{'issue':6s} {'cutoff':12s} {'published':>10s} {'reproduced':>11s}  {'N=3':>6s} {'N=4':>6s} {'N=5':>6s}")
@@ -137,7 +162,8 @@ for tag, cut, pub, trunc in ISSUES:
     ns = [fixed_horizon_permeability(ev, n)[0] for n in (3, 4, 5)]
     EMIT["fixed_horizon"][tag] = {"cutoff": cut, "published": pub, "reproduced": rep,
                                   "N3": ns[0], "N4": ns[1], "N5": ns[2]}
-    print(f"{tag:6s} {cut:12s} {pub:10.1f} {rep:11.1f}  " + " ".join(f"{str(x):>6s}" for x in ns))
+    print(f"{tag:6s} {cut:12s} {'-' if pub is None else format(pub, '.1f'):>10s} {rep:11.1f}  "
+          + " ".join(f"{str(x):>6s}" for x in ns))
 print("  (issue #1 'reproduced' is against its own partial-day truncation; with a complete 08-11")
 print("   the same metric reads 32.2 — a different measurement, not data drift)")
 

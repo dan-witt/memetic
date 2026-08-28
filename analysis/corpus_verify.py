@@ -49,10 +49,18 @@ def verify(issue_date):
     # on disk can pass or fail on a stale index instead of on the log the store actually holds.
     con = CS.build_index()
     rows = CS.items_at(con, cutoff=cutoff, observed_at=observed)
+    # Issue #14 made the placeholder-free parse the currency. An issue is verified on ITS OWN
+    # basis, read from what it published; issues #1-#13 carry no field and are verified with the
+    # placeholders in, which is how they were computed.
+    basis = pub.get("placeholder_basis", "included")
+    if basis == "excluded":
+        drop = CS.placeholder_keys(con)
+        rows = [r for r in rows if r["item_key"] not in drop]
     R = []
 
     print(f"\n=== {pub['issue']} — rebuilt from the observation store ===")
-    print(f"    cutoff {pub['cutoff']}   observed_at {pub['pull_at']}   {len(rows)} items\n")
+    print(f"    cutoff {pub['cutoff']}   observed_at {pub['pull_at']}   {len(rows)} items"
+          f"   placeholders {basis}\n")
 
     print("corpus")
     want = pub["corpus"]
