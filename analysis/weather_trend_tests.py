@@ -30,7 +30,7 @@ deliberately conservative about what they license.
 
 Usage: python3 analysis/weather_trend_tests.py [issue-date]   (default: newest published issue)
 """
-import json, sys
+import json, statistics, sys
 from math import comb, sqrt
 from pathlib import Path
 
@@ -153,6 +153,25 @@ def report(issue_date):
             "read": "binomial counting noise for ONE day against a frozen point estimate. A gap "
                     "inside ~1 SE is not a reading in either direction; the comparator also "
                     "carries its own CI ([0.4515, 0.4853]) which is wider still."}
+    # ...and the same scale for EVERY classified day. Reports tabulate several days against the
+    # platform figure, and a table whose standard errors were typed in by hand is the defect this
+    # module exists to remove.
+    if _pt:
+        _perday = (((d.get("allocation_trend") or {}).get("label_audit") or {}).get("per_day", {}))
+        rows = {}
+        for k in days:
+            n = _perday.get(k, {}).get("labelled")
+            if not n:
+                continue
+            p_ = alloc[k]
+            se = (p_ * (1 - p_) / n) ** 0.5
+            rows[k] = {"venue_share": p_, "labelled_items": n, "counting_se": round(se, 4),
+                       "gap": round(p_ - _pt, 4), "gap_in_counting_se": round((p_ - _pt) / se, 2)}
+        out["days_vs_platform"] = {
+            "platform_qwen": _pt, "days": rows,
+            "days_above": sum(1 for v in rows.values() if v["gap"] > 0), "n_days": len(rows),
+            "read": "per-day binomial counting noise only; the comparator's own CI is wider and "
+                    "classifier error is in neither."}
 
     # (3) the proposed replacement rule: does the LEVEL stay down, not just single days?
     _vals = [alloc[k] for k in days]
@@ -229,7 +248,9 @@ def report(issue_date):
     if len(days) >= 3:
         vals = [z[k] for k in days]
         moves = [vals[i + 1] - vals[i] for i in range(len(vals) - 1)]
-        med = sorted(abs(m) for m in moves)[len(moves) // 2]
+        # statistics.median, not sorted(...)[n//2]: the latter is the upper-middle value and is
+        # the median only at odd n. Same defect weather_cpu.py fixed for the backfill lags.
+        med = statistics.median([abs(m) for m in moves])
         out["register_sensitivity"] = {
             "days": len(days), "min": min(vals), "max": max(vals),
             "range": round(max(vals) - min(vals), 4),

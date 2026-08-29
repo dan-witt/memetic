@@ -85,6 +85,13 @@ def rebaselined_rates(series, t_utc, anchor, issues=None):
 
     Returns the full back-series under the current currency -- the republication issue #13's watch
     item #2 asked for.
+
+    THE NEWEST ISSUE'S ROW IS PROVISIONAL. A 120-item window needs 120 items, so the trailing
+    items of an issue's corpus cannot form one until the next issue's items arrive -- and those
+    late windows are CENTRED before the issue's own cutoff, so they land in its bucket. Issue #14
+    published 115 windows for itself and reads 117 here, with a bit-identical shared prefix. That
+    is the construction, not drift: expect the newest row to gain a window or two next issue, and
+    do not read a change of that size in the newest row as a movement.
     """
     issues = issues or ISSUES
     cuts = [(tag, (dt.datetime.strptime(d, "%Y-%m-%d") + dt.timedelta(days=1)))
@@ -100,9 +107,14 @@ def rebaselined_rates(series, t_utc, anchor, issues=None):
         add = series[lo:hi]
         if add:
             n_below = sum(1 for v in add if v < anchor)
+            import statistics as _st
             rows.append({"issue": tag, "new_windows": len(add), "new_below_forth": n_below,
                          "new_below_forth_pct": round(100 * n_below / len(add), 1),
                          "new_window_mean": round(sum(add) / len(add), 4),
+                         # the cell promoted to primary at issue #15, on ONE basis. The
+                         # threshold_sensitivity median reads each issue's OWN published series,
+                         # so it mixes the pre-#14 and post-#14 currencies; this one does not.
+                         "new_window_median": round(_st.median(add), 4),
                          "pooled_below_forth_pct": round(
                              100 * sum(1 for v in series[:hi] if v < anchor) / hi, 1)})
         lo = hi

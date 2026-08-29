@@ -18,7 +18,8 @@ S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memeti
 _c = os.environ["WEATHER_CUTOFF"]  # e.g. "2026-08-14" = midnight UTC upper bound (exclusive)
 sys.path.insert(0, "/home/dan/personal/memetic/analysis")
 import zstd_curve as Z
-import weather_issue_boundary as IB   # issue/window boundaries, single source of truth
+import weather_issue_boundary as IB
+import weather_backfill_exposure as BE   # backfill denominator, single source of truth
 
 CUTOFF = dt.datetime(*map(int, _c.split("-")), tzinfo=dt.timezone.utc).timestamp()
 
@@ -79,6 +80,18 @@ feed_lag = {"backfilled_items": len(backfill), "by_day": bf_day,
             "item_age_at_missed_pull_hours": {"median": round(float(np.median(lags_h)), 2) if lags_h else None,
                                               "p90": round(lags_h[int(len(lags_h)*0.9)], 2) if lags_h else None},
             "note": "trailing-day counts are provisional: this pull's view of its final hours will be revised upward by roughly this issue's backfill rate"}
+# Both bases in the record, not one in the record and one in the prose. prev_last_item reproduces
+# the series; prev_run is the stricter reading (the pull ran at time T, so anything created before
+# T should have been caught). The max age is published beside the median because what makes a
+# backfill a pull-boundary RACE rather than a lagging feed is that its OLDEST item is minutes old.
+feed_lag["backfilled_items_prev_run_basis"] = len(
+    CS.backfill(CON, prev_at=PREV_AT, this_at=OBSERVED_AT or 9e18, basis="prev_run"))
+feed_lag["item_age_at_missed_pull_hours"]["max"] = round(max(lags_h), 3) if lags_h else None
+# The count alone is not comparable across issues. A backfilled item can only come from the
+# stretch the previous pull already reached into -- (previous issue's cutoff, its last item] --
+# whose width is that pull's MARGIN, not this issue's window width. Issue #14 normalised by window
+# items and so halved its own rate by covering two calendar days. See weather_backfill_exposure.
+feed_lag["exposure"] = BE.cell(CON, _c, PREV_AT, _bf, observed_at=OBSERVED_AT)
 
 # --- content-mutation check (issue-3 watch item #4): items present in BOTH corpora under the
 # same id whose TEXT changed after publication. id-keyed caches (claims, allocation labels)
