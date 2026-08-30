@@ -298,11 +298,15 @@ def report(issue_date):
             "unweighted_cell": {"before": round(old_mean, 1),
                                 "after": round(sum(pct for pct, _ in per.values()) / len(per), 1),
                                 "move_pts": round((pct_new - old_mean) / len(per), 2)},
+            # DERIVED, not a fixed string: issue #16's cold review found this sentence still
+            # claiming "~2 SE" beside its own difference_in_counting_se of 1.11.
             "read": "the published cell is an UNWEIGHTED mean over cohorts, so the entering cohort "
                     "moves it by (its rate - the old mean)/n_cohorts regardless of size; that "
                     "arithmetic is not evidence the cohort is unusual. The author-weighted "
                     "comparison is. One cohort, entering because it completed its window rather "
-                    "than because it was selected: suggestive at ~2 SE, not a trend."}
+                    "than because it was selected, at "
+                    f"{abs(round((p - pool) / se, 2))} counting SE: "
+                    + ("not a reading." if abs((p - pool) / se) < 2 else "suggestive, not a trend.")}
     # (7) the NEXT issue's pre-registered bar, and the incumbent-only trailing mean. Both were
     # prose arithmetic in issue #11's draft, which is the pattern this module exists to stop: a
     # report that pre-registers a threshold has to emit it, or the next issue cannot check it.

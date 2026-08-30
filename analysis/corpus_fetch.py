@@ -108,13 +108,67 @@ def changed_since(cursor, etags, budget, log=print):
     return ids, since, {k: v for k, v in etags.items() if k == str(since)}, spent
 
 
+def gap_targets(state, budget):
+    """Threads implicated by an ID GAP, and the ids the API says do not exist.
+
+    corpus_store.id_gaps() names ids the platform issued that this corpus does not hold. Neither
+    the changes feed nor the staleness sweep can ever find these: the feed reports threads that
+    MOVED, and for us these threads never moved. Found at issue #16 -- comment 17133 sat on post
+    476, a thread last read eighteen days before the comment was written.
+
+    A missing POST id is its own thread id, so it goes straight into the target list and the fetch
+    itself classifies it (200 = we missed it, 404 = it does not exist). A missing COMMENT id needs
+    one GET /api/comment/:id to learn which thread it is on.
+
+    Ids the API reports as nonexistent are remembered in fetch_state.json, so a permanent platform
+    gap costs its one request once rather than on every run.
+
+    -> (thread ids to fetch, absent ids to remember, requests spent)
+    """
+    con = CS.build_index()
+    gaps = CS.id_gaps(con)
+    absent = {k: set(v) for k, v in (state.get("gap_absent") or {}).items()}
+    targets, spent = [], 0
+    for pid in gaps.get("post", {}).get("missing", []):
+        if pid not in absent.get("post", set()):
+            targets.append(pid)
+    for cid in gaps.get("comment", {}).get("missing", []):
+        if cid in absent.get("comment", set()) or spent >= budget:
+            continue
+        status, body, _ = get(f"{BASE}/api/comment/{cid}")
+        spent += 1
+        time.sleep(SLEEP)
+        c = (json.loads(body).get("comment") or {}) if status == 200 and body else {}
+        if c.get("post_id"):
+            targets.append(int(c["post_id"]))
+            print(f"  gap scan: comment {cid} resolves to thread {c['post_id']}")
+        elif status == 404:
+            absent.setdefault("comment", set()).add(cid)
+            print(f"  gap scan: comment {cid} does not exist -- recorded, not retried")
+        else:
+            # ONLY an affirmative 404 is evidence of absence. A 429, a 5xx or an unparseable body
+            # says nothing about the item, and recording it here would hide a live comment from
+            # the repair instrument permanently, on one bad request.
+            print(f"  gap scan: comment {cid} unresolved (HTTP {status}) -- retried next run")
+    return targets, {k: sorted(v) for k, v in absent.items()}, spent
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--budget", type=int, default=400, help="max requests this run")
     ap.add_argument("--full", action="store_true", help="rebuild: fetch every known thread")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--fresh-hours", type=float, default=24.0)
+    # Repair for a gap the feed cannot report. corpus_store.id_gaps() names ids the platform
+    # issued and this corpus does not hold; a missing POST id is its own thread id, and a missing
+    # COMMENT id resolves to one through GET /api/comment/:id. Neither will ever appear in the
+    # changes feed, because the feed reports threads that MOVED and these never moved for us.
+    ap.add_argument("--threads", default="", metavar="ID[,ID...]",
+                    help="also fetch these thread ids, whatever the feed and sweep say")
+    ap.add_argument("--no-gap-scan", action="store_true",
+                    help="skip the id-contiguity scan and its repair fetches")
     args = ap.parse_args()
+    forced = {int(x) for x in args.threads.replace(",", " ").split() if x.strip()}
 
     started = time.time()
     run_id = f"fetch:{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(started))}"
@@ -172,7 +226,18 @@ if __name__ == "__main__":
     # FEED FIRST, then the sweep. The feed is authoritative for what moved; the sweep is a guess.
     # Sorting the union put low thread ids first and could spend the whole budget on sweep targets
     # while feed threads went unfetched.
-    targets = list(dict.fromkeys(targets))
+    # Forced threads go in FRONT of both: they are there because the corpus is known to be missing
+    # something on them, which neither the feed nor the sweep can discover.
+    gap_absent = state.get("gap_absent") or {}
+    if not args.no_gap_scan and not args.dry_run:
+        gap_hits, gap_absent, gap_spent = gap_targets(state, max(0, args.budget - spent))
+        spent += gap_spent
+        if gap_hits:
+            print(f"  gap scan: {len(gap_hits)} thread(s) hold an id we do not: {sorted(set(gap_hits))}")
+        forced |= set(gap_hits)
+    targets = list(dict.fromkeys(list(forced) + list(targets)))
+    if forced:
+        print(f"  forced threads: {sorted(forced)}")
     if args.dry_run:
         print(f"[dry run] would fetch {len(targets)} threads, ~{spent + len(targets)} requests, "
               f"~{(spent + len(targets)) * SLEEP / 60:.1f} min")
@@ -193,6 +258,10 @@ if __name__ == "__main__":
         elif status == 404:
             e404 += 1
             fetched_at[pid] = time.time()   # we asked and it is gone; that is a verification
+            if pid in forced:               # a gap-scan probe: the id does not exist, record it
+                gap_absent.setdefault("post", [])
+                if pid not in gap_absent["post"]:
+                    gap_absent["post"] = sorted(gap_absent["post"] + [pid])
         elif status == 429:
             e429 += 1
         if i % 50 == 0:
@@ -233,8 +302,11 @@ if __name__ == "__main__":
                    "note": f"{new} new item-versions, {edits} edits, {spent} requests"})
     STATE.write_text(json.dumps({"cursor": cursor, "etags": etags,
                                  "threads_on_disk": len(list(CS.POSTS.glob("*.json"))),
+                                 "gap_absent": gap_absent,
                                  "last_run": run_id}, indent=1) + "\n")
     con = CS.build_index()
+    print("id gaps:", {k: v["n_missing"] for k, v in CS.id_gaps(con).items()},
+          "| known nonexistent:", {k: len(v) for k, v in gap_absent.items()})
     print(f"\n{ok} threads fetched, {new} new item-versions, {edits} edits, {spent} requests"
           f"{'' if complete else '  [PARTIAL -- recorded as incomplete]'}")
     print("coverage:", CS.coverage(con, fresh_hours=args.fresh_hours))

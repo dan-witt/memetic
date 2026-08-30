@@ -33,6 +33,7 @@ stay in data/posts/<id>.json as archival record; this store is the queryable vie
 FILTERING IS A QUERY CONCERN. The store records every item as fetched. The >=20-char rule lives in
 items_at(), so the store stays a faithful record and the analysis rule stays in one place.
 """
+import datetime as dt
 import hashlib, json, os, sqlite3, time
 from pathlib import Path
 
@@ -490,3 +491,56 @@ def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS,
              r["kind"])
             for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
             if r["item_key"] not in drop]
+
+
+def id_gaps(con, cutoff=None, observed_at=None):
+    """Which item ids the platform issued that this corpus does not hold.
+
+    The coverage numbers this pipeline already publishes cannot see this. `cutoff_margin.coverage`
+    reports what fraction of threads was recently VERIFIED, and `feed_lag` measures items that
+    arrived late -- both are blind to an item that never arrived at all. 1f916 issues dense
+    per-kind integer ids, so the ids themselves are the census: any id inside the observed range
+    that the store does not hold is either a platform gap (the id was never used, or the item was
+    hard-deleted before we first saw it) or a fetch we missed.
+
+    Found at issue #16 by asking whether comment ids are contiguous. They were, except for one:
+    comment 17133, on post 476 -- a thread last observed on 08-11, eighteen days before the item
+    was written. The changes feed never brought that thread back, and nothing else in the pipeline
+    would ever have noticed. Post 1811 was missing the same way; posts 2 and 27 are the other kind
+    (the API answers "does not exist").
+
+    With a `cutoff`, the range is cut at the highest id created before it, so the answer is about
+    the items an ISSUE reports on. Without one it runs to the newest id held, whose last few
+    entries are a live boundary: an id created between two of our own thread fetches shows as a
+    gap and is filled by the next run. Report the in-scope figure; the unbounded one is the
+    fetcher's business.
+
+    -> {kind: {"min", "max", "held", "missing": [...], "n_missing"}}. Cheap: two index scans, no
+    network. Which kind of gap a given id is needs one GET per id and is not done here.
+    """
+    hi = {}
+    if cutoff is not None:
+        cut = cutoff if isinstance(cutoff, (int, float)) else \
+            dt.datetime(*map(int, str(cutoff)[:10].split("-")), tzinfo=dt.timezone.utc).timestamp()
+        for kind in ("post", "comment"):
+            r = con.execute("SELECT MAX(item_id) FROM observations WHERE kind = ? AND "
+                            "created_at < ? AND first_seen_at <= ?",
+                            (kind, cut, observed_at or 9e18)).fetchone()
+            hi[kind] = r[0]
+    out = {}
+    for kind in ("post", "comment"):
+        # first_seen_at, like every other query here: an issue is pinned by its published pull_at
+        # and must re-derive this cell from the observations that existed when it ran. Without the
+        # filter a later repair makes an old issue's id_coverage un-reproducible -- which is the
+        # contract this very cell was added to police.
+        ids = sorted(r[0] for r in con.execute(
+            "SELECT DISTINCT item_id FROM observations WHERE kind = ? AND first_seen_at <= ?",
+            (kind, observed_at or 9e18)))
+        if hi.get(kind):
+            ids = [i for i in ids if i <= hi[kind]]
+        if not ids:
+            continue
+        missing = sorted(set(range(ids[0], ids[-1] + 1)) - set(ids))
+        out[kind] = {"min": ids[0], "max": ids[-1], "held": len(ids),
+                     "missing": missing, "n_missing": len(missing)}
+    return out

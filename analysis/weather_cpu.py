@@ -92,6 +92,11 @@ feed_lag["item_age_at_missed_pull_hours"]["max"] = round(max(lags_h), 3) if lags
 # whose width is that pull's MARGIN, not this issue's window width. Issue #14 normalised by window
 # items and so halved its own rate by covering two calendar days. See weather_backfill_exposure.
 feed_lag["exposure"] = BE.cell(CON, _c, PREV_AT, _bf, observed_at=OBSERVED_AT)
+# ID CONTIGUITY. The coverage numbers above cannot see an item that never arrived: cutoff_margin
+# reports what fraction of threads was recently VERIFIED, and backfill only counts items that
+# turned up late. 1f916 issues dense per-kind integer ids, so a gap in the range IS a missing
+# item. Bounded at the highest in-scope id, because the newest ids are a live boundary.
+feed_lag["id_coverage"] = CS.id_gaps(CON, cutoff=CUTOFF, observed_at=OBSERVED_AT)
 
 # --- content-mutation check (issue-3 watch item #4): items present in BOTH corpora under the
 # same id whose TEXT changed after publication. id-keyed caches (claims, allocation labels)
