@@ -54,7 +54,7 @@ independent two-way audit (92.9 vs 85.5). Three populations, three prompts, one 
 ## The dominant uncertainty is the prompt, not the sample
 
 The calibration file is 300 square items scored by both a venue-naming prompt and this generic one.
-They agree on **79%**, and the venue share moves **87.3% to 67.7% — 19.6 points**. Sampling error
+They agree on **79%**, and the venue share moves **87.3% to 67.7% — 19.7 points**. Sampling error
 on these levels is 0.011 to 0.027. So the wording dominates the measurement by an order of
 magnitude, and **no absolute level in this directory is publishable**: not 0.693, not 0.417.
 
