@@ -135,7 +135,7 @@ def pooled_start(cutoff_str, K=3):
                            "pooled_issues": [q.name for q in dirs[:K - 1]] + ["(this issue)"]}
 
 
-def pooled_overlap(NEW, start, cutoff, prev_issue_dir):
+def pooled_overlap(NEW, start, cutoff, prev_issue_dir, con=None):
     """How much of THIS pooled window is the PREVIOUS issue's pooled window over again.
 
     Issue #7 opened the pooled series and pre-registered the discipline (its watch item #4):
@@ -158,11 +158,41 @@ def pooled_overlap(NEW, start, cutoff, prev_issue_dir):
     pcut = dt.datetime.strptime(pc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc).timestamp()
     mine = [t for t, k, x, a in NEW if start <= t < cutoff]
     both = [t for t in mine if pstart <= t < pcut]
-    return {"prev_issue": d.get("issue"), "prev_pooled_start_utc": ws,
-            "prev_pooled_end_utc": pc, "this_pooled_items": len(mine),
-            "shared_items": len(both),
-            "shared_fraction_of_this": round(len(both) / len(mine), 3) if mine else None,
-            "read": "consecutive pooled points are strongly dependent; not a two-point trend."}
+    out = {"prev_issue": d.get("issue"), "prev_pooled_start_utc": ws,
+           "prev_pooled_end_utc": pc, "this_pooled_items": len(mine),
+           "shared_items": len(both),
+           "shared_fraction_of_this": round(len(both) / len(mine), 3) if mine else None,
+           "read": "consecutive pooled points are strongly dependent; not a two-point trend."}
+    # ...and the item fraction is the WEAKER statement, because the cells measure the SPLIT. An
+    # author is a newcomer relative to each window's own start, so a later start reclassifies the
+    # previous window's earliest arrivals as incumbents. Issue #18 read a pooled disagreement
+    # against an item overlap of 68% while only 37% of the previous newcomer SET was still a
+    # newcomer; without this row the dependence caveat points the wrong way.
+    try:
+        import corpus_store as CS
+        _c = con or CS.build_index()
+        prev_stream = CS.weather_items(_c, cutoff=pcut)
+        pn_i, pi_i = split(prev_stream, pstart)
+        key_p = lambda i: f"{prev_stream[i][1][0]}:{prev_stream[i][1][1]}"
+        key_t = lambda i: f"{NEW[i][1][0]}:{NEW[i][1][1]}"
+        cn_i, ci_i = split(NEW, start)
+        pn = {key_p(i) for i in pn_i}
+        cn = {key_t(i) for i in cn_i}
+        ci = {key_t(i) for i in ci_i}
+        out["newcomer_set_overlap"] = {
+            "prev_newcomer_items": len(pn), "this_newcomer_items": len(cn),
+            "retained_as_newcomer": len(pn & cn),
+            "retained_fraction_of_prev": round(len(pn & cn) / len(pn), 3) if pn else None,
+            "reclassified_as_incumbent": len(pn & ci),
+            "fell_out_of_the_window": len(pn - cn - ci),
+            "newly_newcomer": len(cn - pn),
+            "read": "the cells measure the newcomer/incumbent SPLIT, so this is the overlap that "
+                    "governs how dependent two pooled points are. A low retained fraction with a "
+                    "high item overlap means the two windows measure different populations and "
+                    "disagreement between them is expected without any change in behaviour."}
+    except Exception as e:                       # a control, never a reason to lose the cell
+        out["newcomer_set_overlap"] = {"error": repr(e)}
+    return out
 
 
 if __name__ == "__main__":
