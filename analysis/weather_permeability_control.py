@@ -194,7 +194,11 @@ for n in (3, 4, 5):
     entered_n = [k for k in c if k not in cp]   # per-horizon; NOT the loop above's `entered`
     held = round(float(np.mean([c[k][0] for k in shared])), 1)
     prev = round(float(np.mean([cp[k][0] for k in shared])), 1)
-    full = round(float(np.mean([v[0] for v in c.values()])), 1)
+    # Average the UNROUNDED cohort rates, as fixed_horizon_permeability's own `overall` does.
+    # Averaging the rounded per-cohort percentages instead made this cell disagree with the
+    # fixed_horizon row by a tenth at issue #19 (31.4 against 31.5) purely by accumulated
+    # rounding, for two numbers that are the same statistic.
+    full = round(100 * float(np.mean([np.mean(byc3[k]) for k in c])), 1) if (byc3 := fixed_horizon_rows(ev, n)) else None
     print(f"   N={n}: {PREV[0]} {prev} -> {NEWEST[0]} {held} on the shared {len(shared)} cohorts"
           f"   (all-cohort {NEWEST[0]} cell: {full}; gap = entry, not behaviour)")
     # Strict check, not decoration: a cohort's window is frozen once it closes, so a shared

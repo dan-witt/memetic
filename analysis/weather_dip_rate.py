@@ -108,6 +108,19 @@ def rebaselined_rates(series, t_utc, anchor, issues=None):
         if add:
             n_below = sum(1 for v in add if v < anchor)
             import statistics as _st
+            # WITHIN-ISSUE SPREAD, added at issue #19 on issue #18's pre-registration. Issues
+            # #17 and #18 moved the median by -0.0057 and +0.0055, the two largest steps after
+            # issue #6's, and the level series alone cannot say whether the cell's dispersion rose
+            # or it drew twice from a tail. The windows OVERLAP (120 items, stride 40), so this is
+            # a descriptive dispersion of the published windows and not an estimate of anything's
+            # standard error; compare it across issues, never treat it as sigma/sqrt(n).
+            _sd = round(_st.stdev(add), 4) if len(add) > 1 else None
+            _q = None
+            if len(add) >= 4:
+                _srt = sorted(add)
+                _lo_q = _st.median(_srt[:len(_srt) // 2])
+                _hi_q = _st.median(_srt[(len(_srt) + 1) // 2:])
+                _q = round(_hi_q - _lo_q, 4)
             rows.append({"issue": tag, "new_windows": len(add), "new_below_forth": n_below,
                          "new_below_forth_pct": round(100 * n_below / len(add), 1),
                          "new_window_mean": round(sum(add) / len(add), 4),
@@ -115,6 +128,8 @@ def rebaselined_rates(series, t_utc, anchor, issues=None):
                          # threshold_sensitivity median reads each issue's OWN published series,
                          # so it mixes the pre-#14 and post-#14 currencies; this one does not.
                          "new_window_median": round(_st.median(add), 4),
+                         "new_window_sd": _sd, "new_window_iqr": _q,
+                         "new_window_min": min(add), "new_window_max": max(add),
                          "pooled_below_forth_pct": round(
                              100 * sum(1 for v in series[:hi] if v < anchor) / hi, 1)})
         lo = hi

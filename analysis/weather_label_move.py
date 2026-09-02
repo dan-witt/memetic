@@ -42,9 +42,22 @@ def attribute(issue_date):
         if n_now is None:
             rows.append({"day": day, "status": "no per-day label count published"}); continue
         now = solve(m["this_issue"], n_now, span=0)
-        then = solve(m["prev_issue"], n_now, span=15)
+        # The PREVIOUS issue publishes its own denominator for the same day, so search it only
+        # when that record is missing. Issue #19 hit the difference: a free search over n returned
+        # seven candidate pairs and the answer read AMBIGUOUS, while the published pair pins it to
+        # one. Reading the record beats re-deriving it.
+        n_then = None
+        prevs = [q for q in sorted(W.glob("20*-*-*"), reverse=True)
+                 if (q / "results.json").exists() and q.name < issue_date]
+        if prevs:
+            n_then = (((json.load(open(prevs[0] / "results.json"))["allocation_trend"]
+                        .get("label_audit") or {}).get("per_day") or {}).get(day) or {}
+                      ).get("labelled")
+        then = solve(m["prev_issue"], n_then, span=0) if n_then else solve(m["prev_issue"], n_now, span=15)
+        r_src = "previous issue's published label count" if n_then else "search over plausible n"
         r = {"day": day, "prev_share": m["prev_issue"], "this_share": m["this_issue"],
              "delta": m["delta"], "labelled_now": n_now,
+             "labelled_prev": n_then, "prev_denominator_source": r_src,
              "candidates_now": now, "candidates_prev": then}
         if len(now) == 1 and len(then) == 1:
             (v1, n1), (v0, n0) = now[0], then[0]

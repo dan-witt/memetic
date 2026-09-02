@@ -43,6 +43,7 @@ import weather_issue_boundary as IB   # issue/window boundaries, single source o
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
 W = Path("/home/dan/personal/memetic/results/weather")
 VENDI_FLOOR, NN_FLOOR = 100, 50   # identical to the per-issue floors in weather_gpu.py
+NN_CTRL_DRAWS = int(os.environ.get("WEATHER_NN_CTRL_DRAWS", "100"))
 
 
 def vendi(E):
@@ -79,6 +80,27 @@ def cells(Ea, idx_newc, idx_inc, rng=None):
     """
     rng = rng if rng is not None else np.random.default_rng(0)
     out = {"counts": {"newcomer_items": len(idx_newc), "incumbent_items": len(idx_inc)}}
+    out.update(vendi_cells(Ea, idx_newc, idx_inc, rng))
+    if len(idx_newc) >= NN_FLOOR and len(idx_inc) >= 3 * NN_FLOOR:
+        En, Ei = Ea[np.array(idx_newc)], Ea[np.array(idx_inc)]
+        out["nn_distance_matched"] = dict(
+            NNR.matched_nn(En, Ei), below_standing_vendi_floor=len(idx_newc) < VENDI_FLOOR,
+            read="same reference pool R, same size, disjoint from every query set; delta > null"
+                 " = newcomer claims sit farther from the incumbent cloud than incumbents do from"
+                 " each other. Null centres on 0 by construction; see weather_nn_validate.py.")
+        out["nn_distance_legacy_asymmetric"] = NNR.legacy_asymmetric(En, Ei)
+    else:
+        out["nn_cell_skipped"] = (f"newcomer_items={len(idx_newc)} / incumbent_items={len(idx_inc)} "
+                                  f"against the standing floors m>={NN_FLOOR} newcomer and "
+                                  f">={3 * NN_FLOOR} incumbent; not computed")
+    return out
+
+
+def vendi_cells(Ea, idx_newc, idx_inc, rng=None):
+    """Just the two Vendi-ratio cells. Split out of cells() so the m-matched control can repeat
+    them over outer subsamples without also re-running the 500-draw NN cell each time."""
+    rng = rng if rng is not None else np.random.default_rng(0)
+    out = {}
     if len(idx_newc) >= VENDI_FLOOR and len(idx_inc) >= VENDI_FLOOR:
         mm = int(0.8 * min(len(idx_newc), len(idx_inc)))
         rs = [vendi(Ea[np.array(idx_newc)][rng.choice(len(idx_newc), mm, replace=False)]) /
@@ -97,18 +119,6 @@ def cells(Ea, idx_newc, idx_inc, rng=None):
     else:
         out["vendi_cells_skipped"] = (f"newcomer_items={len(idx_newc)} below the standing "
                                       f"m>={VENDI_FLOOR} floor for the Vendi-based parity/union cells; not computed")
-    if len(idx_newc) >= NN_FLOOR and len(idx_inc) >= 3 * NN_FLOOR:
-        En, Ei = Ea[np.array(idx_newc)], Ea[np.array(idx_inc)]
-        out["nn_distance_matched"] = dict(
-            NNR.matched_nn(En, Ei), below_standing_vendi_floor=len(idx_newc) < VENDI_FLOOR,
-            read="same reference pool R, same size, disjoint from every query set; delta > null"
-                 " = newcomer claims sit farther from the incumbent cloud than incumbents do from"
-                 " each other. Null centres on 0 by construction; see weather_nn_validate.py.")
-        out["nn_distance_legacy_asymmetric"] = NNR.legacy_asymmetric(En, Ei)
-    else:
-        out["nn_cell_skipped"] = (f"newcomer_items={len(idx_newc)} / incumbent_items={len(idx_inc)} "
-                                  f"against the standing floors m>={NN_FLOOR} newcomer and "
-                                  f">={3 * NN_FLOOR} incumbent; not computed")
     return out
 
 
@@ -259,6 +269,114 @@ if __name__ == "__main__":
             print(f"   overlap_with_prev_issue: {ov['shared_items']}/{ov['this_pooled_items']} "
                   f"items = {100 * ov['shared_fraction_of_this']:.1f}% shared with "
                   f"{ov['prev_issue']}'s pooled window")
+
+    # (3) the m-matched control, pre-registered by issue #18's watch item #5.
+    #
+    # within_pool_parity and union_over_incumbent are Vendi ratios drawn at m set by the newcomer
+    # pool size, and that pool shrank with recruitment: 529 -> 346 -> 196 items over issues
+    # #17-#19. Vendi grows sublinearly with m at a rate set by each pool's own geometry, so a
+    # parity move across those windows confounds the effect with the cell's own sample size.
+    #
+    # Construction: every published pooled window is rebuilt against its OWN start and cutoff, so
+    # each keeps its real newcomer population, and the newcomer set is then subsampled to a common
+    # target m. Claims and embeddings are this issue's throughout -- one basis, like the one-basis
+    # median column -- so an earlier window is its own population measured with today's instrument.
+    #
+    # TWO targets, because they answer different questions. Issue #18 registered ONE: subsample the
+    # larger pool to the previous window's size, which asks whether the parity move between those
+    # two windows survives. The smallest pool across all windows is also run, which is the only m
+    # every window can reach and so the only one that puts the whole series on one footing. Both
+    # are reported; the registered one is marked.
+    #
+    # The OUTER subsample is repeated (WEATHER_MCTRL_DRAWS, default 20) rather than drawn once,
+    # because a single draw would put the whole comparison on one arbitrary subset. The band below
+    # is over outer draws of the per-draw medians; the inner 40-draw band of any one subsample is
+    # narrower and is not what should be read.
+    if "--no-m-control" not in sys.argv and EMIT.get("pooled_window"):
+        D = int(os.environ.get("WEATHER_MCTRL_DRAWS", "20"))
+        wins = []
+        for q in published_issues_before(_c)[:K - 1]:
+            _pd = json.load(open(q / "results.json"))
+            _pw = _pd.get("newcomer_cells_pooled_window") or {}
+            if not _pw.get("start_utc"):
+                continue
+            wins.append((_pd["issue"],
+                         dt.datetime.strptime(_pw["start_utc"], "%Y-%m-%d %H:%M")
+                         .replace(tzinfo=dt.timezone.utc).timestamp(),
+                         dt.datetime.strptime(_pd["cutoff"], "%Y-%m-%dT%H:%M:%SZ")
+                         .replace(tzinfo=dt.timezone.utc).timestamp()))
+        wins.reverse()
+        wins.append((f"(this issue, cutoff {_c})", st, CUTOFF))
+        rows = []
+        for tag, ws, wc in wins:
+            keep = [i for i, (t, k, x, a) in enumerate(NEW) if t < wc]
+            sub = [NEW[i] for i in keep]
+            n_j, i_j = split(sub, ws)
+            rows.append({"window": tag, "n": [keep[j] for j in n_j], "i": [keep[j] for j in i_j]})
+        # The pre-registered target is the PREVIOUS issue's pooled newcomer count -- that is what
+        # "subsample the larger newcomer pool to 346" named. Read it from the previous issue's
+        # published block rather than picking a sort position, which happened to equal 346 only
+        # because these three counts are distinct.
+        counts = sorted({len(r["n"]) for r in rows})
+        registered = None
+        _pdirs = published_issues_before(_c)
+        if _pdirs:
+            registered = (((json.load(open(_pdirs[0] / "results.json"))
+                            .get("newcomer_cells_pooled_window") or {}).get("counts") or {})
+                          .get("newcomer_items"))
+        targets = sorted({counts[0]} | ({registered} if registered else set()))
+        EMIT["m_matched_control"] = {"K": K, "outer_draws": D,
+            "construction": "each published pooled window rebuilt against its own start and "
+                            "cutoff; newcomer set subsampled to a common target and the subsample "
+                            "repeated D times. Bands are over OUTER draws, not the inner band of "
+                            "one subsample. A row whose pool EQUALS the target is not subsampled, "
+                            "so its band carries no outer variation and is marked "
+                            "no_outer_variation. Claims and embeddings are this issue's throughout.",
+            "targets": {}}
+        for m_t in targets:
+            elig = [r for r in rows if len(r["n"]) >= m_t]
+            ctrl = []
+            for r in elig:
+                rg = np.random.default_rng(0)
+                par, uni, nnd, nnp = [], [], [], []
+                # A window whose pool EQUALS the target is not subsampled at all, so its "outer
+                # draws" are 20 copies of one set and its band carries no outer variation. That is
+                # a different quantity from a genuinely subsampled row's band and is flagged.
+                degenerate = len(r["n"]) == m_t
+                for _ in range(D):
+                    draw = [r["n"][j] for j in rg.choice(len(r["n"]), m_t, replace=False)]
+                    c = vendi_cells(Ea, draw, r["i"], np.random.default_rng(0))
+                    if c.get("within_pool_parity"): par.append(c["within_pool_parity"]["band"][0])
+                    if c.get("union_over_incumbent"): uni.append(c["union_over_incumbent"]["band"][0])
+                    # NN over the SAME outer draws, at reduced inner draws so the repetition is
+                    # affordable. p resolution is 2/NN_CTRL_DRAWS, ample for telling an exclusion
+                    # from a null here; the published cell keeps its 500.
+                    if len(draw) >= NN_FLOOR and len(r["i"]) >= 3 * NN_FLOOR:
+                        _n = NNR.matched_nn(Ea[np.array(draw)], Ea[np.array(r["i"])],
+                                            draws=NN_CTRL_DRAWS)
+                        nnd.append(_n["delta_observed"][0]); nnp.append(_n["p_two_sided_vs_null"])
+                band = lambda v, k=3: [round(float(np.percentile(v, q)), k) for q in (50, 5, 95)] if v else None
+                ctrl.append({"window": r["window"], "newcomer_items_full": len(r["n"]),
+                             "incumbent_items": len(r["i"]), "newcomer_items_drawn": m_t,
+                             "no_outer_variation": degenerate,
+                             "parity_over_outer_draws": band(par),
+                             "union_over_outer_draws": band(uni),
+                             "nn_delta_over_outer_draws": band(nnd, 4),
+                             "nn_p_over_outer_draws": band(nnp, 3),
+                             "nn_inner_draws": NN_CTRL_DRAWS})
+            EMIT["m_matched_control"]["targets"][str(m_t)] = {
+                "m_newcomer_items": m_t,
+                "vendi_draw_m": int(0.8 * m_t),
+                "windows_eligible": len(elig),
+                "pre_registered": m_t == registered,
+                "windows": ctrl}
+            print(f"m-matched control at m={m_t} ({D} outer draws"
+                  f"{', PRE-REGISTERED' if m_t == registered else ''}):")
+            for c in ctrl:
+                print(f"   {c['window']:34s} full={c['newcomer_items_full']:4d}"
+                      f"{' [no outer variation]' if c['no_outer_variation'] else '':22s} "
+                      f"parity={c['parity_over_outer_draws']} union={c['union_over_outer_draws']} "
+                      f"nn_p={c['nn_p_over_outer_draws']}")
 
     out = S / "weather_newcomer_pooled_out.json"
     out.write_text(json.dumps(EMIT, indent=1))

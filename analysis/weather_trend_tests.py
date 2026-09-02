@@ -263,6 +263,34 @@ def report(issue_date):
                     "to take it outside its own history. Compare any candidate event's move against "
                     "median_abs_day_move before calling the cell unmoved."}
 
+    # (5b) the idea column's own move scale, added at issue #19 on issue #18's pre-registration.
+    # Issues #17 and #18 moved the one-basis median by -0.0057 and +0.0055 and the report asked
+    # whether the cell's dispersion had risen or it had drawn twice from a tail. Two statistics
+    # answer it and neither needs a new instrument: the WITHIN-ISSUE spread of each issue's added
+    # windows (published in per_issue_dip_rate_rebaselined.new_window_sd), and the median absolute
+    # issue-to-issue MOVE, which is the same construction register_sensitivity already uses. A
+    # move larger than the observed range would be the first outside the column's own history.
+    _reb = (d.get("idea_time_series") or {}).get("per_issue_dip_rate_rebaselined") or []
+    _med = [r["new_window_median"] for r in _reb if r.get("new_window_median") is not None]
+    _sd = [r["new_window_sd"] for r in _reb if r.get("new_window_sd") is not None]
+    if len(_med) >= 3:
+        _mv = [round(_med[i + 1] - _med[i], 4) for i in range(len(_med) - 1)]
+        out["idea_move_sensitivity"] = {
+            "issues": len(_med), "median": {"min": min(_med), "max": max(_med)},
+            "moves": _mv, "newest_move": _mv[-1],
+            "median_abs_move": round(statistics.median([abs(m) for m in _mv]), 4),
+            "largest_abs_move": max(abs(m) for m in _mv),
+            "within_issue_sd": {"newest": _sd[-1] if _sd else None,
+                                "median_over_issues": round(statistics.median(_sd), 4) if _sd else None,
+                                "min": min(_sd) if _sd else None, "max": max(_sd) if _sd else None,
+                                "last_four": _sd[-4:]},
+            "read": "two scales for one column. within_issue_sd is the dispersion of an issue's own "
+                    "added windows -- if the recent large moves came from the cell getting noisier, "
+                    "this is where it shows. median_abs_move is the issue-to-issue step scale. The "
+                    "windows OVERLAP (120 items, stride 40), so the sd is a descriptive spread of "
+                    "the published windows and not sigma for any estimator; do not divide it by "
+                    "sqrt(n)."}
+
     # (6) the entering per-cohort conversion cohort against the pool it joins. The published N=3
     # cell is an UNWEIGHTED mean over cohorts, so a new cohort moves it by (its rate - the old
     # mean)/n_cohorts regardless of size; that arithmetic is not a test of whether the cohort is
@@ -295,8 +323,15 @@ def report(issue_date):
             "difference_pts": round(pct_new - 100 * pool, 1),
             "difference_in_counting_se": round((p - pool) / se, 2),
             "cohorts_n_ge_50": {c: v[0] for c, v in sorted(per.items()) if v[1] >= 50},
+            # `after` is the same statistic as
+            # structure.permeability_membership_held_fixed.N3.issue_all_cohorts, so it is READ from
+            # there rather than re-derived. Averaging the per_cohort table's already-rounded
+            # percentages put 31.4 and 31.5 in one results.json at issue #19 for one number.
             "unweighted_cell": {"before": round(old_mean, 1),
-                                "after": round(sum(pct for pct, _ in per.values()) / len(per), 1),
+                                "after": (((d.get("structure") or {})
+                                           .get("permeability_membership_held_fixed") or {})
+                                          .get("N3") or {}).get("issue_all_cohorts")
+                                or round(sum(pct for pct, _ in per.values()) / len(per), 1),
                                 "move_pts": round((pct_new - old_mean) / len(per), 2)},
             # DERIVED, not a fixed string: issue #16's cold review found this sentence still
             # claiming "~2 SE" beside its own difference_in_counting_se of 1.11.
