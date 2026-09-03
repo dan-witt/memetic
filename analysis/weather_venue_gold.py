@@ -34,10 +34,22 @@ Also reported, and NOT part of any marker: `unowned_addresses`. 40-hex addresses
 the square's record. It is a control, because the naive version of this check matched any address
 and mixed them in.
 
-Usage: python3 analysis/weather_venue_gold.py     (WEATHER_CUTOFF sets the cutoff)
+THE WORLD SIDE (added at issue #20, pre-registered by issue #18 and carried by #19). The markers
+above bound recall on VENUE-true items and nothing on the other side, so an axis that labels
+everything VENUE would pass them. The symmetric subset is the one the same record defines by
+exclusion: an item carrying an absolute http(s) URL that is not under any operated property, when
+`operated_properties.meaning` says that list is COMPLETE. It is a WEAKER marker than the own-side
+ones -- an item can link an outside article while arguing about the square's governance, and the
+link is then not the subject -- so it is a recall floor for WORLD, not a gold set, and its cell is
+read for SIGN and rough size rather than as a rate. `world_side.exclusive` drops items that also
+carry an own marker and is the cell to read.
+
+Usage: python3 analysis/weather_venue_gold.py     (WEATHER_CUTOFF sets the cutoff;
+       WEATHER_OWN_IDENTIFIERS points at a snapshot other than the current one)
 """
 import collections, datetime as dt, json, os, re, sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 R = Path(__file__).resolve().parent.parent
 S = Path(os.environ.get("MEMETIC_WORKDIR", os.path.expanduser("~/personal/memetic-workdir")))
@@ -45,7 +57,8 @@ sys.path.insert(0, str(R / "analysis"))
 import corpus_store as CS
 
 CUTOFF = os.environ.get("WEATHER_CUTOFF")
-OWN = json.load(open(R / "data/1f916_own_identifiers.json"))
+OWN_PATH = Path(os.environ.get("WEATHER_OWN_IDENTIFIERS", R / "data/1f916_own_identifiers.json"))
+OWN = json.load(open(OWN_PATH))
 
 ADDR = re.compile(r"\b0x[0-9a-fA-F]{40}\b")
 # A published route with a :param becomes a prefix: "/api/post/:id" matches "/api/post/1916".
@@ -80,6 +93,40 @@ MARKERS = {
 # Not a marker. The control the naive version of this check needed.
 CONTROL = {"unowned_addresses": lambda t: any(m.group(0).lower() not in _OWN_ADDR
                                               for m in ADDR.finditer(t))}
+
+# Every operated property as (host, path prefix). The x account and the subreddit are paths on
+# hosts the square does not operate, so a host-only test would hand x.com and reddit.com to the
+# WORLD side wholesale and the square's own account with them.
+_OWNED = []
+for _u in (OWN["operated_sites"] + OWN["operated_repos"]
+           + [OWN["operated_x_account"], OWN["operated_subreddit"]]):
+    _p = urlsplit(_u)
+    _OWNED.append((_p.netloc.lower().removeprefix("www."), _p.path.rstrip("/").lower()))
+
+
+def _urls_in(t):
+    """Absolute http(s) URLs in free text, parsed rather than pattern-matched.
+
+    No stdlib parser finds URLs inside prose, so the text is split on whitespace and each token is
+    handed to urlsplit; a token is a URL if it parses with an http(s) scheme and a host. Trailing
+    sentence punctuation and wrapping brackets are stripped first. Misses URLs glued to a preceding
+    word, which is why the cell is a recall floor.
+    """
+    out = []
+    for tok in t.split():
+        tok = tok.strip("<>()[]{}\"'`").rstrip(".,;:!?")
+        if "://" not in tok:
+            continue
+        p = urlsplit(tok)
+        if p.scheme in ("http", "https") and p.netloc:
+            out.append((p.netloc.lower().removeprefix("www."), p.path.rstrip("/").lower()))
+    return out
+
+
+def _unowned_url(t):
+    """An outbound URL under no operated property -- the record's own definition of not-ours."""
+    return any(not any(h == oh and (p == op or p.startswith(op + "/")) for oh, op in _OWNED)
+               for h, p in _urls_in(t))
 
 
 def rows(cutoff=CUTOFF, observed_at=None):
@@ -127,6 +174,89 @@ def _cell(keys, labels, per=None, when=None):
     return out
 
 
+# Third-party properties that exist to watch or mirror THIS square. Unlike every other list in
+# this file these are a judgement, not the platform's record -- the record can only say what the
+# square operates, and by construction an unofficial watcher is not on it. Used for one sensitivity
+# row, never for a published marker.
+ABOUT_THE_SQUARE = ("openwitness.net", "f916-watch.fly.dev")
+
+
+def _cluster_se(keys, labels, authors, p):
+    """Author-clustered SE for a subset's venue rate.
+
+    The binomial SE every marker row carries assumes independent items. One author writing thirty
+    of a 513-item subset breaks that, and this subset is small enough for it to matter. Standard
+    cluster-robust sandwich for a mean: sum the per-author residuals, not the per-item ones.
+    """
+    n = sum(1 for q in keys if q in labels)
+    if not n:
+        return None
+    g = collections.defaultdict(lambda: [0, 0])
+    for q in keys:
+        if q in labels:
+            r = g[authors.get(q, "?")]
+            r[0] += 1
+            r[1] += labels[q] == "V"
+    return round((sum((v - c * p) ** 2 for c, v in g.values()) / n ** 2) ** 0.5, 4)
+
+
+def world_side(items, labels, per, when):
+    """The symmetric subset: items pointing at material the square's own record disclaims.
+
+    Same arithmetic as a marker row, opposite expected sign -- if the axis carries subject matter,
+    these items should fall BELOW the day-mix-standardised corpus venue share. `exclusive` is the
+    cell to read; `all` keeps the items that also quote an own identifier, where the two markers
+    point opposite ways and the item is genuinely mixed.
+
+    Two controls, because the headline row has two obvious alternative explanations:
+      `owned_url_only`  -- items whose URLs are ALL under an operated property. If merely carrying
+                           a link pushed the classifier toward WORLD, this row would move too.
+      `about_the_square_excluded` -- the exclusive row minus items whose unowned hosts are all
+                           third-party properties that watch this square. Those are outbound links
+                           about the venue, so they attenuate the cell; dropping them says by how
+                           much. The host list is a judgement and is named in ABOUT_THE_SQUARE.
+    """
+    own = {f"{k[0]}:{k[1]}" for _, k, x, _ in items if any(f(x) for f in MARKERS.values())}
+    hit = {f"{k[0]}:{k[1]}" for _, k, x, _ in items if _unowned_url(x)}
+    authors = {f"{k[0]}:{k[1]}": a for _, k, _, a in items}
+    unowned = lambda x: [(h, p) for h, p in _urls_in(x)
+                         if not any(h == oh and (p == op or p.startswith(op + "/"))
+                                    for oh, op in _OWNED)]
+    hosts = collections.Counter(h for _, k, x, _ in items if f"{k[0]}:{k[1]}" in (hit - own)
+                                for h, _ in unowned(x))
+    with_url = {f"{k[0]}:{k[1]}" for _, k, x, _ in items if _urls_in(x)}
+    about = {f"{k[0]}:{k[1]}" for _, k, x, _ in items
+             if f"{k[0]}:{k[1]}" in (hit - own)
+             and all(h in ABOUT_THE_SQUARE for h, _ in unowned(x))}
+
+    excl = _cell(hit - own, labels, per, when)
+    excl["author_clustered_se"] = _cluster_se(hit - own, labels, authors, excl["venue_rate"])
+    excl["distinct_authors"] = len({authors.get(q, "?") for q in (hit - own) if q in labels})
+    if excl["author_clustered_se"]:
+        excl["lift_in_author_clustered_se"] = round(
+            excl["lift_over_corpus_standardised"] / excl["author_clustered_se"], 2)
+    return {
+        "marker": "an absolute http(s) URL under no property in operated_properties",
+        "all": _cell(hit, labels, per, when),
+        "exclusive": excl,
+        "also_bearing_an_own_marker": len(hit & own),
+        "top_unowned_hosts": hosts.most_common(12),
+        "controls": {
+            "owned_url_only": _cell(with_url - hit, labels, per, when),
+            "about_the_square_excluded": _cell((hit - own) - about, labels, per, when),
+            "about_the_square_only": _cell(about, labels, per, when),
+            "about_the_square_hosts": list(ABOUT_THE_SQUARE),
+        },
+        "read": "a recall FLOOR for the WORLD side, not a gold set: an item can link an outside "
+                "page while arguing about the square itself, and URL-finding in prose misses links "
+                "glued to a preceding word. Read the sign and rough size of "
+                "lift_over_corpus_standardised on `exclusive`, against its AUTHOR-CLUSTERED SE "
+                "rather than the binomial one; a lift at or above zero would say the axis does not "
+                "separate the two sides at all. One-sided either way: it says nothing about "
+                "whether the VENUE label is right.",
+    }
+
+
 def report(items, labels):
     n_lab = sum(1 for _, k, _, _ in items if f"{k[0]}:{k[1]}" in labels)
     base_v = sum(1 for _, k, _, _ in items if labels.get(f"{k[0]}:{k[1]}") == "V")
@@ -171,6 +301,7 @@ def report(items, labels):
                       for d, r in sorted(per.items())}
     out["per_day_beyond_2se"] = [d for d, v in out["per_day"].items()
                                  if v["z"] is not None and abs(v["z"]) > 2]
+    out["world_side"] = world_side(items, labels, per, when)
     out["read"] = (
         "venue_rate is the published classifier's RECALL on a subset where the VENUE answer is "
         "close to known by exact match against the square's own published record. One-sided, and "

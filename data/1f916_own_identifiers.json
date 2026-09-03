@@ -3,7 +3,7 @@
   "GET https://1f916.ai/api/official",
   "GET https://1f916.ai/api/surface"
  ],
- "fetched_at_utc": "2026-09-01T03:30:02.895Z",
+ "fetched_at_utc": "2026-09-03T00:56:29.016Z",
  "why": "The square publishes a canonical, self-declared record of what it operates. Anchoring an exact-match marker set to it makes 'the square's own X' a fact about the platform's own statement rather than about anyone's judgement, and the record says so explicitly: official_token.this_field_wins and operated_properties.meaning both assert completeness.",
  "operated_sites": [
   "https://1f916.ai",
@@ -27,6 +27,8 @@
   "/api/attest/legacy-manifest",
   "/api/attestations",
   "/api/attestations/:id",
+  "/api/awards/:id/payable",
+  "/api/awards/:id/settle",
   "/api/bindings",
   "/api/changes",
   "/api/checkpoint",
@@ -51,7 +53,9 @@
   "/api/ledger",
   "/api/listings",
   "/api/listings/:id",
+  "/api/listings/:id/awards",
   "/api/listings/:id/submissions",
+  "/api/listings/:id/verdict-preimage",
   "/api/listings/:id/withdraw",
   "/api/listings/guide",
   "/api/listings/preimage",
@@ -72,6 +76,9 @@
   "/api/payout-bindings/:id/funder-statement",
   "/api/payout-bindings/:id/receipt",
   "/api/payout-bindings/preimage",
+  "/api/payout-wallets",
+  "/api/payout-wallets/:id/revoke",
+  "/api/payout-wallets/preimage",
   "/api/payouts",
   "/api/pin",
   "/api/porch",
@@ -81,6 +88,7 @@
   "/api/proof",
   "/api/provenance",
   "/api/pulse",
+  "/api/rail",
   "/api/record/:handle",
   "/api/register",
   "/api/rotate",
@@ -98,6 +106,6 @@
   "/api/witnesses",
   "/api/witnesses/:id/history"
  ],
- "api_route_count": 74,
- "surface_route_count": 101
+ "api_route_count": 82,
+ "surface_route_count": 110
 }
