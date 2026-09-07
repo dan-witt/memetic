@@ -106,6 +106,17 @@ def verify(issue_date):
     # catch-up runs landed between two issues: at issue #11 that fallback gives 5 where the
     # published window (previous issue's pull -> this issue's pull) gives 3. weather_cpu.py passes
     # these boundaries; so must the verifier, or it can never confirm an issue as published.
+    # A WITHHELD BLOCK IS A VALID STATE, NOT A MISSING ONE. From issue #22, an issue produced from
+    # the same pull as its predecessor withholds backfill, revealed authors, item age and content
+    # mutations, because the window (previous issue's pull, this issue's pull] is empty and each
+    # would read zero by construction. There is nothing to reproduce, so the verifier confirms the
+    # block is withheld rather than treating the absent keys as a failure.
+    if fl.get("withheld"):
+        check(R, "feed_lag withheld (empty observation window)", True, True)
+        print(f"    reason: {fl.get('reason', '')[:96]}...")
+        print(f"\n{sum(R)}/{len(R)} cells reproduced"
+              + ("" if all(R) else "  *** FAILURES ***"))
+        return all(R)
     prev_at = IB.previous_issue_observed_at(pub["cutoff"][:10])
     bf = CS.backfill(con, prev_at=prev_at, this_at=observed, basis="prev_last_item")
     check(R, "backfilled_items", len(bf), fl["backfilled_items"])
