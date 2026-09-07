@@ -32,7 +32,7 @@ nothing heavy so either environment can use it.
    cutoff and their pull, so they covered ~87% of a day where a cutoff-based window covers all of
    it. Same KIND (one calendar day), slightly different extent; comparisons should say so.
 """
-import datetime as dt
+import datetime as dt, os
 import json
 from pathlib import Path
 
@@ -64,6 +64,19 @@ def issue_window_start(cutoff_str, prev_last=None, root=WEATHER):
     prev_last (the previous pull's last item) is used only for the fallback and for reporting how
     much the definition change is worth this issue.
     """
+    # WHEN ISSUES ARE PRODUCED IN A BATCH. The window start is DEFINITIONALLY the previous issue's
+    # cutoff, and for consecutive daily issues that is this issue's cutoff minus one day -- a value
+    # that is known before the previous issue is published. Deriving it from the published
+    # directory instead silently widens the window when a backlog is worked newest-last: issues
+    # #23 and #24 first measured 2- and 3-day windows because #22 and #23 did not exist on disk
+    # yet, which also corrupts every window-only cell. WEATHER_WINDOW_START names it explicitly.
+    _pin = os.environ.get("WEATHER_WINDOW_START")
+    if _pin:
+        start = cutoff_epoch(_pin)
+        return start, {"basis": "previous issue's CUTOFF, stated explicitly (batched production)",
+                       "start_utc": dt.datetime.fromtimestamp(
+                           start, dt.timezone.utc).strftime("%Y-%m-%d %H:%M"),
+                       "from_issue": f"cutoff {_pin}", "source": "WEATHER_WINDOW_START"}
     dirs = published_issues_before(cutoff_str, root)
     if not dirs:
         return prev_last, {"basis": "previous pull's last item (no published issue precedes this one)"}

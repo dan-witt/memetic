@@ -257,6 +257,30 @@ def world_side(items, labels, per, when):
     }
 
 
+def world_side_since(items, labels, since, cutoff=None):
+    """Issue #21's watch item #5: the WORLD-side cell on items this cell has NOT already seen.
+
+    Re-running the construction on the whole corpus next issue is not a replication -- the subsets
+    overlap almost entirely, so the second reading is nearly the same items and cannot confirm the
+    first. The test is the cell computed on items created at or after `since` (issue #20's cutoff),
+    reported beside the cumulative figure.
+
+    The day-mix standardisation still comes from the WHOLE corpus: `_cell` compares a subset
+    against the corpus venue share on the days the subset's own items fall on, so restricting the
+    subset while keeping the full day mix is what makes the fresh cell comparable to the
+    cumulative one rather than to itself.
+    """
+    t0 = dt.datetime(*map(int, since.split("-")), tzinfo=dt.timezone.utc).timestamp()
+    per, when = _daymix(items, labels)
+    fresh = [r for r in items if r[0] >= t0]
+    out = world_side(fresh, labels, per, when)
+    out["slice"] = {"since_utc": f"{since} 00:00Z", "items": len(fresh),
+                    "note": "items created at or after the previous issue's cutoff; the "
+                            "cumulative cell above shares nearly all of its items with issue "
+                            "#20's and cannot replicate it."}
+    return out
+
+
 def report(items, labels):
     n_lab = sum(1 for _, k, _, _ in items if f"{k[0]}:{k[1]}" in labels)
     base_v = sum(1 for _, k, _, _ in items if labels.get(f"{k[0]}:{k[1]}") == "V")
@@ -352,6 +376,9 @@ if __name__ == "__main__":
     _items = rows()
     out = report(_items, labels)
     out["vs_three_way_predicate"] = against_three_way(_items, labels)
+    _since = os.environ.get("WEATHER_WORLD_SIDE_SINCE")
+    if _since:
+        out["world_side_fresh_slice"] = world_side_since(_items, labels, _since)
     print(json.dumps({k: v for k, v in out.items() if k != "per_day"}, indent=1))
     json.dump(out, open(S / "weather_venue_gold_out.json", "w"), indent=1)
     print("saved", S / "weather_venue_gold_out.json")

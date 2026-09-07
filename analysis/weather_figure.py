@@ -45,7 +45,9 @@ xs = range(len(ts["vendi_over_W"]))
 # the overlay excluded them; from #14 the published line excludes them and the overlay is the
 # old basis.
 _mp = d.get("moderation_placeholders") or {}
-if d.get("placeholder_basis") == "excluded":
+# "substituted" (issue #21+) is a placeholder-free basis like "excluded", so it takes the same
+# branch; only the issue #1-#13 "included" basis wants the other overlay.
+if d.get("placeholder_basis") in ("excluded", "substituted"):
     _alt = _mp.get("rolling_series_with")
     _alt_label = "including placeholders (issues #1-#13 basis)"
 else:

@@ -1,12 +1,12 @@
 {
- "cursor": 1788396149030,
+ "cursor": 1788750282444,
  "etags": {},
- "threads_on_disk": 3646,
+ "threads_on_disk": 4199,
  "gap_absent": {
   "post": [
    2,
    27
   ]
  },
- "last_run": "fetch:2026-09-03T00:41:32Z"
+ "last_run": "fetch:2026-09-07T03:04:29Z"
 }

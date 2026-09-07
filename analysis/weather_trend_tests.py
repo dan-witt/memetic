@@ -225,13 +225,20 @@ def report(issue_date):
                                  "not in it."}
 
     # (4) dip rate: this issue's new-window dip count against the previous issue's.
-    rows = d["idea_time_series"]["per_issue_dip_rate"]
+    # REBASELINED, not own-basis. per_issue_dip_rate keeps each issue's OWN published row, so
+    # comparing its last two rows pits this issue's windows (recomputed now) against the previous
+    # issue's windows as that issue computed them -- exactly the mixture the block's own docstring
+    # forbids, and it matters whenever the currency changed between the two. Issue #21 quoted
+    # "19/46 vs 29/51" where the rebaselined #20 row is 28/50.
+    rows = d["idea_time_series"].get("per_issue_dip_rate_rebaselined") \
+        or d["idea_time_series"]["per_issue_dip_rate"]
     if len(rows) >= 2:
         cur, prv = rows[-1], rows[-2]
         a, b = cur["new_below_forth"], cur["new_windows"] - cur["new_below_forth"]
         c, e = prv["new_below_forth"], prv["new_windows"] - prv["new_below_forth"]
         out["dip_rate_change"] = {
             "issue": cur["issue"], "prev_issue": prv["issue"],
+            "basis": "per_issue_dip_rate_rebaselined -- both rows on THIS issue's series",
             "counts": f"{a}/{cur['new_windows']} vs {c}/{prv['new_windows']}",
             "pct": [cur["new_below_forth_pct"], prv["new_below_forth_pct"]],
             "p_two_sided_fisher": round(fisher_2x2(a, b, c, e), 4),

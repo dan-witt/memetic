@@ -52,9 +52,15 @@ def verify(issue_date):
     # Issue #14 made the placeholder-free parse the currency. An issue is verified on ITS OWN
     # basis, read from what it published; issues #1-#13 carry no field and are verified with the
     # placeholders in, which is how they were computed.
+    # Issue #21 moved detection from the collapse marker's TEXT to mod_state, which names all
+    # three states in which the platform substitutes a body. An issue published before that reads
+    # "excluded" and is still verified against the text-matched set, because that is what it was
+    # computed on.
     basis = pub.get("placeholder_basis", "included")
-    if basis == "excluded":
-        drop = CS.placeholder_keys(con)
+    # An issue that published its exclusion set is verified against THAT set, not against what the
+    # live archive would derive today -- see corpus_store.dropped_keys.
+    drop = CS.dropped_keys(con, basis=basis, keys=pub.get("currency_excluded_keys"))
+    if drop:
         rows = [r for r in rows if r["item_key"] not in drop]
     R = []
 

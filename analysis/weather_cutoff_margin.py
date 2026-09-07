@@ -132,9 +132,21 @@ def margin_from_store(cutoff_str, con=None):
     import corpus_store as CS
     con = con or CS.build_index()
     cut = dt.datetime(*map(int, cutoff_str.split("-")), tzinfo=dt.timezone.utc).timestamp()
-    row = con.execute("SELECT run_id, ended_at, mode, threads_ok, threads_429, complete "
-                      "FROM fetch_runs WHERE ended_at >= ? ORDER BY ended_at LIMIT 1",
-                      (cut,)).fetchone()
+    # WHICH RUN IS "THIS ISSUE'S PULL". By default the first run that ended after the cutoff --
+    # the earliest pull that could have seen the whole day. WEATHER_OBSERVED_AT names it instead,
+    # and MUST be used whenever the rest of the pipeline ran against a later state: publishing a
+    # pull_at earlier than the observations the numbers were computed from makes the issue
+    # unverifiable, because corpus_verify pins observed_at to the published pull_at and would
+    # rebuild from a smaller corpus than the one that was measured.
+    _pin = os.environ.get("WEATHER_OBSERVED_AT")
+    if _pin:
+        row = con.execute("SELECT run_id, ended_at, mode, threads_ok, threads_429, complete "
+                          "FROM fetch_runs WHERE ended_at <= ? ORDER BY ended_at DESC LIMIT 1",
+                          (float(_pin),)).fetchone()
+    else:
+        row = con.execute("SELECT run_id, ended_at, mode, threads_ok, threads_429, complete "
+                          "FROM fetch_runs WHERE ended_at >= ? ORDER BY ended_at LIMIT 1",
+                          (cut,)).fetchone()
     if not row:
         return None
     run_id, ended, mode, ok, e429, complete = row

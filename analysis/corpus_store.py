@@ -411,10 +411,10 @@ def exclude_placeholders_default():
     """Whether the loaders drop collapse placeholders when the caller does not say.
 
     Issue #14 made the placeholder-free parse the published currency; WEATHER_KEEP_PLACEHOLDERS=1
-    restores the issue #1-#13 basis. It is resolved here, once, because eight call sites load the
-    corpus and they must all answer the same way within one run.
+    restores the issue #1-#13 basis. WHICH items get dropped is currency_basis()'s question, not
+    this one -- this answers only whether anything is dropped at all.
     """
-    return os.environ.get("WEATHER_KEEP_PLACEHOLDERS", "") not in ("1", "true", "yes")
+    return currency_basis() != "included"
 
 
 _ph_keys = None
@@ -432,6 +432,81 @@ def placeholder_keys(con, posts_dir=POSTS):
         text = item_texts((r["item_key"] for r in rows), posts_dir)
         _ph_keys = {k for k, t in text.items() if is_placeholder(t)}
     return _ph_keys
+
+
+# The platform rewrites a body in three states and names them in mod_state. Issue #14 excluded one
+# of them by matching its boilerplate TEXT; issue #20 measured the other two sitting in the
+# published currency, and issue #21 adopts the field. mod_state is the platform's own record, the
+# text is only its symptom -- and the symptom is unreliable, because a `removed` and a `withdrawn`
+# notice carry different markers that is_placeholder was never written to match.
+SUBSTITUTED_STATES = ("collapsed", "removed", "withdrawn")
+
+_sub_keys = None
+
+
+def substituted_keys(con=None, posts_dir=POSTS, states=SUBSTITUTED_STATES):
+    """-> {item_key} of every item whose body the PLATFORM replaced, detected on mod_state.
+
+    Read from the archive rather than the log: mod_state is a property of the item as last
+    fetched, and the observation log records content hashes, not moderation state. That also means
+    the set GROWS as old items are withdrawn or removed after the fact -- a day's count is not
+    frozen, which is why issue #21's falsification test is scoped to named item keys rather than
+    to whatever mod_state reads next issue.
+    """
+    global _sub_keys
+    if _sub_keys is None:
+        out = set()
+        for f in Path(posts_dir).glob("*.json"):
+            try:
+                th = json.load(open(f))
+            except Exception:
+                continue
+            p = th.get("post") or {}
+            for kind, o in [("post", p)] + [("comment", c) for c in th.get("comments", [])]:
+                if o.get("id") is not None and o.get("mod_state") in states:
+                    out.add(f"{kind}:{o['id']}")
+        _sub_keys = out
+    return _sub_keys
+
+
+def currency_basis():
+    """Which items the loaders drop: 'included' | 'excluded' | 'substituted'.
+
+    included     issues #1-#13   nothing dropped
+    excluded     issues #14-#20  collapse placeholders, matched on text
+    substituted  issues #21-     every platform-substituted body, matched on mod_state
+
+    Resolved here, once, because three loaders answer this question and they must agree within a
+    run. WEATHER_KEEP_PLACEHOLDERS=1 still restores the #1-#13 basis; WEATHER_CURRENCY_BASIS names
+    one explicitly, which is how corpus_verify.py reproduces an issue on the basis it published.
+    """
+    if os.environ.get("WEATHER_KEEP_PLACEHOLDERS", "") in ("1", "true", "yes"):
+        return "included"
+    b = os.environ.get("WEATHER_CURRENCY_BASIS", "substituted")
+    if b not in ("included", "excluded", "substituted"):
+        raise SystemExit(f"unknown WEATHER_CURRENCY_BASIS {b!r}")
+    return b
+
+
+def dropped_keys(con, basis=None, posts_dir=POSTS, keys=None):
+    """-> the set of item_keys a given currency basis excludes.
+
+    `keys` PINS the set explicitly and is how a published issue is reproduced. Both derived bases
+    read the live archive -- `excluded` matches boilerplate TEXT, `substituted` reads `mod_state` --
+    and neither is pinned by observed_at, because the archive holds each item as last fetched
+    rather than as it stood at a past pull. So a later withdrawal silently changes which items an
+    ALREADY-PUBLISHED issue excluded. Issue #21 hit exactly that: one 08-23 item was withdrawn
+    between assembly and verification, and the issue stopped reproducing itself (43,330 -> 43,329).
+    From issue #21 every issue publishes `currency_excluded_keys`, and corpus_verify reads it.
+    """
+    if keys is not None:
+        return frozenset(keys)
+    basis = basis or currency_basis()
+    if basis == "included":
+        return frozenset()
+    if basis == "excluded":
+        return placeholder_keys(con, posts_dir)
+    return substituted_keys(con, posts_dir)
 
 
 def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=POSTS,
@@ -453,7 +528,8 @@ def weather_items(con, cutoff, observed_at=None, min_chars=MIN_CHARS, posts_dir=
                          f"(e.g. {missing[:3]}). The archive is behind the log: re-fetch, or pass "
                          f"an observed_at that predates them.")
     if exclude_placeholders:
-        rows = [r for r in rows if not is_placeholder(text[r["item_key"]])]
+        drop = dropped_keys(con, posts_dir=posts_dir)
+        rows = [r for r in rows if r["item_key"] not in drop]
     out = [(r["created_at"], (r["kind"], r["item_id"]), text[r["item_key"]], r["author"] or "?")
            for r in rows]
     out.sort(key=lambda x: (x[0], 0 if x[1][0] == "post" else 1, x[1][1]))
@@ -469,7 +545,7 @@ def author_stream(con, cutoff, observed_at=None, min_chars=MIN_CHARS,
     """
     if exclude_placeholders is None:
         exclude_placeholders = exclude_placeholders_default()
-    drop = placeholder_keys(con, posts_dir) if exclude_placeholders else ()
+    drop = dropped_keys(con, posts_dir=posts_dir) if exclude_placeholders else ()
     return [(r["created_at"], r["author"] or "?")
             for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)
             if r["item_key"] not in drop]
@@ -486,7 +562,7 @@ def profile_rows(con, cutoff, observed_at=None, min_chars=MIN_CHARS,
     """
     if exclude_placeholders is None:
         exclude_placeholders = exclude_placeholders_default()
-    drop = placeholder_keys(con, posts_dir) if exclude_placeholders else ()
+    drop = dropped_keys(con, posts_dir=posts_dir) if exclude_placeholders else ()
     return [(r["created_at"], r["author"] or "?", r["author_model"], r["n_chars"], r["post_id"],
              r["kind"])
             for r in items_at(con, cutoff=cutoff, observed_at=observed_at, min_chars=min_chars)

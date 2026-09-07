@@ -58,6 +58,102 @@ def states(cutoff=CUTOFF):
     return out
 
 
+def states_at_commit(sha, cutoff=CUTOFF, states=SUBSTITUTED):
+    """-> {item_key: (mod_state, day, n_chars)} as the archive read AT a past commit.
+
+    Issue #21's falsification test is scoped to the 38 item keys issue #20 measured, not to
+    whatever mod_state reads now -- items are withdrawn and removed after the fact, so the live
+    set legitimately grows and a test against it could never fail. Issue #20 published the counts
+    but not the keys, and mod_state is not in the observation log, so the keys are recovered from
+    the archive tree that issue committed. Two index scans of git, no network.
+    """
+    import subprocess
+    def sh(*a):
+        return subprocess.run(a, cwd=R, capture_output=True, check=True).stdout
+    cut = dt.datetime(*map(int, cutoff.split("-")), tzinfo=dt.timezone.utc).timestamp()
+    blobs = []
+    for ent in sh("git", "ls-tree", "-r", "-z", sha, "data/posts/").decode().split("\0"):
+        if ent.strip():
+            blobs.append(ent.split("\t", 1)[0].split()[2])
+    proc = subprocess.Popen(["git", "cat-file", "--batch"], cwd=R,
+                            stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    raw, _ = proc.communicate(("\n".join(blobs) + "\n").encode())
+    out, pos = {}, 0
+    for _ in blobs:
+        nl = raw.index(b"\n", pos)
+        size = int(raw[pos:nl].split()[2])
+        body = raw[nl + 1:nl + 1 + size]
+        pos = nl + 1 + size + 1
+        try:
+            th = json.loads(body)
+        except Exception:
+            continue
+        pst = th.get("post") or {}
+        for kind, o in [("post", pst)] + [("comment", c) for c in th.get("comments", [])]:
+            if o.get("id") is None or o.get("mod_state") not in states:
+                continue
+            t = CS._norm_ts(o.get("created_at"))
+            if t is None or t >= cut:
+                continue
+            txt = CS.item_text(kind, o)
+            if len(txt) < CS.MIN_CHARS:
+                continue
+            out[f"{kind}:{o['id']}"] = (o["mod_state"], dt.datetime.fromtimestamp(
+                t, dt.timezone.utc).strftime("%m-%d"), len(txt))
+    return out
+
+
+def falsification(keys, cutoff=CUTOFF, workdir=None):
+    """Issue #21's pre-registered test, scoped to NAMED item keys.
+
+    Issue #20 measured that dropping 38 platform-substituted items moves the largest published
+    venue-share day by 0.0031, and pre-registered: if dropping THOSE 38 moves any day by more than
+    0.0031, the measurement was wrong. The test must be scoped to the named keys, because the live
+    substituted set grows -- items are withdrawn and removed after the fact, and #20 said so -- and
+    a test against "whatever mod_state reads now" could never fail for the reason it was written.
+
+    The current currency already excludes them, so the effect is measured by adding them BACK:
+    share_now is published, share_with_38 is what the day would read if they were still counted.
+    -> {day: {"labelled", "share_now", "share_with_38", "move"}}, move = share_now - share_with_38.
+    """
+    S_ = Path(workdir or S)
+    con = CS.build_index()
+    cut = dt.datetime(*map(int, cutoff.split("-")), tzinfo=dt.timezone.utc).timestamp()
+    labels = json.load(open(S_ / "allocation_label_cache_agent.json"))
+    keys = set(keys)
+    VENUE = "V"          # the cache stores single letters, not words
+
+    now = collections.defaultdict(lambda: [0, 0])          # day -> [labelled, venue]
+    for t, k, _, _ in CS.weather_items(con, cut):
+        lab = labels.get(f"{k[0]}:{k[1]}")
+        if lab:
+            d = dt.datetime.fromtimestamp(t, dt.timezone.utc).strftime("%m-%d")
+            now[d][0] += 1
+            now[d][1] += (lab == VENUE)
+
+    add = collections.defaultdict(lambda: [0, 0])          # the named 38, by their own day
+    rows = {r["item_key"]: r for r in CS.items_at(con, cutoff=cut, min_chars=CS.MIN_CHARS)}
+    for key in keys:
+        r = rows.get(key)
+        lab = labels.get(key)
+        if r is None or not lab:
+            continue
+        d = dt.datetime.fromtimestamp(r["created_at"], dt.timezone.utc).strftime("%m-%d")
+        add[d][0] += 1
+        add[d][1] += (lab == VENUE)
+
+    out = {}
+    for d, (n, v) in sorted(now.items()):
+        an, av = add.get(d, [0, 0])
+        if not an:
+            continue
+        share_now = v / n if n else 0.0
+        share_with = (v + av) / (n + an)
+        out[d] = {"labelled": n, "added_back": an, "share_now": round(share_now, 4),
+                  "share_with_38": round(share_with, 4), "move": round(share_now - share_with, 4)}
+    return out
+
+
 def main():
     sub = states()
     labels = json.load(open(S / "allocation_label_cache_agent.json"))
