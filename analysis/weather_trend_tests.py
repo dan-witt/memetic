@@ -64,14 +64,35 @@ def longest_run(mask):
     return best
 
 
+def arrangements_with_runs_shorter_than(n, k, L):
+    """-> how many of the C(n, k) placements of k marked days among n have no run of length >= L.
+
+    Counted by dynamic programming over (marked so far, length of the current run), in exact
+    integers. Until issue #25 this was a walk over every combination, which reached 347M at issue
+    #24 and grows combinatorially; the counts agree with that walk on all 17 issues it published.
+    """
+    f = [[0] * L for _ in range(k + 1)]
+    f[0][0] = 1
+    for _ in range(n):
+        g = [[0] * L for _ in range(k + 1)]
+        for j in range(k + 1):
+            for r in range(L):
+                v = f[j][r]
+                if not v:
+                    continue
+                g[j][0] += v
+                if j < k and r + 1 < L:
+                    g[j + 1][r + 1] += v
+        f = g
+    return sum(f[k])
+
+
 def run_below(values, thresh):
     """Exact permutation test on the CLUSTERING of sub-threshold days. See the caveat above.
 
-    Enumerates every way k below-threshold days could be arranged among n days (all orders
-    equally likely) and returns the share whose longest run is at least the observed one. Exact
-    when C(n, k) is enumerable, which it is at these series lengths.
+    Of every way k below-threshold days could be arranged among n days (all orders equally
+    likely), the share whose longest run is at least the observed one.
     """
-    from itertools import combinations
     n = len(values)
     below = [i for i, v in enumerate(values) if v < thresh]
     k = len(below)
@@ -79,15 +100,12 @@ def run_below(values, thresh):
     if k == 0 or k == n:
         return {"n_days": n, "k_below": k, "threshold": thresh, "longest_run": obs, "p_exact": None,
                 "read": "degenerate: every day on one side of the threshold"}
-    total = hit = 0
-    for c in combinations(range(n), k):
-        m = [False] * n
-        for i in c: m[i] = True
-        total += 1
-        if longest_run(m) >= obs: hit += 1
+    total = comb(n, k)
+    hit = total - arrangements_with_runs_shorter_than(n, k, obs)
     return {"n_days": n, "k_below": k, "threshold": thresh, "longest_run": obs,
             "arrangements": total, "at_least_as_clustered": hit,
             "p_exact": round(hit / total, 4),
+            "method": "exact count by dynamic programming (from issue #25; enumerated before)",
             "read": "tests CLUSTERING under random day order, not a level shift. A drifting series "
                     "places its lowest values adjacent with no regime change, so a small p here "
                     "does not license 'the level moved'; it only says the run was not a coincidence "
@@ -242,7 +260,10 @@ def report(issue_date):
             "counts": f"{a}/{cur['new_windows']} vs {c}/{prv['new_windows']}",
             "pct": [cur["new_below_forth_pct"], prv["new_below_forth_pct"]],
             "p_two_sided_fisher": round(fisher_2x2(a, b, c, e), 4),
-            "effective_independent_windows_each": "~6-7 (120-item windows advancing by 40)",
+            # n windows of 120 items at stride 40 span 120 + 40(n-1) items; that span over 120 is
+            # the non-overlapping count. The literal "~6-7" this replaced dated from 115-window issues.
+            "effective_independent_windows_each": [
+                round((120 + 40 * (r["new_windows"] - 1)) / 120, 1) for r in (cur, prv)],
             "read": "anti-conservative on the nominal n; a non-significant result here is safe, a "
                     "significant one would not be."}
 

@@ -118,6 +118,10 @@ def main():
 
     # the corpus rows, so an event can be attributed to a day and an author
     rows = {r["item_key"]: r for r in CS.items_at(con, cutoff=cut, min_chars=0)}
+    # placeholder_keys() reads the whole archive. Unscoped, a pull days after the cutoff counted
+    # items created after it (issue #25: 5 of 21 "without an event").
+    ph_archive = len(ph)
+    ph = ph & set(rows)
 
     by_day, actions, reasons, matched, unmatched = Counter(), Counter(), Counter(), [], 0
     all_actions = []
@@ -159,6 +163,7 @@ def main():
         # figure below counts DISTINCT ITEMS, not event rows.
         "distinct_targets": len({m["target"] for m in matched}),
         "placeholders_in_corpus": len(ph),
+        "placeholders_in_archive_unscoped": ph_archive,
         "placeholders_with_an_event": len({m["target"] for m in matched
                                            if m["is_placeholder_now"]}),
         "placeholders_without_an_event": len(ph - {m["target"] for m in matched}),

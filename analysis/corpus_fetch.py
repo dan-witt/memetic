@@ -176,6 +176,17 @@ if __name__ == "__main__":
     con = CS.build_index()
     spent = 0
 
+    # The gap scan reads only the store, so it runs before the sweep is sized. Sized first, the
+    # sweep took the whole remaining budget, the gap probes then overran it, and a run that fetched
+    # every target was recorded incomplete.
+    gap_absent = state.get("gap_absent") or {}
+    if not args.no_gap_scan and not args.dry_run:
+        gap_hits, gap_absent, gap_spent = gap_targets(state, args.budget)
+        spent += gap_spent
+        if gap_hits:
+            print(f"  gap scan: {len(gap_hits)} thread(s) hold an id we do not: {sorted(set(gap_hits))}")
+        forced |= set(gap_hits)
+
     if args.full:
         cursor, etags = 0, {}
         targets, cursor, etags, used = changed_since(0, {}, args.budget) if not args.dry_run else \
@@ -215,7 +226,7 @@ if __name__ == "__main__":
         targets, cursor, etags, used = changed_since(cursor, etags, args.budget) \
             if not args.dry_run else (set(), cursor, etags, 0)
         spent += used
-        room = max(0, args.budget - spent - len(targets))
+        room = max(0, args.budget - spent - len(set(targets) | forced))
         sweep = CS.stale_threads(con, limit=room)
         print(f"  staleness sweep: {len(sweep)} thread(s) within budget"
               + (f", top score {sweep[0]['score']} (stale {sweep[0]['stale_hours']}h / "
@@ -228,13 +239,6 @@ if __name__ == "__main__":
     # while feed threads went unfetched.
     # Forced threads go in FRONT of both: they are there because the corpus is known to be missing
     # something on them, which neither the feed nor the sweep can discover.
-    gap_absent = state.get("gap_absent") or {}
-    if not args.no_gap_scan and not args.dry_run:
-        gap_hits, gap_absent, gap_spent = gap_targets(state, max(0, args.budget - spent))
-        spent += gap_spent
-        if gap_hits:
-            print(f"  gap scan: {len(gap_hits)} thread(s) hold an id we do not: {sorted(set(gap_hits))}")
-        forced |= set(gap_hits)
     targets = list(dict.fromkeys(list(forced) + list(targets)))
     if forced:
         print(f"  forced threads: {sorted(forced)}")

@@ -6,7 +6,7 @@ anchors (full pool AND issue-window-only cells, 3 embedders); allocation venue s
 newcomer cells (within-pool parity + cross-pool refresh: union-vs-incumbent Vendi and
 matched-pool nearest-incumbent claim distance). Outputs weather_gpu_out.json +
 agent_claims_current.json."""
-import json, gc, os, sys, hashlib, datetime as dt
+import collections, json, gc, os, sys, hashlib, datetime as dt
 from pathlib import Path
 # Set before torch touches CUDA. Issue #9 OOM'd here: the card carries ~3.4 GB of desktop memory,
 # leaving ~20 GB, and a claimify batch of 16 at max_length=1500 through a 7B model peaked at
@@ -179,6 +179,10 @@ _unlab = sum(v[0] - v[1] for v in _cov.values())
 label_audit = {"pass_type": "delta pass (did this issue's classification work)" if todo else
                "re-run over warm caches: counts describe THIS pass only, not the issue total",
                "delta_classified": len(todo_l),
+               # Per day, so a batch-produced issue can count retries against its real
+               # predecessor at assembly; PREV_PUB here is whatever was on disk when this ran.
+               "delta_classified_by_day": dict(sorted(collections.Counter(
+                   _dayof(NEW[i][0]) for i, _ in todo_l).items())),
                "retries_in_previous_pull": len(RETRIED),
                "retries_on_already_published_days": len(RETRIED_PUB),
                "unlabelled_after_run": _unlab,

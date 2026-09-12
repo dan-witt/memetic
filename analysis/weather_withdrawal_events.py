@@ -95,6 +95,10 @@ def main():
         for kind, o in [("post", p)] + [("comment", c) for c in th.get("comments", [])]:
             if o.get("id") is not None and o.get("mod_state") == "withdrawn":
                 withdrawn.add(f"{kind}:{o['id']}")
+    # The archive is read whole; scope it to the issue. Unscoped, items created after the cutoff
+    # were counted as withdrawn without an in-scope event (issue #24: all 12 of its 12).
+    withdrawn_archive = len(withdrawn)
+    withdrawn &= set(rows)
 
     by_day, detail, in_scope, unparsed = Counter(), [], 0, 0
     for ev in events:
@@ -124,6 +128,7 @@ def main():
         "unparsed_detail": unparsed,
         "distinct_targets": len(targets),
         "withdrawn_items_in_corpus": len(withdrawn),
+        "withdrawn_in_archive_unscoped": withdrawn_archive,
         "withdrawn_with_an_event": len(withdrawn & targets),
         "withdrawn_without_an_event": len(withdrawn - targets),
         "events_whose_target_is_not_withdrawn_now": sorted(
