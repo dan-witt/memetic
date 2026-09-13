@@ -182,7 +182,7 @@ def prefix_drift(series, prev_series, prev_t=None):
     Issue #21's currency change REMOVES items (49 platform-substituted bodies), which shifts every
     later window's position: index i no longer names the same window in the two series, and a
     positional diff reports ~97% of windows moved when almost none did. Windows are keyed by their
-    end timestamp, which the basis change does not move.
+    published timestamp, the window's middle item (weather_gpu.py stamps i + W//2).
 
     A window present in one series and absent from the other is not drift -- it is a window whose
     end item left the currency -- so it is counted separately rather than as a move.

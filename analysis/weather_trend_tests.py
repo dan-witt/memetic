@@ -340,6 +340,7 @@ def report(issue_date):
             "days": len(days), "min": min(vals), "max": max(vals),
             "range": round(max(vals) - min(vals), 4),
             "median_abs_day_move": round(med, 4),
+            "median_day": round(statistics.median(vals), 4),
             "newest_day_move": round(moves[-1], 4),
             "band_floor": (d.get("register_trend_zstd_raw") or {}).get("band_floor"),
             "gap_to_floor_from_newest": round(
@@ -401,6 +402,65 @@ def report(issue_date):
                      for r in _rows[-2:]],
             "read": "the newest row is provisional and gains windows next issue. Issue #26's rule: "
                     "'above the anchor' is a reading only if both rows clear 2 SE on both bands."}
+
+    # (5d) diversity against arrivals, added at issue #30 when the idea median cleared #26's rule on
+    # two high-arrival days. Newcomer claims sit farther from the incumbent cloud (the NN cell), so
+    # a day with more newcomer text can read more diverse with incumbents unchanged. Rank
+    # correlation of newcomer item share with (a) each issue's one-basis idea median, from issue #9
+    # (one-day windows keyed to the issue date), and (b) each published matched-day placement
+    # value against lisp, latest publication of each day.
+    def _spearman(xs, ys):
+        def _ranks(v):
+            order = sorted(range(len(v)), key=lambda i: v[i])
+            r = [0.0] * len(v)
+            i = 0
+            while i < len(order):
+                j = i
+                while j + 1 < len(order) and v[order[j + 1]] == v[order[i]]:
+                    j += 1
+                for k in range(i, j + 1):
+                    r[order[k]] = (i + j) / 2 + 1
+                i = j + 1
+            return r
+        rx, ry = _ranks(xs), _ranks(ys)
+        mx, my = sum(rx) / len(rx), sum(ry) / len(ry)
+        num = sum((a - mx) * (b - my) for a, b in zip(rx, ry))
+        den = (sum((a - mx) ** 2 for a in rx) * sum((b - my) ** 2 for b in ry)) ** 0.5
+        return round(num / den, 2) if den else None
+    _inf = (d.get("structure") or {}).get("inflows") or {}
+    _inf = _inf.get("per_day", _inf)
+    _share = {k: v["newcomer_item_share"] for k, v in _inf.items()
+              if isinstance(v, dict) and v.get("newcomer_item_share") is not None}
+    _idea = [(r["date"][5:], r["median_one_basis"]) for r in _rows
+             if r["date"] >= "2026-08-21" and r["date"][5:] in _share]
+    _matched = {}
+    for q in sorted(W.glob("20*-*-*")):
+        if not (q / "results.json").exists() or q.name > issue_date:
+            continue
+        _w = ((json.load(open(q / "results.json")).get("placement_matched_day_windows") or {})
+              .get("windows") or {})
+        for day, v in _w.items():
+            x = ((v or {}).get("lisp") or {}).get("band", [None])[0]
+            if x is not None:
+                _matched[day] = x
+    _mrows = [(k, x) for k, x in sorted(_matched.items()) if k in _share]
+    if len(_idea) >= 5:
+        _since21 = [(k, m) for k, m in _idea if k >= "09-03"]
+        out["diversity_vs_arrivals"] = {
+            "idea_median_vs_newcomer_share": {
+                "from_issue_9": {"n": len(_idea), "spearman": _spearman(
+                    [_share[k] for k, _ in _idea], [m for _, m in _idea])},
+                "from_issue_21": {"n": len(_since21), "spearman": _spearman(
+                    [_share[k] for k, _ in _since21], [m for _, m in _since21])
+                    if len(_since21) >= 5 else None}},
+            "matched_day_lisp_vs_newcomer_share": {
+                "n": len(_mrows), "median_lisp": round(statistics.median(x for _, x in _mrows), 4)
+                if _mrows else None,
+                "spearman": _spearman([_share[k] for k, _ in _mrows], [x for _, x in _mrows])
+                if len(_mrows) >= 5 else None},
+            "read": "rank association only, over overlapping issue windows and a daily share that "
+                    "is itself autocorrelated; it says the diversity cells move with arrivals across "
+                    "the series, not by how much on any one day."}
 
     # (6) the entering per-cohort conversion cohort against the pool it joins. The published N=3
     # cell is an UNWEIGHTED mean over cohorts, so a new cohort moves it by (its rate - the old
