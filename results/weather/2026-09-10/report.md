@@ -165,8 +165,6 @@ Derived by diffing the two records:
 - The published currency excludes every body the platform substituted, detected on `mod_state`
   (adopted at issue #21), including substitutions made after the cutoff; the issue publishes
   `currency_excluded_keys`.
-- The pre-dip line's SE is a fit SE for a straight line; it does not cover the choice of a straight
-  line, and the line gap gains ~0.5 SE a day for a flat square.
 - The cohort control has been run on thirty-six days, so a single small p carries a multiplicity of
   that size.
 - Single-normalizer (Qwen) and bge-only cells, delta-cached per item; the allocation currency is a
