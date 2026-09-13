@@ -138,9 +138,11 @@ def report(issue_date):
     tail5 = days[-6:]                      # 6 levels -> 5 moves
     moves = [round(alloc[b] - alloc[a], 4) for a, b in zip(tail5[:-1], tail5[1:])]
     neg = sum(1 for m in moves if m < 0)
+    pos = sum(1 for m in moves if m > 0)
     out["allocation_sign_test"] = {
         "days": tail5, "moves": moves, "negative": neg, "n": len(moves),
         "p_one_sided_fair_coin": round(sign_tail(neg, len(moves)), 4),
+        "positive": pos, "p_one_sided_fair_coin_positive": round(sign_tail(pos, len(moves)), 4),
         "read": "upper bound on how surprising the run is; autocorrelation makes runs cheaper, so "
                 "failing to reach significance here fails a fortiori. Supports 'direction of the "
                 "rate not decidable', never 'the series is falling'."}
@@ -284,8 +286,16 @@ def report(issue_date):
                               "predicted_gap": round(_pred(days[-5:]) - _pred(_pre), 4),
                               "gap_to_line": round(m5 - _pred(days[-5:]), 4),
                               "gap_to_line_in_se": round((m5 - _pred(days[-5:])) /
-                                                         (_pred_se(days[-5:]) ** 2 + se5 ** 2) ** 0.5, 2)},
-            "read": "the pre-dip comparison's SEs are binomial counting floors; "
+                                                         (_pred_se(days[-5:]) ** 2 + se5 ** 2) ** 0.5, 2),
+                              "gap_to_line_in_se_trailing_empirical": round(
+                                  (m5 - _pred(days[-5:])) /
+                                  (_pred_se(days[-5:]) ** 2 + se5_emp ** 2) ** 0.5, 2),
+                              # A square flat at any level gains slope/SE on this gap every day.
+                              "drift_in_se_per_day_if_flat": round(
+                                  -slope / (_pred_se(days[-5:]) ** 2 + se5 ** 2) ** 0.5, 2)},
+            "read": "gap_to_line_in_se combines the line's SE with the trailing mean's counting SE; "
+                    "the _trailing_empirical variants use the five days' own sd instead. "
+                    "the pre-dip comparison's SEs are binomial counting floors; "
                     "gap_in_se_trailing_empirical uses the five days' own sd instead. The line "
                     "comparison carries the line's extrapolation SE. A gap the pre-dip slope already "
                     "predicts does not separate a step at 09-03 from the decline that preceded it."}
