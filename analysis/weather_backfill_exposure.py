@@ -84,6 +84,13 @@ def history(root=IB.WEATHER):
             prev = d; rows.append({"issue": f"#{i+1}", "date": q.name, "exposure_items": None,
                                    "backfilled_items": (d.get("feed_lag") or {}).get("backfilled_items")})
             continue
+        if this_at == prev_at:
+            # Same pull as the previous issue: the window is empty, so a zero here is not a
+            # measurement. Issues #22-#24 and #26-#29 were published this way.
+            prev = d; rows.append({"issue": f"#{i+1}", "date": q.name, "exposure_items": None,
+                                   "backfilled_items": None, "per_1000_exposure_items": None,
+                                   "withheld": "same pull as the previous issue"})
+            continue
         bf = CS.backfill(con, prev_at=prev_at, this_at=this_at, basis="prev_last_item")
         r = cell(con, cut[:10], prev_at, bf, observed_at=this_at)
         r.update({"issue": f"#{i+1}", "date": q.name,
