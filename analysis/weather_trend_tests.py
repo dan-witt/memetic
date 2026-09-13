@@ -31,6 +31,7 @@ deliberately conservative about what they license.
 Usage: python3 analysis/weather_trend_tests.py [issue-date]   (default: newest published issue)
 """
 import json, statistics, sys
+from datetime import date
 from math import comb, sqrt
 from pathlib import Path
 
@@ -105,6 +106,7 @@ def run_below(values, thresh):
     return {"n_days": n, "k_below": k, "threshold": thresh, "longest_run": obs,
             "arrangements": total, "at_least_as_clustered": hit,
             "p_exact": round(hit / total, 4),
+            "p_exact_2sf": float(f"{hit / total:.2g}"),   # p_exact rounds to 0.0 from issue #26
             "method": "exact count by dynamic programming (from issue #25; enumerated before)",
             "read": "tests CLUSTERING under random day order, not a level shift. A drifting series "
                     "places its lowest values adjacent with no regime change, so a small p here "
@@ -241,6 +243,41 @@ def report(issue_date):
                                  "days' labelled counts; a FLOOR on the statistic's noise, not a CI "
                                  "for the level -- classifier error and within-day dependence are "
                                  "not in it."}
+
+    # (3b) the level question on the mean, set by issue #25's watch item 2: the trailing five-day
+    # mean against the three days before the 09-03 dip. A declining series puts two windows apart by
+    # slope x the distance between their centres with no step at all, so the gap is published
+    # beside what an OLS line through the days up to the pre-dip window predicts for both windows.
+    _pre = ["08-31", "09-01", "09-02"]
+    if all(k in alloc and _n.get(k) for k in _pre + days[-5:]) and days[-5] > _pre[-1]:
+        _ord = lambda k: date(2026, int(k[:2]), int(k[3:])).toordinal()
+        _mean = lambda ks: sum(alloc[k] for k in ks) / len(ks)
+        _cse = lambda ks: sum(alloc[k] * (1 - alloc[k]) / _n[k] for k in ks) ** 0.5 / len(ks)
+        _fit = [k for k in days if k <= _pre[-1]]
+        xs, ys = [_ord(k) for k in _fit], [alloc[k] for k in _fit]
+        xm, ym = sum(xs) / len(xs), sum(ys) / len(ys)
+        sxx = sum((x - xm) ** 2 for x in xs)
+        slope = sum((x - xm) * (y - ym) for x, y in zip(xs, ys)) / sxx
+        resid = [y - (ym + slope * (x - xm)) for x, y in zip(xs, ys)]
+        slope_se = (sum(r * r for r in resid) / (len(xs) - 2) / sxx) ** 0.5
+        _pred = lambda ks: ym + slope * (sum(_ord(k) for k in ks) / len(ks) - xm)
+        m5, m3 = _mean(days[-5:]), _mean(_pre)
+        se5, se3 = _cse(days[-5:]), _cse(_pre)
+        out["level_vs_predip"] = {
+            "trailing_days": days[-5:], "predip_days": _pre,
+            "trailing_mean": round(m5, 4), "trailing_counting_se": round(se5, 4),
+            "predip_mean": round(m3, 4), "predip_counting_se": round(se3, 4),
+            "gap": round(m5 - m3, 4),
+            "gap_in_counting_se": round((m5 - m3) / (se5 ** 2 + se3 ** 2) ** 0.5, 2),
+            "trailing_empirical_sd": round(statistics.stdev(alloc[k] for k in days[-5:]), 4),
+            "pre_dip_trend": {"fit_days": [_fit[0], _fit[-1]], "slope_per_day": round(slope, 5),
+                              "slope_se": round(slope_se, 5),
+                              "predicted_trailing_mean": round(_pred(days[-5:]), 4),
+                              "predicted_predip_mean": round(_pred(_pre), 4),
+                              "predicted_gap": round(_pred(days[-5:]) - _pred(_pre), 4)},
+            "read": "both SEs are binomial counting floors. The gap is read against predicted_gap: "
+                    "a gap the pre-dip slope already predicts does not separate a step at 09-03 "
+                    "from the decline that preceded it."}
 
     # (4) dip rate: this issue's new-window dip count against the previous issue's.
     # REBASELINED, not own-basis. per_issue_dip_rate keeps each issue's OWN published row, so
