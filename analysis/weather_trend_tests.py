@@ -259,10 +259,15 @@ def report(issue_date):
         sxx = sum((x - xm) ** 2 for x in xs)
         slope = sum((x - xm) * (y - ym) for x, y in zip(xs, ys)) / sxx
         resid = [y - (ym + slope * (x - xm)) for x, y in zip(xs, ys)]
-        slope_se = (sum(r * r for r in resid) / (len(xs) - 2) / sxx) ** 0.5
+        resid_sd = (sum(r * r for r in resid) / (len(xs) - 2)) ** 0.5
+        slope_se = resid_sd / sxx ** 0.5
         _pred = lambda ks: ym + slope * (sum(_ord(k) for k in ks) / len(ks) - xm)
+        # SE of the fitted line at the window's mean ordinal: the line's own extrapolation error.
+        _pred_se = lambda ks: resid_sd * (1 / len(xs) + (sum(_ord(k) for k in ks) / len(ks) - xm) ** 2
+                                          / sxx) ** 0.5
         m5, m3 = _mean(days[-5:]), _mean(_pre)
         se5, se3 = _cse(days[-5:]), _cse(_pre)
+        se5_emp = statistics.stdev(alloc[k] for k in days[-5:]) / 5 ** 0.5
         out["level_vs_predip"] = {
             "trailing_days": days[-5:], "predip_days": _pre,
             "trailing_mean": round(m5, 4), "trailing_counting_se": round(se5, 4),
@@ -270,14 +275,20 @@ def report(issue_date):
             "gap": round(m5 - m3, 4),
             "gap_in_counting_se": round((m5 - m3) / (se5 ** 2 + se3 ** 2) ** 0.5, 2),
             "trailing_empirical_sd": round(statistics.stdev(alloc[k] for k in days[-5:]), 4),
+            "gap_in_se_trailing_empirical": round((m5 - m3) / (se5_emp ** 2 + se3 ** 2) ** 0.5, 2),
             "pre_dip_trend": {"fit_days": [_fit[0], _fit[-1]], "slope_per_day": round(slope, 5),
-                              "slope_se": round(slope_se, 5),
+                              "slope_se": round(slope_se, 5), "residual_sd": round(resid_sd, 4),
                               "predicted_trailing_mean": round(_pred(days[-5:]), 4),
+                              "predicted_trailing_mean_se": round(_pred_se(days[-5:]), 4),
                               "predicted_predip_mean": round(_pred(_pre), 4),
-                              "predicted_gap": round(_pred(days[-5:]) - _pred(_pre), 4)},
-            "read": "both SEs are binomial counting floors. The gap is read against predicted_gap: "
-                    "a gap the pre-dip slope already predicts does not separate a step at 09-03 "
-                    "from the decline that preceded it."}
+                              "predicted_gap": round(_pred(days[-5:]) - _pred(_pre), 4),
+                              "gap_to_line": round(m5 - _pred(days[-5:]), 4),
+                              "gap_to_line_in_se": round((m5 - _pred(days[-5:])) /
+                                                         (_pred_se(days[-5:]) ** 2 + se5 ** 2) ** 0.5, 2)},
+            "read": "the pre-dip comparison's SEs are binomial counting floors; "
+                    "gap_in_se_trailing_empirical uses the five days' own sd instead. The line "
+                    "comparison carries the line's extrapolation SE. A gap the pre-dip slope already "
+                    "predicts does not separate a step at 09-03 from the decline that preceded it."}
 
     # (4) dip rate: this issue's new-window dip count against the previous issue's.
     # REBASELINED, not own-basis. per_issue_dip_rate keeps each issue's OWN published row, so
@@ -297,10 +308,9 @@ def report(issue_date):
             "counts": f"{a}/{cur['new_windows']} vs {c}/{prv['new_windows']}",
             "pct": [cur["new_below_forth_pct"], prv["new_below_forth_pct"]],
             "p_two_sided_fisher": round(fisher_2x2(a, b, c, e), 4),
-            # n windows of 120 items at stride 40 span 120 + 40(n-1) items; that span over 120 is
-            # the non-overlapping count. The literal "~6-7" this replaced dated from 115-window issues.
-            "effective_independent_windows_each": [
-                round((120 + 40 * (r["new_windows"] - 1)) / 120, 1) for r in (cur, prv)],
+            # 120-item windows at stride 40 overlap threefold: n/3, as idea_anchor_gap uses. The
+            # literal "~6-7" this replaced dated from 115-window issues.
+            "effective_independent_windows_each": [round(r["new_windows"] / 3, 1) for r in (cur, prv)],
             "read": "anti-conservative on the nominal n; a non-significant result here is safe, a "
                     "significant one would not be."}
 
@@ -355,6 +365,32 @@ def report(issue_date):
                     "windows OVERLAP (120 items, stride 40), so the sd is a descriptive spread of "
                     "the published windows and not sigma for any estimator; do not divide it by "
                     "sqrt(n)."}
+
+    # (5c) the idea median against the forth anchor on two bands, set by issue #26's watch item 3.
+    # Standing band: issue #23's derivation (pooled window sd 0.0060, ~14 effective windows).
+    # Re-derived band, as issue #25 computed it: pooled sd over the last three rebaselined rows,
+    # effective windows = the row's own window count / 3 (120-item windows at stride 40).
+    _its = d.get("idea_time_series") or {}
+    _rows = [r for r in _its.get("window_level_median") or [] if r.get("median_one_basis") is not None]
+    _forth = (_its.get("anchor_levels") or {}).get("forth")
+    if len(_rows) >= 2 and _forth and len(_reb) >= 3:
+        _sd3 = (sum(r["new_window_sd"] ** 2 for r in _reb[-3:]) / 3) ** 0.5
+        _se_std = 1.2533 * 0.0060 / 14 ** 0.5
+        out["idea_anchor_gap"] = {
+            "anchor_forth": _forth,
+            "standing_band": {"window_sd": 0.0060, "effective_windows": 14,
+                              "median_se": round(_se_std, 5)},
+            "rederived_band": {"window_sd_pooled_last_three": round(_sd3, 5),
+                               "from_issues": [r["issue"] for r in _reb[-3:]]},
+            "rows": [{"date": r["date"], "median": r["median_one_basis"],
+                      "n_windows": r["n_windows_one_basis"],
+                      "gap": round(r["median_one_basis"] - _forth, 4),
+                      "gap_in_se_standing": round((r["median_one_basis"] - _forth) / _se_std, 2),
+                      "gap_in_se_rederived": round((r["median_one_basis"] - _forth) /
+                                                   (1.2533 * _sd3 / (r["n_windows_one_basis"] / 3) ** 0.5), 2)}
+                     for r in _rows[-2:]],
+            "read": "the newest row is provisional and gains windows next issue. Issue #26's rule: "
+                    "'above the anchor' is a reading only if both rows clear 2 SE on both bands."}
 
     # (6) the entering per-cohort conversion cohort against the pool it joins. The published N=3
     # cell is an UNWEIGHTED mean over cohorts, so a new cohort moves it by (its rate - the old
